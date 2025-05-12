@@ -30,7 +30,7 @@ module datapath(
     // 计算跳转目标地址（j 指令）
     wire [31:0] jump_target = {pcplus4[31:28], instr[25:0], 2'b00};
 
-    // PC来源选择：跳转 -> 分支 -> 顺序执行
+    // PC来源选择
     assign pcnext = jump ? jump_target :          // 跳转指令
                     pcsrc ? pcbranch :            // 分支指令
                     pcplus4;                      // 顺序执行
