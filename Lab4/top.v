@@ -2,7 +2,7 @@ module top(
 	input clk,
 	input rst
     );
-	wire[31:0] pc,instr,readdata,alu_out,writedata;
+	wire[31:0] pc,instr,readdata,aluout,writedata;
    	wire data_ram_wea;
    	
 	mips mips(
@@ -11,7 +11,7 @@ module top(
 	.pc(pc),
 	.instr(instr),
 	.memwrite(data_ram_wea),
-	.aluout(alu_out),
+	.aluout(aluout),
 	.writedata(writedata),
 	.readdata(readdata)
 	);
@@ -25,7 +25,7 @@ module top(
     data_ram data_ram (
     .clka(clk),
     .wea({4{data_ram_wea}}),
-    .addra(alu_out[31:2]),
+    .addra(aluout[31:2]),
     .dina(writedata),    
     .douta(readdata)
      );
