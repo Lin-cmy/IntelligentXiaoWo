@@ -13,7 +13,7 @@
     "pages/currentfamily/currentfamily"
   ],
   "window": {
-    "navigationBarTitleText": "智能家居"
+    "navigationBarTitleText": "智慧小窝"
   },
   "tabBar": {
     "color": "#666",
