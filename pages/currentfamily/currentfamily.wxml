@@ -1,0 +1,50 @@
+<view class="current-family-container">
+  <view class="current-family-header">
+    <text class="current-family-name">陈俊烨的家</text>
+  </view>
+
+  <view class="current-family-section1">
+    <view class="current-family-message" bindtap="onNameTap">
+      <view class="msg-left">
+        <text class="part1">家庭名称</text>
+      </view>
+      <view class="msg-right">
+        <text class="part2">陈俊烨的家</text>
+        <text class="part3">></text>
+      </view>
+    </view>
+    <view class="current-family-message" bindtap="onPositionTap">
+      <view class="msg-left">
+        <text class="part1">家庭位置</text>
+      </view>
+      <view class="msg-right">
+        <text class="part2">未设置</text>
+        <text class="part3">></text>
+      </view>
+    </view>
+    <view class="current-family-message" bindtap="onR&DTap">
+      <view class="msg-left">
+        <text class="part1">房间及设备管理</text>
+      </view>
+      <view class="msg-right">
+        <text class="part2">n个设备</text>
+        <text class="part3">></text>
+      </view>
+    </view>
+  </view>
+
+  <text class="family-member">家庭成员</text>
+  <view class="current-family-section2">
+    <text class="member-introduction">所有成员均可使用家庭内的设备</text>
+    <block wx:for="{{familymembers}}" wx:key="id">
+      <view class="member-item" bindtap="onMemberTap" data-id="{{item.id}}">
+        <image class="member-icon" src="{{item.icon}}"></image>
+        <text class="member-name">{{item.name}}</text>
+      </view>
+    </block>
+    <view class="member-item">
+      <view class="member-icon add-member-icon" bindtap="onAddTap"></view>
+      <text class="member-name">添加成员</text>
+    </view>
+  </view>
+</view>

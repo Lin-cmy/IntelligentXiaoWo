@@ -1,0 +1,54 @@
+<!--index.wxml-->
+<view class="container">
+  <swiper 
+    class="swiper" 
+    bindchange="handleSwiperChange"
+    circular
+    autoplay
+    interval="4000"
+    duration="500"
+    previous-margin="60rpx"
+    next-margin="60rpx"
+    easing-function="easeInOutCubic"
+  >
+    <swiper-item>
+      <view class="slide-item">
+        <image src="/static/images/welcome1.png" mode="aspectFill"/>
+        <view class="slide-content">
+          <text class="title">智能设备       
+          随心管理</text>
+          <text class="subtitle">便携控制 一手掌握</text>
+        </view>
+      </view>
+    </swiper-item>
+    <swiper-item>
+      <view class="slide-item">
+        <image src="/static/images/welcome2.png" mode="aspectFill"/>
+        <view class="slide-content">
+          <text class="title">您的专属推荐场景</text>
+          <text class="subtitle">一屋互联 智慧联动 舒心生活</text>
+        </view>
+      </view>
+    </swiper-item>
+    <swiper-item>
+      <view class="slide-item">
+        <image src="/static/images/welcome3.png" mode="aspectFill"/>
+        <view class="slide-content">
+          <text class="title">新视觉 新体验</text>
+          <text class="subtitle">全新界面 精致呈现</text>
+        </view>
+        <view class="start-btn-wrapper {{showButton ? 'show' : ''}}">
+          <button class="start-btn" bindtap="handleStart">登录立即体验</button>
+        </view>
+      </view>
+    </swiper-item>
+  </swiper>
+
+  <view class="dots">
+    <view 
+      class="dot {{currentIndex === index ? 'active' : ''}}" 
+      wx:for="{{3}}" 
+      wx:key="*this"
+    ></view>
+  </view>
+</view>

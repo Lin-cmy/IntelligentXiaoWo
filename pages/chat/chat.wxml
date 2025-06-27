@@ -1,0 +1,132 @@
+<!--chat.wxml-->
+<view class="chat-container">
+  <!-- 顶部标题栏 -->
+  <view class="chat-header">
+    <view class="header-left" bindtap="goBack">
+      <text class="back-icon">←</text>
+    </view>
+    <view class="header-center">
+      <text class="header-title">语音中心 | 对话记录</text>
+      <image class="avatar" src="/images/pagesetting/others/meow.jpg" mode="aspectFill"></image>
+    </view>
+    <view class="header-right"></view>
+  </view>
+
+  <!-- 聊天内容区域 -->
+  <view class="chat-content">
+    <scroll-view 
+      class="message-list" 
+      scroll-y="true" 
+      scroll-top="{{scrollTop}}"
+      scroll-into-view="{{scrollIntoView}}"
+    >
+      <!-- AI助手欢迎消息 -->
+      <view class="message-item ai-message">
+        <view class="avatar-wrapper">
+          <image class="message-avatar" src="/images/pagesetting/others/meow.jpg" mode="aspectFill"></image>
+        </view>
+        <view class="message-content">
+          <view class="message-bubble ai-bubble">
+            <text class="message-text">您可以这样说</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 示例消息按钮 -->
+      <view class="example-messages">
+        <view class="example-item" bindtap="sendExample" data-text="打开卧室空调">
+          <text>打开卧室空调</text>
+        </view>
+        <view class="example-item" bindtap="sendExample" data-text="😸有点热">
+          <text>😸有点热</text>
+        </view>
+        <view class="example-item" bindtap="sendExample" data-text="打开窗帘">
+          <text>打开窗帘</text>
+        </view>
+        <view class="example-item" bindtap="sendExample" data-text="空调调到25度">
+          <text>空调调到25度</text>
+        </view>
+        <view class="example-item" bindtap="sendExample" data-text="今天😸可以做什么菜">
+          <text>今天😸可以做什么菜</text>
+        </view>
+      </view>
+
+      <!-- 聊天消息列表 -->
+      <view wx:for="{{messages}}" wx:key="id" id="msg{{item.id}}" class="message-item {{item.type === 'user' ? 'user-message' : 'ai-message'}}">
+        <view class="avatar-wrapper" wx:if="{{item.type === 'ai'}}">
+          <image class="message-avatar" src="/images/pagesetting/others/meow.jpg" mode="aspectFill"></image>
+        </view>
+        <view class="message-content">
+          <view class="message-bubble {{item.type === 'user' ? 'user-bubble' : 'ai-bubble'}}">
+            <text class="message-text">{{item.content}}</text>
+            <text class="message-time">{{item.time}}</text>
+          </view>
+        </view>
+        <view class="avatar-wrapper" wx:if="{{item.type === 'user'}}">
+          <image class="message-avatar" src="/images/pagesetting/others/touwei.png" mode="aspectFill"></image>
+        </view>
+      </view>
+    </scroll-view>
+  </view>
+
+  <!-- 底部输入区域 -->
+  <view class="chat-input">
+    <!-- AI助手信息 -->
+    <view class="ai-assistant-info">
+      <image class="assistant-avatar" src="/images/pagesetting/others/miao.jpg" mode="aspectFill"></image>
+      <text class="assistant-text">小窝管家为您服务</text>
+    </view>
+
+    <!-- 输入控制区域 -->
+    <view class="input-controls">
+      <!-- 文本输入框 -->
+      <view class="input-wrapper" wx:if="{{inputMode === 'text'}}">
+        <input 
+          class="text-input" 
+          type="text" 
+          placeholder="输入消息..." 
+          value="{{inputText}}"
+          bindinput="onInputChange"
+          confirm-type="send"
+          bindconfirm="sendTextMessage"
+        />
+        <view class="input-actions">
+          <view class="action-btn" bindtap="switchToVoice">
+            <text class="icon">🎤</text>
+          </view>
+          <view class="action-btn send-btn" bindtap="sendTextMessage" wx:if="{{inputText.length > 0}}">
+            <text class="icon">📤</text>
+          </view>
+        </view>
+      </view>
+
+      <!-- 语音输入 -->
+      <view class="voice-wrapper" wx:if="{{inputMode === 'voice'}}">
+        <view class="voice-input-area">
+          <view 
+            class="voice-btn {{isRecording ? 'recording' : ''}}" 
+            bindtouchstart="startRecording"
+            bindtouchend="stopRecording"
+            bindtouchcancel="cancelRecording"
+          >
+            <view class="voice-icon {{isRecording ? 'pulse' : ''}}">🎤</view>
+            <text class="voice-text">{{isRecording ? '松开结束' : '按住说话'}}</text>
+          </view>
+          <view class="switch-text-btn" bindtap="switchToText">
+            <text class="icon">⌨️</text>
+          </view>
+        </view>
+        
+        <!-- 录音状态提示 -->
+        <view class="recording-hint" wx:if="{{isRecording}}">
+          <view class="sound-waves">
+            <view class="wave wave1"></view>
+            <view class="wave wave2"></view>
+            <view class="wave wave3"></view>
+          </view>
+          <text>正在录音...</text>
+        </view>
+      </view>
+    </view>
+  </view>
+</view> 

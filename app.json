@@ -1,0 +1,38 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/login/login",
+    "pages/register/register",
+    "pages/home/home",
+    "pages/scene/scene",
+    "pages/scene-detail/scene-detail",
+    "pages/ragQA/ragQA",
+    "pages/chat/chat",
+    "pages/familymanager/familymanager",
+    "pages/joinfamily/joinfamily",
+    "pages/currentfamily/currentfamily"
+  ],
+  "window": {
+    "navigationBarTitleText": "智能家居"
+  },
+  "tabBar": {
+    "color": "#666",
+    "selectedColor": "#1AAD19",
+    "backgroundColor": "#fff",
+    "borderStyle": "black",
+    "list": [
+      {
+        "pagePath": "pages/home/home",
+        "text": "首页"
+      },
+      {
+        "pagePath": "pages/scene/scene",
+        "text": "场景"
+      },
+      {
+        "pagePath": "pages/ragQA/ragQA",
+        "text": "我的"
+      }
+    ]
+  }
+}

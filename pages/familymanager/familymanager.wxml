@@ -1,0 +1,43 @@
+<view class="family-manager-container">
+  <view class="family-manager-section1">
+    <block wx:for="{{myfamilies}}" wx:key="id">
+      <view class="family-square" bindtap="onFamilyTap">
+        <text class="family-name">{{item.name}}</text>
+        <text class="family-identity">身份: {{item.identity}}</text>
+      </view>
+    </block>
+  </view>
+
+  <view class="family-manager-section2">
+    <view class="create-square" bindtap="onCreateTap">
+      <text class="create-family">创建家庭+</text>
+    </view>
+    <view class="join-square" bindtap="onJoinTap">
+      <text class="join-family">加入家庭+</text>
+    </view>
+  </view>
+
+  <view wx:if="{{showCreatePopup}}" class="popup-mask" catchtouchmove="true">
+    <view class="popup">
+      <view class="popup-title">创建家庭</view>
+      <input
+        class="popup-input"
+        placeholder="请输入家庭名称"
+        value="{{newFamilyName}}"
+        bindinput="onFamilyNameInput"
+        maxlength="20"
+      />
+      <input
+        class="popup-input"
+        placeholder="请输入家庭地址"
+        value="{{newFanilyAddress}}"
+        bindinput="onFanilyAddressInput"
+        maxlength="20"
+        />
+      <view class="popup-btns">
+        <button class="popup-btn cancel" bindtap="onPopupClose">取消</button>
+        <button class="popup-btn confirm" bindtap="onConfirmCreate">确定</button>
+      </view>
+    </view>
+  </view>
+</view>

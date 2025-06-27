@@ -1,0 +1,25 @@
+<view class="home-header">
+  <text class="home-title" bindtap="onTitleTap">XX的家</text>
+  <view class="triangle-down" bindtap="onTitleTap"></view>
+</view>
+
+<scroll-view class="filter-bar" scroll-x>
+  <view class="filter-item {{selectedRoom === '全部' ? 'active' : ''}}" bindtap="onFilterTap" data-room="全部">全部</view>
+  <view class="filter-item {{selectedRoom === '卧室' ? 'active' : ''}}" bindtap="onFilterTap" data-room="卧室">卧室</view>
+  <view class="filter-item {{selectedRoom === '客厅' ? 'active' : ''}}" bindtap="onFilterTap" data-room="客厅">客厅</view>
+  <view class="filter-item {{selectedRoom === '厨房' ? 'active' : ''}}" bindtap="onFilterTap" data-room="厨房">厨房</view>
+  <view class="filter-item {{selectedRoom === '书房' ? 'active' : ''}}" bindtap="onFilterTap" data-room="书房">书房</view>
+</scroll-view>
+
+<view class="device-grid">
+  <block wx:for="{{filteredDevices}}" wx:key="id">
+    <view class="device-square" bindtap="onDeviceTap" data-id="{{item.id}}">
+      <image class="device-bg" src="{{item.icon}}" mode="aspectFill" />
+      <text class="device-name">{{item.name}}</text>
+    </view>
+  </block>
+</view>
+
+<view wx:if="{{showPopup}}" class="popup">
+  <view class="popup-item" hover-class="popup-item-hover" bindtap="onFamilyManagerTap">家庭管理</view>
+</view>

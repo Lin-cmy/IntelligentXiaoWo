@@ -1,0 +1,132 @@
+<view class="container">
+  <!-- 顶部导航栏 -->
+  <!-- <view class="nav-bar">
+    <view class="nav-item active">热门</view>
+    <view class="nav-item">精选</view>
+  </view> -->
+
+  <!-- 场景列表 -->
+  <view class="scene-list">
+  <!-- 离家 -->
+  <view class="scene-item" bindtap="onSceneDetail" data-scene="leave">
+      <image class="scene-image" src="/images/leave.jpg" mode="aspectFill"></image>
+      <view class="scene-info">
+        <view class="scene-title">
+          <text class="trophy-icon">🏆</text>
+          <text>离家</text>
+          <view class="scene-status {{scenes.leave.activated ? 'activated' : 'pending'}}">
+            {{scenes.leave.activated ? '已激活' : '待激活'}}
+          </view>
+        </view>
+        <view class="scene-desc">一键关闭空调灯等设备，开启扫地机</view>
+        <view class="scene-users">附近4k人已启用</view>
+      </view>
+    </view>
+    <!-- 洗晾联动 -->
+    <view class="scene-item" bindtap="onSceneDetail" data-scene="laundry">
+      <image class="scene-image" src="/images/laundry.jpg" mode="aspectFill"></image>
+      <view class="scene-info">
+        <view class="scene-title">
+          <text class="trophy-icon">🏆</text>
+          <text>洗晾联动</text>
+          <view class="scene-status {{scenes.laundry.activated ? 'activated' : 'pending'}}">
+            {{scenes.laundry.activated ? '已激活' : '待激活'}}
+          </view>
+        </view>
+        <view class="scene-desc">洗涤结束，晾衣机下落</view>
+        <view class="scene-users">附近4k人已启用</view>
+      </view>
+    </view>
+    <!-- 烟灶 -->
+    <view class="scene-item" bindtap="onSceneDetail" data-scene="yanzao">
+      <image class="scene-image" src="/images/yanzao.jpg" mode="aspectFill"></image>
+      <view class="scene-info">
+        <view class="scene-title">
+          <text class="medal-icon">🥈</text>
+          <text>烟灶联动</text>
+          <view class="scene-status {{scenes.yanzao.activated ? 'activated' : 'pending'}}">
+            {{scenes.yanzao.activated ? '已激活' : '待激活'}}
+          </view>
+        </view>
+        <view class="scene-desc">灶具任一灶头打开旋钮进行点火操作时烟机自启动</view>
+        <view class="scene-users">附近7.2k人已启用</view>
+      </view>
+    </view>
+    <!-- 全屋灯关 -->
+    <view class="scene-item" bindtap="onSceneDetail" data-scene="lights_off">
+      <image class="scene-image" src="/images/lights_off.jpg" mode="aspectFill"></image>
+      <view class="scene-info">
+        <view class="scene-title">
+          <text class="medal-icon">🥈</text>
+          <text>全屋灯关</text>
+          <view class="scene-status {{scenes.lights_off.activated ? 'activated' : 'pending'}}">
+            {{scenes.lights_off.activated ? '已激活' : '待激活'}}
+          </view>
+        </view>
+        <view class="scene-desc">根据需要可一键实现关灯</view>
+        <view class="scene-users">附近4k人已启用</view>
+      </view>
+    </view>
+    <!-- 定时除湿净化 -->
+    <view class="scene-item" bindtap="onSceneDetail" data-scene="chushitime">
+      <image class="scene-image" src="/images/chushitime.jpg" mode="aspectFill"></image>
+      <view class="scene-info">
+        <view class="scene-title">
+          <text class="medal-icon">🥉</text>
+          <text>定时除湿净化</text>
+          <view class="scene-status {{scenes.chushitime.activated ? 'activated' : 'pending'}}">
+            {{scenes.chushitime.activated ? '已激活' : '待激活'}}
+          </view>
+        </view>
+        <view class="scene-desc">固定时间段内打开空气净化器空调开启除湿</view>
+        <view class="scene-users">附近2k人已启用</view>
+      </view>
+    </view>
+    <!-- 全屋灯开 -->
+    <view class="scene-item" bindtap="onSceneDetail" data-scene="lights_on">
+      <image class="scene-image" src="/images/lights_on.jpg" mode="aspectFill"></image>
+      <view class="scene-info">
+        <view class="scene-title">
+          <text class="medal-icon">🥉</text>
+          <text>全屋灯开</text>
+          <view class="scene-status {{scenes.lights_on.activated ? 'activated' : 'pending'}}">
+            {{scenes.lights_on.activated ? '已激活' : '待激活'}}
+          </view>
+        </view>
+        <view class="scene-desc">回家后可一键实现开灯</view>
+        <view class="scene-users">附近3k人已启用</view>
+      </view>
+    </view>
+
+    <!-- 起床 -->
+    <view class="scene-item" bindtap="onSceneDetail" data-scene="wakeup">
+      <image class="scene-image" src="/images/wakeup.jpg" mode="aspectFill"></image>
+      <view class="scene-info">
+        <view class="scene-title">
+          <text>起床</text>
+          <view class="scene-status {{scenes.wakeup.activated ? 'activated' : 'pending'}}">
+            {{scenes.wakeup.activated ? '已激活' : '待激活'}}
+          </view>
+        </view>
+        <view class="scene-desc">打开窗帘和净化器，清新环境开启新一天</view>
+        <view class="scene-users">附近4.8k人已启用</view>
+      </view>
+    </view>
+
+    <!-- 观影 -->
+    <view class="scene-item" bindtap="onSceneDetail" data-scene="movie">
+      <image class="scene-image" src="/images/movie.jpg" mode="aspectFill"></image>
+      <view class="scene-info">
+        <view class="scene-title">
+          <text>观影</text>
+          <view class="scene-status {{scenes.movie.activated ? 'activated' : 'pending'}}">
+            {{scenes.movie.activated ? '已激活' : '待激活'}}
+          </view>
+        </view>
+        <view class="scene-desc">观影模式启动，关闭不必要的灯和窗帘，设置电影模式</view>
+        <view class="scene-users">附近5k人已启用</view>
+      </view>
+    </view>
+  </view>
+</view>
+

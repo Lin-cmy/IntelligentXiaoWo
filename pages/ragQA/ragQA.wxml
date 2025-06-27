@@ -1,0 +1,54 @@
+<!--pages/devices/devices.wxml-->
+<view class="text">
+<view class="line_y"></view>
+<text>智慧时代一键即连</text></view>
+<view class='pageBox pageTwo'>
+  <swiper class='swiperClass' autoplay indicator-color="#a39f99" indicator-active-color="#ec8aa4" indicator-dots  interval="2000" duration="1000" previous-margin="60px" next-margin="60px" circular bindchange="bindchange" style='height: {{swiperHeight}}px'>
+  <block wx:for="{{imgUrls}}" wx:key="{{index}}">
+    <swiper-item>
+      <image src="{{item}}" class="slide-image {{swiperIdx == index ? 'active' : 'quiet'}}" mode='aspectFill'></image>
+    </swiper-item>
+  </block>
+ </swiper>
+</view>
+<view class="meowing"><!--大框架-->
+  <view class="nav_left"><!--侧边栏盒子-->
+    <block wx:for="{{leftitem}}" wx:key="id">
+      <!--这里定义了一个变量index，并把这个变量赋值为index，这个是wx：for循环产生的下标，传到js，通过这个下标完成文章的显示-->
+      <view class="nav_left_items {{count==index?'active-tag':''}}" bindtap="switchRightTab" data-index="{{index}}"><!--文字盒子-->
+        {{item.nad}}
+      </view>
+    </block>
+  </view>
+  <view class="nav_right"><!--右边主体部分-->
+    <!--通过侧边栏的选择传到js中的index的值与js中data数据中的tag进行比较，完成设备的分类显示-->
+    <view class="nav_right_cat" wx:for="{{rightitem}}" wx:key="id" wx:if="{{count==item.tag}}" ><!--设备详情-->
+      <view bindtap="click_nav_cat" data-index_two="{{index}}" class="nav">
+        <image src="{{item.url}}" mode="widthFix" style="width: 180rpx;height: 180rpx;border-radius: 20rpx;"></image>
+        <view class="nav_right_nadandsex"><!--文字盒子-->
+          <text class="nav_right_nad" style="color: black;">{{item.nad}}</text><!--文字-->
+          <view class="nav_right_sex"><!--文章tag-->
+            {{item.tag}}
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>
+<!-- 悬浮球 -->
+<movable-area class="movable-area">
+    <movable-view 
+      class="movable-view" 
+      direction="all"
+      bindlongpress="onFloatBallLongPress"
+      bindtap="onFloatBallTap"
+    >
+      <view class="float-ball">
+        <image class="ball-avatar" src="/images/pagesetting/others/meow.jpg" mode="aspectFill"></image>
+        <view class="pulse-ring"></view>
+      </view>
+    </movable-view>
+  </movable-area>
+
+ 
+ 

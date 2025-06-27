@@ -1,0 +1,353 @@
+.detail-container {
+  min-height: 100vh;
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+}
+
+.header-section {
+  position: relative;
+  height: 400rpx;
+  overflow: hidden;
+}
+
+.bg-image {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.header-content {
+  position: absolute;
+  top: 40rpx;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 0 40rpx;
+  z-index: 2;
+}
+
+.back-icon, .like-icon {
+  width: 80rpx;
+  height: 80rpx;
+  background: rgba(255, 255, 255, 0.9);
+  border-radius: 40rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 32rpx;
+  color: #2c3e50;
+  font-weight: bold;
+  backdrop-filter: blur(10px);
+}
+
+.title-section {
+  position: absolute;
+  bottom: 40rpx;
+  left: 40rpx;
+  right: 40rpx;
+  color: white;
+  z-index: 2;
+}
+
+.title-section::before {
+  content: '';
+  position: absolute;
+  top: -20rpx;
+  left: -20rpx;
+  right: -20rpx;
+  bottom: -20rpx;
+  background: linear-gradient(135deg, rgba(0, 0, 0, 0.6) 0%, rgba(0, 0, 0, 0.3) 100%);
+  border-radius: 16rpx;
+  backdrop-filter: blur(10px);
+  z-index: -1;
+}
+
+.title {
+  font-size: 48rpx;
+  font-weight: 600;
+  margin-bottom: 16rpx;
+}
+
+.desc {
+  font-size: 28rpx;
+  opacity: 0.9;
+  line-height: 1.4;
+}
+
+.content-section {
+  padding: 40rpx 30rpx;
+}
+
+.section-title {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 30rpx;
+}
+
+.devices-list {
+  margin-bottom: 40rpx;
+}
+
+.device-item {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20rpx;
+  padding: 30rpx;
+  margin-bottom: 20rpx;
+  display: flex;
+  align-items: center;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+  backdrop-filter: blur(10px);
+}
+
+.device-icon {
+  font-size: 32rpx;
+  margin-right: 24rpx;
+}
+
+.device-info {
+  flex: 1;
+}
+
+.device-name {
+  font-size: 30rpx;
+  font-weight: 600;
+  color: #2c3e50;
+  margin-bottom: 8rpx;
+}
+
+.device-state, .device-type {
+  font-size: 26rpx;
+  color: #7f8c8d;
+}
+
+.selected-devices {
+  margin-bottom: 40rpx;
+}
+
+.device-item.selected {
+  border: 3rpx solid #7FB69F;
+  position: relative;
+}
+
+.device-actions {
+  margin: 0 20rpx;
+}
+
+.action-picker {
+  background: #f8f9fa;
+  border: 2rpx solid #e9ecef;
+  border-radius: 12rpx;
+  padding: 16rpx 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-width: 120rpx;
+  font-size: 26rpx;
+  color: #2c3e50;
+}
+
+.arrow {
+  font-size: 20rpx;
+  color: #7f8c8d;
+}
+
+.remove-btn {
+  width: 50rpx;
+  height: 50rpx;
+  background: #e74c3c;
+  border-radius: 25rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 28rpx;
+  font-weight: bold;
+}
+
+.add-device-btn {
+  background: rgba(127, 182, 159, 0.1);
+  border: 3rpx dashed #7FB69F;
+  border-radius: 20rpx;
+  padding: 40rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 40rpx;
+  color: #7FB69F;
+  transition: all 0.3s ease;
+}
+
+.add-device-btn:active {
+  background: rgba(127, 182, 159, 0.2);
+  transform: scale(0.98);
+}
+
+.plus-icon {
+  font-size: 48rpx;
+  font-weight: bold;
+  margin-bottom: 12rpx;
+}
+
+.device-list-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 1000;
+}
+
+.modal-mask {
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.modal-content {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: white;
+  border-radius: 32rpx 32rpx 0 0;
+  padding: 40rpx 30rpx;
+  max-height: 80vh;
+  overflow: hidden;
+}
+
+.modal-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 30rpx;
+  padding-bottom: 20rpx;
+  border-bottom: 2rpx solid #e9ecef;
+}
+
+.modal-header text {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #2c3e50;
+}
+
+.close-btn {
+  width: 60rpx;
+  height: 60rpx;
+  border-radius: 30rpx;
+  background: #f8f9fa;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 36rpx;
+  color: #7f8c8d;
+}
+
+.available-device-list {
+  max-height: 60vh;
+  overflow-y: auto;
+}
+
+.device-item.available {
+  border: 2rpx solid #e9ecef;
+  transition: all 0.3s ease;
+}
+
+.device-item.available:active {
+  border-color: #7FB69F;
+  background: rgba(127, 182, 159, 0.05);
+  transform: scale(0.98);
+}
+
+.add-icon {
+  width: 40rpx;
+  height: 40rpx;
+  background: #7FB69F;
+  border-radius: 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: white;
+  font-size: 24rpx;
+  font-weight: bold;
+}
+
+.time-section {
+  margin-bottom: 40rpx;
+}
+
+.time-picker {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16rpx;
+  padding: 30rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+.time-picker text:first-child {
+  font-size: 30rpx;
+  color: #2c3e50;
+}
+
+.arrow {
+  font-size: 24rpx;
+  color: #7f8c8d;
+}
+
+.form-section {
+  margin-bottom: 40rpx;
+}
+
+.bottom-btn {
+  padding: 40rpx 30rpx;
+  background: rgba(255, 255, 255, 0.95);
+  backdrop-filter: blur(10px);
+}
+
+.create-scene-btn {
+  width: 100%;
+  height: 88rpx;
+  background: linear-gradient(135deg, #7FB69F 0%, #6aa085 100%);
+  color: white;
+  border: none;
+  border-radius: 16rpx;
+  font-size: 32rpx;
+  font-weight: 600;
+  letter-spacing: 2rpx;
+  transition: all 0.3s ease;
+  box-shadow: 0 8rpx 24rpx rgba(127, 182, 159, 0.4);
+}
+
+.create-scene-btn:active {
+  transform: translateY(2rpx);
+  box-shadow: 0 4rpx 12rpx rgba(127, 182, 159, 0.6);
+}
+
+.time-picker-modal {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  z-index: 1000;
+}
+
+.picker-item {
+  background: white;
+  border-radius: 16rpx;
+  padding: 30rpx;
+  margin: 20rpx;
+  font-size: 28rpx;
+  color: #2c3e50;
+}

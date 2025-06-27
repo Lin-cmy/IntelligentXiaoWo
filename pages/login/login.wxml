@@ -1,0 +1,57 @@
+<!--login.wxml-->
+<view class="login-container">
+  <!-- 顶部装饰区域 -->
+  <view class="header-section">
+    <image class="logo-image" src="/images/pagesetting/others/mainpage.jpg" mode="aspectFit"></image>
+    <view class="welcome-text">
+      <text class="title">欢迎回到智慧小窝</text>
+      <text class="subtitle">让科技温暖您的家</text>
+    </view>
+  </view>
+
+  <!-- 登录表单区域 -->
+  <view class="form-container">
+    <view class="input-group">
+      <view class="input-item">
+        <text class="input-label">手机号</text>
+        <input 
+          class="input-field" 
+          type="number" 
+          placeholder="请输入手机号" 
+          value="{{phone}}"
+          bindinput="onPhoneInput"
+          maxlength="11"
+        />
+      </view>
+      
+      <view class="input-item">
+        <text class="input-label">密码</text>
+        <input 
+          class="input-field" 
+          type="password" 
+          placeholder="请输入密码" 
+          value="{{password}}"
+          bindinput="onPasswordInput"
+        />
+      </view>
+    </view>
+
+    <!-- 登录按钮 -->
+    <button class="login-btn" bindtap="handleLogin" disabled="{{!canLogin}}">
+      {{isLoading ? '登录中...' : '登录'}}
+    </button>
+
+    <!-- 底部链接 -->
+    <view class="bottom-links">
+      <text class="link-text" bindtap="goToRegister">还没有账号？立即注册</text>
+      <text class="link-text" bindtap="forgotPassword">忘记密码？</text>
+    </view>
+  </view>
+
+  <!-- 装饰元素 -->
+  <view class="decoration-dots">
+    <view class="dot dot-1"></view>
+    <view class="dot dot-2"></view>
+    <view class="dot dot-3"></view>
+  </view>
+</view> 
