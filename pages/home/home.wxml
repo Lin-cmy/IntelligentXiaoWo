@@ -1,16 +1,18 @@
+<!-- 窝名 -->
 <view class="home-header">
-  <text class="home-title" bindtap="onTitleTap">XX的家</text>
+  <text class="home-title" bindtap="onTitleTap">{{homeName}}</text>
   <view class="triangle-down" bindtap="onTitleTap"></view>
 </view>
 
+<!-- 显示当前窝的房间 -->
 <scroll-view class="filter-bar" scroll-x>
-  <view class="filter-item {{selectedRoom === '全部' ? 'active' : ''}}" bindtap="onFilterTap" data-room="全部">全部</view>
-  <view class="filter-item {{selectedRoom === '卧室' ? 'active' : ''}}" bindtap="onFilterTap" data-room="卧室">卧室</view>
-  <view class="filter-item {{selectedRoom === '客厅' ? 'active' : ''}}" bindtap="onFilterTap" data-room="客厅">客厅</view>
-  <view class="filter-item {{selectedRoom === '厨房' ? 'active' : ''}}" bindtap="onFilterTap" data-room="厨房">厨房</view>
-  <view class="filter-item {{selectedRoom === '书房' ? 'active' : ''}}" bindtap="onFilterTap" data-room="书房">书房</view>
+  <view class="filter-item {{selectedRoomId == '0' ? 'active' : '' }}" bindtap="onFilterTap" data-roomid='0'>全部</view>
+  <block wx:for="{{rooms}}" wx:key="id">
+    <view class="filter-item {{selectedRoomId == item.id ? 'active' : '' }}" bindtap="onFilterTap" data-roomId="{{item.id}}">{{item.name}}</view>
+  </block>
 </scroll-view>
 
+<!-- 显示当前房间的设备 -->
 <view class="device-grid">
   <block wx:for="{{filteredDevices}}" wx:key="id">
     <view class="device-square" bindtap="onDeviceTap" data-id="{{item.id}}">
@@ -20,6 +22,38 @@
   </block>
 </view>
 
+<!-- 悬浮窗 -->
 <view wx:if="{{showPopup}}" class="popup">
+  <block wx:for="{{homes}}" wx:key="id">
+    <view class="popup-item" hover-class="popup-item-hover" bindtap="onFamilyChangeTap" data-id="{{item.id}}" data-name="{{item.name}}">
+      {{item.name}}
+    </view>
+  </block>
   <view class="popup-item" hover-class="popup-item-hover" bindtap="onFamilyManagerTap">家庭管理</view>
+  <view class="popup-item" hover-class="popup-item-hover" bindtap="onFamilyCreateTap">创建家庭</view>
 </view>
+
+<!-- 创建家庭弹窗 -->
+<view wx:if="{{showCreatePopup}}" class="popup-mask" catchtouchmove="true">
+    <view class="popup-section">
+      <view class="popup-title">创建家庭</view>
+      <input
+        class="popup-input"
+        placeholder="请输入家庭名称"
+        value="{{newFamilyName}}"
+        bindinput="onFamilyNameInput"
+        maxlength="20"
+      />
+      <input
+        class="popup-input"
+        placeholder="请输入家庭地址"
+        value="{{newFamilyAddress}}"
+        bindinput="onFamilyAddressInput"
+        maxlength="20"
+        />
+      <view class="popup-btns">
+        <button class="popup-btn cancel" bindtap="onPopupClose">取消</button>
+        <button class="popup-btn confirm" bindtap="onConfirmCreate">确定</button>
+      </view>
+    </view>
+  </view>
