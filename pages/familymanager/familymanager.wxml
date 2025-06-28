@@ -1,20 +1,41 @@
 <view class="family-manager-container">
   <view class="family-manager-section1">
     <block wx:for="{{myfamilies}}" wx:key="id">
-      <view class="family-square" bindtap="onFamilyTap">
-        <text class="family-name">{{item.name}}</text>
-        <text class="family-identity">身份: {{item.identity}}</text>
+      <view class="family-square">
+        <view class="family-info" bindtap="onFamilyTap" data-homeid="{{item.id}}">
+          <text class="family-name">{{item.name}}</text>
+          <text class="family-identity">身份: {{item.role}}</text>
+        </view>
+
+        <!-- 删除模式下显示删除按钮 -->
+        <view
+          wx:if="{{deleteMode}}"
+          class="family-delete-btn"
+          bindtap="onDeleteFamily"
+          data-homeid="{{item.id}}"
+        >
+          <text class="family-delete-minus">-</text>
+        </view>
       </view>
     </block>
   </view>
 
   <view class="family-manager-section2">
     <view class="create-square" bindtap="onCreateTap">
-      <text class="create-family">创建家庭+</text>
+      <text class="create-family">创建家庭</text>
     </view>
     <view class="join-square" bindtap="onJoinTap">
-      <text class="join-family">加入家庭+</text>
+      <text class="join-family">加入家庭</text>
     </view>
+    <view class="delete-square" bindtap="onDeleteTap">
+      <text class="delete-family">删除家庭</text>
+    </view>
+
+    <!-- 删除模式下显示完成按钮 -->
+    <view wx:if="{{deleteMode}}" class="finish-btn" bindtap="onFinishDelete">
+      完成
+    </view>
+
   </view>
 
   <view wx:if="{{showCreatePopup}}" class="popup-mask" catchtouchmove="true">
@@ -30,8 +51,8 @@
       <input
         class="popup-input"
         placeholder="请输入家庭地址"
-        value="{{newFanilyAddress}}"
-        bindinput="onFanilyAddressInput"
+        value="{{newFamilyAddress}}"
+        bindinput="onFamilyAddressInput"
         maxlength="20"
         />
       <view class="popup-btns">

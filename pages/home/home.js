@@ -1,7 +1,7 @@
 Page({
   data: {
     homeId: null,
-    homeName: '',
+    homeName: '创建家庭',
     newFamilyName: '',
     newFamilyAddress: '',
     homes: [],
@@ -15,6 +15,11 @@ Page({
   
   // 初始化界面，查询用户所在的家庭，默认展示第一个家庭
   onLoad() {
+    this.homeget();
+  },
+
+  // 刷新页面
+  onShow() {
     this.homeget();
   },
 
@@ -135,7 +140,7 @@ Page({
   homeview() {
     const homeId = this.data.homeId;
     wx.request({
-      url: 'http://localhost:8080/home/view?homeId=' + homeId,
+      url: 'http://localhost:8080/home/view/' + homeId,
       method: 'GET',
       header: { 
         'content-type': 'application/json',

@@ -10,7 +10,9 @@
     "pages/chat/chat",
     "pages/familymanager/familymanager",
     "pages/joinfamily/joinfamily",
-    "pages/currentfamily/currentfamily"
+    "pages/currentfamily/currentfamily",
+    "pages/Roommanager/Roommanager",
+    "pages/Devicemanager/Devicemanager"
   ],
   "window": {
     "navigationBarTitleText": "智慧小窝"

@@ -1,0 +1,44 @@
+<!-- 顶部导航栏 -->
+<view class="nav-bar">
+  <text class="nav-title">设备管理</text>
+  <view class="nav-menu-icon" bindtap="onMenuTap">
+    <text class="icon-dot"></text>
+    <text class="icon-dot"></text>
+    <text class="icon-dot"></text>
+  </view>
+</view>
+
+<!-- 悬浮菜单 -->
+<view wx:if="{{showMenu}}" class="float-menu" catchtouchmove="true">
+  <view class="menu-item" bindtap="onAddDeviceTap">添加设备</view>
+  <view class="menu-item" bindtap="onMoveDeviceTap">移动设备</view>
+  <view class="menu-item" bindtap="onDeleteDeviceTap">删除设备</view>
+</view>
+
+<!-- 添加设备弹窗 -->
+<view wx:if="{{showAddDevicePopup}}" class="popup-change" catchtouchmove="true">
+  <view class="popup-content">
+    <text class="popup-change-title">新增设备</text>
+    <input 
+      class="popup-change-input"
+      placeholder="请输入设备名称"
+      value="{{newDeviceName}}"
+      bindinput="onDeviceNameInput"
+      maxlength="20"
+    />
+    <view class="popup-btns">
+      <button class="popup-btn cancel" bindtap="onAddDeviceCancel">取消</button>
+      <button class="popup-btn confirm" bindtap="onAddDeviceConfirm">确定</button>
+    </view>
+  </view>
+</view>
+
+<!-- 设备列表 -->
+<view class="device-list">
+  <block wx:for="{{devices}}" wx:key="id">
+    <view class="device-item" bindtap="onDeviceTap" data-id="{{item.id}}">
+      <text class="device-name">{{item.name}}</text>
+      <text class="device-arrow">></text>
+    </view>
+  </block>
+</view>

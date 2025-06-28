@@ -1,0 +1,149 @@
+/* 顶部导航栏 */
+.nav-bar {
+  position: relative;
+  height: 100rpx;
+  background: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 32rpx;
+  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+  z-index: 10;
+}
+.nav-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #222;
+}
+.nav-menu-icon {
+  width: 48rpx;
+  height: 48rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  cursor: pointer;
+}
+.icon-dot {
+  width: 8rpx;
+  height: 8rpx;
+  border-radius: 50%;
+  background: #888;
+  margin: 2rpx 0;
+  display: block;
+}
+
+/* 悬浮菜单 */
+.float-menu {
+  position: absolute;
+  top: 92rpx; /* 紧贴导航栏底部 */
+  right: 32rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0,0,0,0.15);
+  z-index: 20;
+  min-width: 180rpx;
+  padding: 16rpx 0;
+  animation: float-fade-in 0.2s;
+}
+.menu-item {
+  padding: 22rpx 48rpx 22rpx 36rpx;
+  font-size: 30rpx;
+  color: #222;
+  transition: background 0.18s;
+}
+.menu-item:active {
+  background: #f0fdf4;
+}
+
+/* 弹窗样式 */
+.popup-change {
+  position: fixed;
+  left: 0; right: 0; top: 0; bottom: 0;
+  background: rgba(0,0,0,0.4);
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  animation: popup-fade-in 0.25s;
+}
+.popup-content {
+  background: #fff;
+  border-radius: 22rpx;
+  padding: 54rpx 36rpx 36rpx 36rpx;
+  min-width: 520rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0,0,0,0.12);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+}
+.popup-change-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  margin-bottom: 32rpx;
+  color: #222;
+}
+.popup-change-input {
+  border: 1rpx solid #e5e7eb;
+  border-radius: 14rpx;
+  width: 100%;
+  padding: 18rpx 14rpx;
+  font-size: 28rpx;
+  margin-bottom: 36rpx;
+  background: #f7fafc;
+  outline: none;
+}
+.popup-btns {
+  width: 100%;
+  display: flex;
+  justify-content: space-between;
+  gap: 24rpx;
+}
+.popup-btn {
+  width: 44%;
+  padding: 16rpx 0;
+  border-radius: 14rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  border: none;
+}
+.popup-btn.cancel {
+  background: #f1f5f9;
+  color: #6b7280;
+}
+.popup-btn.confirm {
+  background: linear-gradient(90deg, #4ade80 0%, #22d3ee 100%);
+  color: #fff;
+}
+
+/* 房间列表 */
+.room-list {
+  padding: 32rpx;
+}
+.room-item {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 32rpx 0;
+  border-bottom: 1rpx solid #f4f4f4;
+  font-size: 32rpx;
+  cursor: pointer;
+}
+.room-name {
+  color: #222;
+}
+.room-arrow {
+  color: #bdbdbd;
+  font-size: 36rpx;
+  margin-left: 14rpx;
+}
+
+/* 动画 */
+@keyframes popup-fade-in {
+  from { opacity: 0; transform: scale(0.98);}
+  to   { opacity: 1; transform: scale(1);}
+}
+@keyframes float-fade-in {
+  from { opacity: 0; transform: translateY(-12rpx);}
+  to   { opacity: 1; transform: translateY(0);}
+}

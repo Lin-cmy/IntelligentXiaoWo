@@ -1,38 +1,41 @@
+<!-- 标题 -->
 <view class="current-family-container">
   <view class="current-family-header">
-    <text class="current-family-name">陈俊烨的家</text>
+    <text class="current-family-name">{{homename}}</text>
   </view>
 
+<!-- 家庭信息 -->
   <view class="current-family-section1">
     <view class="current-family-message" bindtap="onNameTap">
       <view class="msg-left">
         <text class="part1">家庭名称</text>
       </view>
       <view class="msg-right">
-        <text class="part2">陈俊烨的家</text>
+        <text class="part2">{{homename}}</text>
         <text class="part3">></text>
       </view>
     </view>
-    <view class="current-family-message" bindtap="onPositionTap">
+    <view class="current-family-message" bindtap="onAddressTap">
       <view class="msg-left">
         <text class="part1">家庭位置</text>
       </view>
       <view class="msg-right">
-        <text class="part2">未设置</text>
+        <text class="part2">{{homeaddress}}</text>
         <text class="part3">></text>
       </view>
     </view>
-    <view class="current-family-message" bindtap="onR&DTap">
+    <view class="current-family-message" bindtap="onRandDTap" data-homeid="{{homeId}}">
       <view class="msg-left">
         <text class="part1">房间及设备管理</text>
       </view>
       <view class="msg-right">
-        <text class="part2">n个设备</text>
+        <text class="part2">{{devicecnt}}个设备</text>
         <text class="part3">></text>
       </view>
     </view>
   </view>
 
+<!-- 家庭成员 -->
   <text class="family-member">家庭成员</text>
   <view class="current-family-section2">
     <text class="member-introduction">所有成员均可使用家庭内的设备</text>
@@ -46,5 +49,39 @@
       <view class="member-icon add-member-icon" bindtap="onAddTap"></view>
       <text class="member-name">添加成员</text>
     </view>
+  </view>
+</view>
+
+<!-- 访客 -->
+
+<!-- 修改家庭名称 -->
+<view wx:if="{{showChangeHomeNamePopup}}" class="popup-change" catchtouchmove="true">
+  <text class="popup-change-title homename">家庭名称</text>
+  <input 
+    class="popup-change-input homename"
+    placeholder="请输入家庭名称"
+    value="{{newhomename}}"
+    bindinput="onHomeNameInput"
+    maxlength="20"
+  />
+  <view class="popup-btns">
+    <button class="popup-btn cancel" bindtap="onPopupCloseHomename">取消</button>
+    <button class="popup-btn confirm" bindtap="onConfirmChangeHomename">确定</button>
+  </view>
+</view>
+
+<!-- 修改家庭位置 -->
+<view wx:if="{{showChangeHomeAddressPopup}}" class="popup-change" catchtouchmove="true">
+  <text class="popup-change-title homeaddress">家庭地址</text>
+  <input 
+    class="popup-change-input homeaddress"
+    placeholder="请输入家庭地址"
+    value="{{newhomeaddress}}"
+    bindinput="onHomeAddressInput"
+    maxlength="20"
+  />
+  <view class="popup-btns">                               
+    <button class="popup-btn cancel" bindtap="onPopupCloseHomeaddress">取消</button>
+    <button class="popup-btn confirm" bindtap="onConfirmChangeHomeaddress">确定</button>
   </view>
 </view>

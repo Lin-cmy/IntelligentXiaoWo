@@ -1,0 +1,42 @@
+<!-- 顶部导航栏 -->
+<view class="nav-bar">
+  <text class="nav-title">房间管理</text>
+  <view class="nav-menu-icon" bindtap="onMenuTap">
+    <text class="icon-dot"></text>
+    <text class="icon-dot"></text>
+    <text class="icon-dot"></text>
+  </view>
+</view>
+
+<!-- 悬浮菜单 -->
+<view wx:if="{{showMenu}}" class="float-menu" catchtouchmove="true">
+  <view class="menu-item" bindtap="onAddRoomTap">添加房间</view>
+</view>
+
+<!-- 添加房间弹窗 -->
+<view wx:if="{{showAddRoomPopup}}" class="popup-change" catchtouchmove="true">
+  <view class="popup-content">
+    <text class="popup-change-title">新建房间</text>
+    <input 
+      class="popup-change-input"
+      placeholder="请输入房间名称"
+      value="{{newRoomName}}"
+      bindinput="onRoomNameInput"
+      maxlength="20"
+    />
+    <view class="popup-btns">
+      <button class="popup-btn cancel" bindtap="onAddRoomCancel">取消</button>
+      <button class="popup-btn confirm" bindtap="onAddRoomConfirm">确定</button>
+    </view>
+  </view>
+</view>
+
+<!-- 房间列表 -->
+<view class="room-list">
+  <block wx:for="{{rooms}}" wx:key="id">
+    <view class="room-item" bindtap="onRoomTap" data-id="{{item.id}}">
+      <text class="room-name">{{item.name}}</text>
+      <text class="room-arrow">></text>
+    </view>
+  </block>
+</view>
