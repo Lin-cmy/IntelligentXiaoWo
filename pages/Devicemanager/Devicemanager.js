@@ -4,11 +4,17 @@ Page({
     roomId: null,
     deviceId: null,
     deviceTypeIndex: 0,
+    moveDeviceIndex: 0,
+    targetRoomIndex: 0,
+    selectedDeviceId: null,
     selectedDeviceTypeId: null,
+    targetRoomId: null,
+    rooms: [],
     devices: [],
     deviceTypes: [],
     showMenu: false,
     showAddDevicePopup: false,
+    showMoveDevicePopup: false,
     deleteMode: false,
     newDeviceName: '',
   },
@@ -77,6 +83,67 @@ Page({
     })
   },
 
+  // 移动设备弹窗
+  onMoveDeviceTap() {
+    this.setData({
+      showMoveDevicePopup: true,
+      showMenu: false,
+      moveDeviceIndex: 0,
+      targetRoomIndex: 0,
+      selectedDeviceId: this.data.devices.length > 0 ? this.data.devices[0].id: null,
+      targetRoomId: this.data.rooms.length > 0 ? this.data.rooms[0].id : null
+    });
+  },
+
+  // 设备选择器改变事件
+  onMoveDeviceChange(e) {
+    const index = e.detail.value;
+    this.setData({
+      moveDeviceIndex: index,
+      selectedDeviceId: this.data.devices[index].id
+    });
+  },
+
+  // 目标房间选择器改变事件
+  onTargetRoomChange(e) {
+    const index = e.detail.value;
+    this.setData({
+      targetRoomIndex: index,
+      targetRoomId: this.data.rooms[index].id
+    });
+  },
+
+  // 确认移动设备
+  onMoveDeviceConfirm() {
+    const { selectedDeviceId, targetRoomId } = this.data;
+    if (!selectedDeviceId) {
+      wx.showToast({
+        title: '请选择设备',
+        icon: 'none'
+      });
+      return;
+    }
+    if (!targetRoomId) {
+      wx.showToast({
+        title: '请选择目标房间',
+        icon: 'none'
+      });
+      return;
+    }
+    this.movedevice(() => {
+      this.homeview(() => {
+        this.setData({ showMoveDevicePopup: false });
+      })
+    });
+  },
+
+  // 取消移动设备
+  onMoveDeviceCancel() {
+    this.setData({
+      showMoveDevicePopup: false
+    });
+  },
+
   // 进入删除设备模式
   onDeleteDeviceTap() {
     this.setData({ deleteMode: true, showMenu: false });
@@ -116,13 +183,17 @@ Page({
             //   icon: 'none'
             // });
             const roomId = this.data.roomId;
+            const rooms = res.data.rooms.map(item => ({
+              id: item.id,
+              name: item.name
+            }));
             const devices = res.data.devices
               .filter(item => item.roomId === roomId)
               .map(item => ({
                 id: item.id,
                 name: item.name
             }));
-            this.setData({ devices: devices });
+            this.setData({ rooms: rooms, devices: devices });
             if (typeof callback === 'function') callback();
           } else {
             wx.showToast({
@@ -238,6 +309,41 @@ Page({
           title: '网络错误',
           icon: 'none'
         });
+      }
+    })
+  },
+
+  // /home/device/move
+  movedevice(callback) {
+    this.setData({ deviceId: this.data.selectedDeviceId, roomId: this.data.targetRoomId });
+    wx.request({
+      url: 'http://localhost:8080/home/device/move',
+      method: 'POST',
+      data: {
+        deviceId: this.data.deviceId,
+        roomId: this.data.roomId
+      },
+      success: (res) => {
+        if (res.statusCode === 200) {
+          wx.showToast({
+            title: '移动成功',
+            icon: 'none'
+          });
+          if (typeof callback === 'function') callback();
+        } else {
+          wx.showToast({
+            title: res.data.message || '移动失败',
+            icon: 'none'
+          });
+          if (typeof callback === 'function') callback();
+        }
+      },
+      fail: () => {
+        wx.showToast({
+          title: '网络错误',
+          icon: 'none'
+        });
+        if (typeof callback === 'function') callback();
       }
     })
   }

@@ -60,6 +60,50 @@
   </block>
 </view>
 
+<!-- 移动设备弹窗 -->
+<view wx:if="{{showMoveDevicePopup}}" class="popup-change" catchtouchmove="true">
+  <view class="popup-content">
+    <text class="popup-change-title">移动设备</text>
+    
+    <!-- 设备选择器 -->
+    <view class="selector-container">
+      <text class="selector-label">选择设备</text>
+      <picker 
+        bindchange="onMoveDeviceChange" 
+        value="{{moveDeviceIndex}}" 
+        range="{{devices}}" 
+        range-key="name"
+      >
+        <view class="picker-view">
+          <text>{{devices[moveDeviceIndex].name || '请选择设备'}}</text>
+          <text class="picker-arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+    
+    <!-- 目标房间选择器 -->
+    <view class="selector-container">
+      <text class="selector-label">移动到</text>
+      <picker 
+        bindchange="onTargetRoomChange" 
+        value="{{targetRoomIndex}}" 
+        range="{{rooms}}" 
+        range-key="name"
+      >
+        <view class="picker-view">
+          <text>{{rooms[targetRoomIndex].name || '请选择目标房间'}}</text>
+          <text class="picker-arrow">▼</text>
+        </view>
+      </picker>
+    </view>
+    
+    <view class="popup-btns">
+      <button class="popup-btn cancel" bindtap="onMoveDeviceCancel">取消</button>
+      <button class="popup-btn confirm" bindtap="onMoveDeviceConfirm">确定</button>
+    </view>
+  </view>
+</view>
+
 <!-- 删除模式下的完成按钮 -->
 <view wx:if="{{deleteMode}}" class="finish-btn-container">
   <button class="finish-btn" bindtap="onFinishDelete">完成</button>

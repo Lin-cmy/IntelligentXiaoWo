@@ -3,11 +3,15 @@ Page({
     homeId: null,
     homename: '',
     homeaddress: '未设置',
+    userId: '',
+    userphone: '',
     newhomename: '',
     newhomeaddress: '',
     devicecnt: null,
     showChangeHomeNamePopup: false,
     showChangeHomeAddressPopup: false,
+    showAddMemberPopup: false,
+    homemembers: []
     // familymembers: [
     //   { id: 1, name: '陈俊烨', icon: '/images/cjy.jpg'}
     // ]
@@ -64,8 +68,44 @@ Page({
     })
   },
 
+  // 添加成员按钮
+  onAddTap() {
+    this.setData({
+      showAddMemberPopup: true,
+      userphone: ''
+    });
+  },
+
+  // 输入手机号
+  onMemberPhoneInput(e) {
+    this.setData({ userphone: e.detail.value });
+  },
+
+  // 取消添加成员
+  onAddMemberCancel() {
+    this.setData({
+      showAddMemberPopup: false,
+      userphone: ''
+    });
+  },
+
+  // 确认添加家庭成员
+  onAddMemberConfirm() {
+    this.searchuser(() => {
+      this.addmember(() => {
+        this.homeview(() => {
+          this.setData({
+            showAddMemberPopup: false,
+            userId: '',
+            userphone: ''
+          })
+        })
+      })
+    });
+  },
+
   // /home/view
-  homeview() {
+  homeview(callback) {
     wx.request({
       url: 'http://localhost:8080/home/view/' + this.data.homeId,
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
@@ -75,22 +115,102 @@ Page({
           //   title: 'view成功',
           //   icon: 'none'
           // });
+          const roleMap = {
+            0: "房主",
+            1: "成员",
+            2: "访客"
+          };
+          const homemembers = res.data.users.map(item => ({
+            id: item.id,
+            name: item.username,
+            role: roleMap[item.role]
+          }));
           this.setData({
             homename: res.data.home.name,
             homeaddress: res.data.home.address,
-            devicecnt: res.data.devices.length
+            devicecnt: res.data.devices.length,
+            homemembers: homemembers
           });
+          if (typeof callback === 'function') callback();
         } else {
           wx.showToast({
             title: res.data.message || 'view失败'
           })
+          if (typeof callback === 'function') callback();
         };
       },
       fail: () => {
         wx.showToast({
           title: '网络错误',
-        })
+        });
+        if (typeof callback === 'function') callback();
       }
     });
+  },
+
+  // /auth/search-user-by-phone
+  searchuser(callback) {
+    wx.request({
+      url: 'http://localhost:8080/auth/search-user-by-phone?phone=' + this.data.userphone,
+      method: 'GET',
+      success: (res) => {
+        if (res.statusCode === 200) {
+          wx.showToast({
+            title: '查询成功',
+            icon: 'none'
+          });
+          this.setData({ userId: res.data.userId });
+          if (typeof callback === 'function') callback();
+        } else {
+          wx.showToast({
+            title: res.data.message || '查询失败',
+            icon: 'none'
+          });
+          if (typeof callback === 'function') callback();
+        }
+      },
+      fail: () => {
+        wx.showToast({
+          title: '网络错误1',
+          icon: 'none'
+        });
+        if (typeof callback === 'function') callback();
+      }
+    })
+  },
+
+  // /home/member/add
+  addmember(callback) {
+    wx.request({
+      url: 'http://localhost:8080/home/member/add',
+      method: 'POST',
+      data: {
+        homeId: this.data.homeId,
+        userId: this.data.userId,
+        role: 1
+      },
+      success: (res) => {
+        if (res.statusCode === 200) {
+          wx.showToast({
+            title: '添加成功',
+            icon: 'none'
+          });
+          if (typeof callback === 'function') callback();
+        } else {
+          wx.showToast({
+            title: res.data.message || '添加失败',
+            icon: 'none'
+          });
+          if (typeof callback === 'function') callback();
+        }
+      },
+      fail: () => {
+        wx.showToast({
+          title: '网络错误2',
+          icon: 'none'
+        });
+        if (typeof callback === 'function') callback();
+      }
+    })
   }
 })

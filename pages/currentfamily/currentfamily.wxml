@@ -39,7 +39,7 @@
   <text class="family-member">家庭成员</text>
   <view class="current-family-section2">
     <text class="member-introduction">所有成员均可使用家庭内的设备</text>
-    <block wx:for="{{familymembers}}" wx:key="id">
+    <block wx:for="{{homemembers}}" wx:key="id">
       <view class="member-item" bindtap="onMemberTap" data-id="{{item.id}}">
         <image class="member-icon" src="{{item.icon}}"></image>
         <text class="member-name">{{item.name}}</text>
@@ -54,34 +54,60 @@
 
 <!-- 访客 -->
 
-<!-- 修改家庭名称 -->
+<!-- 修改家庭名称弹窗(美化版) -->
 <view wx:if="{{showChangeHomeNamePopup}}" class="popup-change" catchtouchmove="true">
-  <text class="popup-change-title homename">家庭名称</text>
-  <input 
-    class="popup-change-input homename"
-    placeholder="请输入家庭名称"
-    value="{{newhomename}}"
-    bindinput="onHomeNameInput"
-    maxlength="20"
-  />
-  <view class="popup-btns">
-    <button class="popup-btn cancel" bindtap="onPopupCloseHomename">取消</button>
-    <button class="popup-btn confirm" bindtap="onConfirmChangeHomename">确定</button>
+  <view class="popup-content">
+    <text class="popup-title">修改家庭名称</text>
+    <view class="popup-desc">为您的家庭起一个温馨的名字</view>
+    <input 
+      class="popup-input"
+      placeholder="请输入家庭名称"
+      value="{{newhomename}}"
+      bindinput="onHomeNameInput"
+      maxlength="20"
+    />
+    <view class="popup-btns">
+      <button class="popup-btn cancel" bindtap="onPopupCloseHomename">取消</button>
+      <button class="popup-btn confirm" bindtap="onConfirmChangeHomename">确定</button>
+    </view>
   </view>
 </view>
 
-<!-- 修改家庭位置 -->
+<!-- 修改家庭位置弹窗(美化版) -->
 <view wx:if="{{showChangeHomeAddressPopup}}" class="popup-change" catchtouchmove="true">
-  <text class="popup-change-title homeaddress">家庭地址</text>
-  <input 
-    class="popup-change-input homeaddress"
-    placeholder="请输入家庭地址"
-    value="{{newhomeaddress}}"
-    bindinput="onHomeAddressInput"
-    maxlength="20"
-  />
-  <view class="popup-btns">                               
-    <button class="popup-btn cancel" bindtap="onPopupCloseHomeaddress">取消</button>
-    <button class="popup-btn confirm" bindtap="onConfirmChangeHomeaddress">确定</button>
+  <view class="popup-content">
+    <text class="popup-title">修改家庭地址</text>
+    <view class="popup-desc">请输入您的家庭详细地址</view>
+    <input 
+      class="popup-input"
+      placeholder="请输入家庭地址"
+      value="{{newhomeaddress}}"
+      bindinput="onHomeAddressInput"
+      maxlength="50"
+    />
+    <view class="popup-btns">
+      <button class="popup-btn cancel" bindtap="onPopupCloseHomeaddress">取消</button>
+      <button class="popup-btn confirm" bindtap="onConfirmChangeHomeaddress">确定</button>
+    </view>
+  </view>
+</view>
+
+<!-- 添加成员弹窗 -->
+<view wx:if="{{showAddMemberPopup}}" class="popup-change" catchtouchmove="true">
+  <view class="popup-content">
+    <text class="popup-title">添加家庭成员</text>
+    <view class="popup-desc">通过手机号添加家庭成员</view>
+    <input 
+      class="popup-input"
+      placeholder="请输入成员手机号"
+      value="{{userphone}}"
+      bindinput="onMemberPhoneInput"
+      maxlength="11"
+      type="number"
+    />
+    <view class="popup-btns">
+      <button class="popup-btn cancel" bindtap="onAddMemberCancel">取消</button>
+      <button class="popup-btn confirm" bindtap="onAddMemberConfirm">确定</button>
+    </view>
   </view>
 </view>

@@ -15,6 +15,10 @@ Page({
     })
   },
 
+  onShow() {
+    this.setData({ showMenu: false });
+  },
+
   // 跳转到设备管理界面
   onRoomTap(e) {
     const roomId = e.currentTarget.dataset.id;

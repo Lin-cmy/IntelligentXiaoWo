@@ -116,6 +116,10 @@
   width: 100%;
   margin-bottom: 12rpx;
 }
+.selector-container {
+  width: 100%;
+  margin-bottom: 24rpx;
+}
 .selector-label {
   font-size: 28rpx;
   color: #666;
