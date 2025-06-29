@@ -214,7 +214,7 @@ Page({
   // /home/room/device/type/list
   getDeviceTypes() {
     wx.request({
-      url: 'http://localhost:8080/home/room/device/type/list',
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/room/device/type/list',
       method: 'GET',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token') },
       success: (res) => {
