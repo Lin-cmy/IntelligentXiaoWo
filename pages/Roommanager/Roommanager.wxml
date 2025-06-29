@@ -11,6 +11,7 @@
 <!-- 悬浮菜单 -->
 <view wx:if="{{showMenu}}" class="float-menu" catchtouchmove="true">
   <view class="menu-item" bindtap="onAddRoomTap">添加房间</view>
+  <view class="menu-item" bindtap="onDeleteRoomTap">删除房间</view>
 </view>
 
 <!-- 添加房间弹窗 -->
@@ -34,9 +35,27 @@
 <!-- 房间列表 -->
 <view class="room-list">
   <block wx:for="{{rooms}}" wx:key="id">
-    <view class="room-item" bindtap="onRoomTap" data-id="{{item.id}}">
+    <view class="room-item" bindtap="{{!deleteMode ? 'onRoomTap' : ''}}" data-id="{{item.id}}">
       <text class="room-name">{{item.name}}</text>
-      <text class="room-arrow">></text>
+      
+      <!-- 正常模式显示箭头 -->
+      <text wx:if="{{!deleteMode}}" class="room-arrow">></text>
+      
+      <!-- 删除模式显示删除按钮 -->
+      <view 
+        wx:if="{{deleteMode}}" 
+        class="room-delete-btn" 
+        catchtap="onDeleteRoom" 
+        data-id="{{item.id}}"
+        data-name="{{item.name}}"
+      >
+        <text class="room-delete-minus">-</text>
+      </view>
     </view>
   </block>
+</view>
+
+<!-- 删除模式下的完成按钮 -->
+<view wx:if="{{deleteMode}}" class="finish-btn" bindtap="onFinishDelete">
+  完成
 </view>

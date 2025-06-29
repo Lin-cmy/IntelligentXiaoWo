@@ -119,6 +119,7 @@
 /* 房间列表 */
 .room-list {
   padding: 32rpx;
+  margin-bottom: 140rpx; /* 为底部的完成按钮留出空间 */
 }
 .room-item {
   display: flex;
@@ -136,6 +137,44 @@
   color: #bdbdbd;
   font-size: 36rpx;
   margin-left: 14rpx;
+}
+
+/* 删除按钮样式 */
+.room-delete-btn {
+  width: 56rpx;
+  height: 56rpx;
+  background: #ff4d4f;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2rpx 8rpx rgba(255,77,79,0.18);
+}
+.room-delete-minus {
+  color: #fff;
+  font-size: 44rpx;
+  font-weight: bold;
+  line-height: 1;
+}
+
+/* 完成按钮样式 */
+.finish-btn {
+  position: fixed;
+  bottom: 48rpx;
+  left: 50%;
+  transform: translateX(-50%);
+  width: 686rpx;
+  height: 96rpx;
+  background: #4ade80;
+  border-radius: 16rpx;
+  color: #fff;
+  font-size: 34rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.08);
+  letter-spacing: 2rpx;
 }
 
 /* 动画 */

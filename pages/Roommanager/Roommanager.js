@@ -1,10 +1,12 @@
 Page({
   data: {
+    newRoomName: '',
     homeId: null,
+    roomId: null,
     rooms: [],
     showMenu: false,
     showAddRoomPopup: false,
-    newRoomName: ''
+    deleteMode: false
   },
 
   onLoad(options) {
@@ -17,7 +19,7 @@ Page({
   onRoomTap(e) {
     const roomId = e.currentTarget.dataset.id;
     wx.navigateTo({
-      url: '/pages/Devicemanager/Devicemanager?roomId=' + roomId,
+      url: `/pages/Devicemanager/Devicemanager?roomId=${roomId}&homeId=${this.data.homeId}`,
     })
   },
 
@@ -61,8 +63,49 @@ Page({
         this.setData({ showMenu: false, showAddRoomPopup: false, newRoomName: '' })
       })
     });
-
   },
+
+  // 点击删除房间菜单
+  onDeleteRoomTap() {
+    this.setData({
+      deleteMode: true,
+      showMenu: false
+    });
+  },
+
+  // 点击完成按钮
+  onFinishDelete() {
+    this.setData({
+      deleteMode: false
+    });
+  },
+
+  // 删除单个房间
+  onDeleteRoom(e) {
+    const roomId = e.currentTarget.dataset.id;
+    const roomName = e.currentTarget.dataset.name;
+    this.setData({ roomId: roomId });
+    wx.showModal({
+      title: '确认删除',
+      content: `确定要删除"${roomName}"房间吗？`,
+      success: (res) => {
+        if (res.confirm) {
+          // 调用删除房间的API
+          this.roomdelete(() => {
+            this.homeview(() => {
+              this.setData({ roomId: null });
+            })
+          });
+        }
+      }
+    });
+  },
+  
+    // 删除房间API调用
+    deleteRoom(roomId) {
+      // 这里写调用后端API删除房间的代码
+      // 删除成功后刷新房间列表
+    },
 
   // /home/view
   homeview(callback) {
@@ -102,6 +145,7 @@ Page({
     wx.request({
       url: 'http://localhost:8080/home/' + this.data.homeId + '/room/create',
       method: 'POST',
+      header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       data: {
         "name": this.data.newRoomName,
         "homeId": this.data.homeId
@@ -126,6 +170,41 @@ Page({
           title: '网络错误',
           icon: 'none'
         })
+        if (typeof callback === 'function') callback();
+      }
+    })
+  },
+
+  // /home/{homeId}/room/delete
+  roomdelete(callback) {
+    wx.request({
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/room/delete',
+      method: 'DELETE',
+      header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
+      data: {
+        "id": this.data.roomId,
+        "homeId": this.data.homeId
+      },
+      success: (res) => {
+        if (res.statusCode === 200) {
+          wx.showToast({
+            title: '删除成功',
+            icon: 'none'
+          });
+          if (typeof callback === 'function') callback();
+        } else {
+          wx.showToast({
+            title: res.data.message || '删除失败',
+            icon: 'none'
+          });
+          if (typeof callback === 'function') callback();
+        }
+      },
+      fail: () => {
+        wx.showToast({
+          title: '网络错误',
+          icon: 'none'
+        });
         if (typeof callback === 'function') callback();
       }
     })

@@ -18,7 +18,7 @@
 <!-- 添加设备弹窗 -->
 <view wx:if="{{showAddDevicePopup}}" class="popup-change" catchtouchmove="true">
   <view class="popup-content">
-    <text class="popup-change-title">新增设备</text>
+    <text class="popup-change-title">添加设备</text>
     <input 
       class="popup-change-input"
       placeholder="请输入设备名称"
@@ -26,9 +26,23 @@
       bindinput="onDeviceNameInput"
       maxlength="20"
     />
+    <view class="device-type-selector">
+      <text class="selector-label">设备类型</text>
+      <picker 
+        bindchange="onDeviceTypeChange" 
+        value="{{deviceTypeIndex}}" 
+        range="{{deviceTypes}}" 
+        range-key="name"
+      >
+        <view class="picker-view">
+          <text>{{deviceTypes[deviceTypeIndex].name || '请选择设备类型'}}</text>
+          <text class="picker-arrow">▼</text>
+        </view>
+      </picker>
+    </view>
     <view class="popup-btns">
       <button class="popup-btn cancel" bindtap="onAddDeviceCancel">取消</button>
-      <button class="popup-btn confirm" bindtap="onAddDeviceConfirm">确定</button>
+      <button class="popup-btn confirm" bindtap="onAddDeviceConfirm">创建</button>
     </view>
   </view>
 </view>
@@ -36,9 +50,17 @@
 <!-- 设备列表 -->
 <view class="device-list">
   <block wx:for="{{devices}}" wx:key="id">
-    <view class="device-item" bindtap="onDeviceTap" data-id="{{item.id}}">
+    <view class="device-item" bindtap="{{deleteMode ? '' : 'onDeviceTap'}}" data-id="{{item.id}}">
       <text class="device-name">{{item.name}}</text>
-      <text class="device-arrow">></text>
+      <view wx:if="{{!deleteMode}}" class="device-arrow">></view>
+      <view wx:else class="delete-btn" catchtap="onDeleteDeviceItem" data-id="{{item.id}}">
+        <text class="delete-icon">-</text>
+      </view>
     </view>
   </block>
+</view>
+
+<!-- 删除模式下的完成按钮 -->
+<view wx:if="{{deleteMode}}" class="finish-btn-container">
+  <button class="finish-btn" bindtap="onFinishDelete">完成</button>
 </view>
