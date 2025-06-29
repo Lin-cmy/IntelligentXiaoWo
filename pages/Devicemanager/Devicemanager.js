@@ -251,7 +251,7 @@ Page({
   // /home/room/device/add
   createdevice(callback) {
     wx.request({
-      url: 'http://localhost:8080/home/room/device/add',
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/room/device/add',
       method: 'POST',
       data: {
         "name": this.data.newDeviceName,
@@ -286,7 +286,7 @@ Page({
   // /home/room/device/delete?id={deviceId}
   deletedevice(callback) {
     wx.request({
-      url: 'http://localhost:8080/home/room/device/delete?id='  + this.data.deviceId,
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/room/device/delete?id='  + this.data.deviceId,
       method: 'DELETE',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       success: (res) => {
