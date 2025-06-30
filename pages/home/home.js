@@ -53,6 +53,7 @@ Page({
     const homeId = Number(e.currentTarget.dataset.id);
     const homeName = e.currentTarget.dataset.name;
     this.setData({ homeId: homeId, homeName: homeName, showPopup: false }, () => this.homeview());
+    wx.setStorageSync('HOMEID', this.data.homeId);
   },
 
   // 跳转到家庭管理界面
@@ -118,6 +119,7 @@ Page({
               if (typeof callback === 'function') callback();
             }
           });
+          wx.setStorageSync('HOMEID', this.data.homeId);
         } else {
           wx.showToast({
             title: res.data.message || '查询失败',

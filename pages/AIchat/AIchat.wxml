@@ -23,7 +23,7 @@
       <!-- AI助手欢迎消息 -->
       <view class="message-item ai-message">
         <view class="avatar-wrapper">
-          <image class="message-avatar" src="/images/pagesetting/others/meow.jpg" mode="aspectFill"></image>
+          <image class="message-avatar" src="/images/cjy.jpg" mode="aspectFill"></image>
         </view>
         <view class="message-content">
           <view class="message-bubble ai-bubble">
@@ -54,12 +54,17 @@
       <!-- 聊天消息列表 -->
       <view wx:for="{{messages}}" wx:key="id" id="msg{{item.id}}" class="message-item {{item.type === 'user' ? 'user-message' : 'ai-message'}}">
         <view class="avatar-wrapper" wx:if="{{item.type === 'ai'}}">
-          <image class="message-avatar" src="/images/pagesetting/others/meow.jpg" mode="aspectFill"></image>
+          <image class="message-avatar" src="/images/cjy.jpg" mode="aspectFill"></image>
         </view>
         <view class="message-content">
           <view class="message-bubble {{item.type === 'user' ? 'user-bubble' : 'ai-bubble'}}">
             <text class="message-text">{{item.content}}</text>
             <text class="message-time">{{item.time}}</text>
+            <view wx:if="{{item.id === aiMessageId && aiResponseInProgress}}" class="thinking-dots">
+              <view class="dot"></view>
+              <view class="dot"></view>
+              <view class="dot"></view>
+            </view>
           </view>
         </view>
         <view class="avatar-wrapper" wx:if="{{item.type === 'user'}}">
@@ -84,17 +89,18 @@
         <input 
           class="text-input" 
           type="text" 
-          placeholder="输入消息..." 
+          placeholder="{{aiResponseInProgress ? '等待AI回复中...' : '输入消息...'}}" 
           value="{{inputText}}"
           bindinput="onInputChange"
           confirm-type="send"
           bindconfirm="sendTextMessage"
+          disabled="{{aiResponseInProgress}}"
         />
         <view class="input-actions">
-          <view class="action-btn" bindtap="switchToVoice">
+          <view class="action-btn" bindtap="switchToVoice" wx:if="{{!aiResponseInProgress}}">
             <text class="icon">🎤</text>
           </view>
-          <view class="action-btn send-btn" bindtap="sendTextMessage" wx:if="{{inputText.length > 0}}">
+          <view class="action-btn send-btn {{aiResponseInProgress ? 'disabled' : ''}}" bindtap="sendTextMessage" wx:if="{{inputText.length > 0 && !aiResponseInProgress}}">
             <text class="icon">📤</text>
           </view>
         </view>
@@ -104,15 +110,15 @@
       <view class="voice-wrapper" wx:if="{{inputMode === 'voice'}}">
         <view class="voice-input-area">
           <view 
-            class="voice-btn {{isRecording ? 'recording' : ''}}" 
-            bindtouchstart="startRecording"
-            bindtouchend="stopRecording"
-            bindtouchcancel="cancelRecording"
+            class="voice-btn {{isRecording ? 'recording' : ''}} {{aiResponseInProgress ? 'disabled' : ''}}" 
+            bindtouchstart="{{aiResponseInProgress ? '' : 'startRecording'}}"
+            bindtouchend="{{aiResponseInProgress ? '' : 'stopRecording'}}"
+            bindtouchcancel="{{aiResponseInProgress ? '' : 'cancelRecording'}}"
           >
             <view class="voice-icon {{isRecording ? 'pulse' : ''}}">🎤</view>
-            <text class="voice-text">{{isRecording ? '松开结束' : '按住说话'}}</text>
+            <text class="voice-text">{{isRecording ? '松开结束' : (aiResponseInProgress ? '请等待' : '按住说话')}}</text>
           </view>
-          <view class="switch-text-btn" bindtap="switchToText">
+          <view class="switch-text-btn" bindtap="switchToText" wx:if="{{!aiResponseInProgress}}">
             <text class="icon">⌨️</text>
           </view>
         </view>
@@ -129,4 +135,4 @@
       </view>
     </view>
   </view>
-</view> 
+</view>

@@ -93,7 +93,7 @@ Page({
   // 悬浮球长按
   onFloatBallLongPress() {
     wx.navigateTo({
-      url: '/pages/chat/chat'
+      url: '/pages/AIchat/AIchat'
     });
   },
   showDialog() {

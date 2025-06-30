@@ -7,12 +7,13 @@
     "pages/scene/scene",
     "pages/scene-detail/scene-detail",
     "pages/ragQA/ragQA",
-    "pages/chat/chat",
+    "pages/AIchat/AIchat",
     "pages/familymanager/familymanager",
     "pages/joinfamily/joinfamily",
     "pages/currentfamily/currentfamily",
     "pages/Roommanager/Roommanager",
     "pages/Devicemanager/Devicemanager"
+    
   ],
   "window": {
     "navigationBarTitleText": "智慧小窝"
