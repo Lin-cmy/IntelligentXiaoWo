@@ -1,11 +1,17 @@
 Page({
   data: {
     homeId: '',
+    selectedHomeId: null,
+    selectedHome: null,
     newFamilyName: '',
     newFamilyAddress: '',
+    searchfamilyname: '',
+    searchInput: '',
     myfamilies: [],
+    searchfamilies: [],
     showCreatePopup: false,
-    deleteMode: false
+    deleteMode: false,
+    showSearchPopup: false
   },
 
   // 获取家庭信息进行初始化
@@ -16,8 +22,9 @@ Page({
   //  查看当前家庭
   onFamilyTap(e) {
     const homeId = e.currentTarget.dataset.homeid; 
+    const role = e.currentTarget.dataset.identity;
     wx.navigateTo({
-      url: '/pages/currentfamily/currentfamily?homeId=' + homeId
+      url: '/pages/currentfamily/currentfamily?homeId=' + homeId + '&role=' + role
     });
   },
 
@@ -50,11 +57,56 @@ Page({
       this.setData({ showCreatePopup: false, newFamilyName: '', newFamilyAddress: '' });
   },
 
-  // 加入家庭
-  onJoinTap() {
-    wx.navigateTo ({
-      url: '/pages/joinfamily/joinfamily'
-    })
+  // 访问家庭
+  onEnterTap() {
+    this.setData({ 
+      showSearchPopup: true,
+      searchfamilies: [],
+      searchInput: '',
+      selectedHomeId: null,
+      selectedHome: null
+    });
+  },
+
+  // 搜索输入变化
+  onSearchInput(e) {
+    this.setData({ 
+      searchInput: e.detail.value,
+      searchfamilyname: e.detail.value 
+    });
+  },
+
+  // 执行搜索
+  onSearch() {
+    if (!this.data.searchInput.trim()) {
+      wx.showToast({ title: '请输入家庭名称', icon: 'none' });
+      return;
+    }
+    this.searchhome();
+  },
+
+  // 选择家庭
+  onSelectHome(e) {
+    const homeId = e.currentTarget.dataset.homeid;
+    const selectedHome = this.data.searchfamilies.find(home => home.id === homeId);
+    this.setData({ 
+      selectedHomeId: homeId,
+      selectedHome: selectedHome 
+    });
+  },
+
+  // 申请访问家庭
+  onApplyEnter() {
+    if (!this.data.selectedHomeId) {
+      wx.showToast({ title: '请选择要加入的家庭', icon: 'none' });
+      return;
+    }
+    this.enterhome();
+  },
+
+  // 关闭搜索弹窗
+  onSearchPopupClose() {
+    this.setData({ showSearchPopup: false });
   },
 
   // 进入删除家庭页面
@@ -149,6 +201,65 @@ Page({
           title: '网络错误'
         });
         if (typeof callback === 'function' ) callback();
+      }
+    })
+  },
+
+  // /home/search?keyword=this.data.searchfamilyname
+  searchhome(callback) {
+    wx.request({
+      url: 'http://localhost:8080/home/search?keyword=' + this.data.searchfamilyname,
+      method: 'GET',
+      headers: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
+      success: (res) => {
+        if (res.statusCode === 200) {
+          console.log('搜索成功');
+          const searchfamilies = res.data.homes.map(item => ({
+            id: item.id,
+            name: item.name,
+            address: item.address
+          }));
+          this.setData({ searchfamilies: searchfamilies });
+          if (typeof callback === 'function') callback();
+        } else {
+          console.log('搜索失败');
+          if (typeof callback === 'function') callback();
+        }
+      },
+      fail: () => {
+        console.log('网络错误');
+        if (typeof callback === 'function') callback();
+      }
+    })
+  },
+
+  // /home/{homeId}/request/put
+  enterhome(callback) {
+    wx.request({
+      url: 'http://localhost:8080/home/' + this.data.selectedHomeId + '/request/put',
+      method: 'POST',
+      header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
+      success: (res) => {
+        if (res.statusCode === 200) {
+          wx.showToast({
+            title: '已发送申请',
+            icon: 'none'
+          });
+          if (typeof callback === 'function') callback();
+        } else {
+          wx.showToast({
+            title: '申请失败',
+            icon: 'none'
+          });
+          if (typeof callback === 'function') callback();
+        }
+      },
+      fail: () => {
+        wx.showToast({
+          title: '网络错误',
+          icon: 'none'
+        });
+        if (typeof callback === 'function') callback();
       }
     })
   },

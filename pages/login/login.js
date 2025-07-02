@@ -55,10 +55,10 @@ Page({
           wx.setStorageSync('token', res.data.token);
           // wx.setStorageSync('userId', res.data.data.userId);
           // wx.setStorageSync('userInfo', res.data.data.userInfo);
-          // wx.switchTab({ url: '/pages/home/home' });
-          wx.navigateTo({
-            url: '/pages/home/home',
-          })
+          wx.switchTab({ url: '/pages/home/home' });
+          // wx.navigateTo({
+          //   url: '/pages/home/home',
+          // })
         } else {
           wx.showToast({ title: res.data.message || '登录失败', icon: 'none' });
         }

@@ -85,7 +85,7 @@
   color:dodgerblue;
   font-weight: 500;
 }
-.join-square {
+.enter-square {
   width: 750rpx;
   height: 180rpx;
   background: #fff;
@@ -96,7 +96,7 @@
   margin-bottom: 0;
   transition: box-shadow 0.2s;
 }
-.join-family {
+.enter-family {
   font-size: 40rpx;
   color:dodgerblue;
   font-weight: 500;
@@ -185,4 +185,121 @@
 .popup-btn.confirm {
   background: #4ade80;
   color: #fff;
+}
+
+/* 搜索弹窗样式 */
+.search-popup {
+  background: #fff;
+  border-radius: 20rpx;
+  box-shadow: 0 8rpx 32rpx rgba(0,0,0,0.14);
+  padding: 48rpx 32rpx 32rpx 32rpx;
+  width: 660rpx;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  max-height: 80vh;
+}
+
+/* 搜索框 */
+.search-box {
+  width: 100%;
+  display: flex;
+  margin-bottom: 24rpx;
+}
+
+.search-input {
+  flex: 1;
+  border: 1rpx solid #ccc;
+  border-radius: 12rpx 0 0 12rpx;
+  padding: 16rpx;
+  font-size: 28rpx;
+}
+
+.search-btn {
+  width: 120rpx;
+  background: #4ade80;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  border-radius: 0 12rpx 12rpx 0;
+  font-size: 28rpx;
+}
+
+/* 搜索结果列表 */
+.search-results {
+  width: 100%;
+  max-height: 600rpx;
+  margin-bottom: 24rpx;
+}
+
+.search-item {
+  padding: 24rpx;
+  border-bottom: 1rpx solid #eee;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.search-item.selected {
+  background: rgba(74, 222, 128, 0.1);
+}
+
+.search-item-info {
+  display: flex;
+  flex-direction: column;
+}
+
+.search-item-name {
+  font-size: 32rpx;
+  color: #333;
+  margin-bottom: 8rpx;
+}
+
+.search-item-address {
+  font-size: 24rpx;
+  color: #888;
+}
+
+.search-item-check {
+  color: #4ade80;
+  font-size: 40rpx;
+  font-weight: bold;
+}
+
+.no-results {
+  padding: 40rpx 0;
+  text-align: center;
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* 选中的家庭信息 */
+.selected-home-info {
+  width: 100%;
+  padding: 16rpx;
+  background: rgba(74, 222, 128, 0.1);
+  border-radius: 12rpx;
+  margin-bottom: 24rpx;
+  display: flex;
+  align-items: center;
+}
+
+.selected-home-title {
+  font-size: 26rpx;
+  color: #666;
+  margin-right: 12rpx;
+}
+
+.selected-home-name {
+  font-size: 28rpx;
+  color: #333;
+  font-weight: 500;
+}
+
+/* 禁用按钮样式 */
+.popup-btn.disabled {
+  background: #ccc;
+  color: #fff;
+  opacity: 0.6;
 }

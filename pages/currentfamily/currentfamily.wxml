@@ -2,6 +2,15 @@
 <view class="current-family-container">
   <view class="current-family-header">
     <text class="current-family-name">{{homename}}</text>
+    <!-- 房主才显示申请管理按钮 -->
+    <view wx:if="{{role === '房主'}}" class="request-manage-btn" bindtap="showRequests">
+      <view class="notification-dot" wx:if="{{requests.length > 0}}"></view>
+      <view class="manage-icon">
+        <view class="manage-icon-bar"></view>
+        <view class="manage-icon-bar"></view>
+        <view class="manage-icon-bar"></view>
+      </view>
+    </view>
   </view>
 
 <!-- 家庭信息 -->
@@ -108,6 +117,48 @@
     <view class="popup-btns">
       <button class="popup-btn cancel" bindtap="onAddMemberCancel">取消</button>
       <button class="popup-btn confirm" bindtap="onAddMemberConfirm">确定</button>
+    </view>
+  </view>
+</view>
+
+<!-- 申请记录弹窗 -->
+<view wx:if="{{showRequestsPopup}}" class="popup-change" catchtouchmove="true">
+  <view class="popup-content requests-popup">
+    <text class="popup-title">访客申请</text>
+    <view class="popup-desc">管理希望访问您家庭的用户申请</view>
+    
+    <scroll-view class="requests-list" scroll-y>
+      <block wx:if="{{requests.length > 0}}">
+        <view wx:for="{{requests}}" wx:key="requestId" class="request-item">
+          <view class="request-user">
+            <view class="request-avatar"></view>
+            <text class="request-username">{{item.userName}}</text>
+          </view>
+          <view class="request-actions">
+            <button 
+              class="request-btn accept" 
+              bindtap="handleRequest" 
+              data-request-id="{{item.requestId}}" 
+              data-user-id="{{item.userId}}"
+              data-status="1"
+            >同意</button>
+            <button 
+              class="request-btn reject" 
+              bindtap="handleRequest" 
+              data-request-id="{{item.requestId}}" 
+              data-userid="{{item.userId}}"
+              data-status="2"
+            >拒绝</button>
+          </view>
+        </view>
+      </block>
+      <view wx:else class="no-requests">
+        <text>暂无访客申请</text>
+      </view>
+    </scroll-view>
+    
+    <view class="popup-btns single-btn">
+      <button class="popup-btn confirm" bindtap="closeRequests">关闭</button>
     </view>
   </view>
 </view>

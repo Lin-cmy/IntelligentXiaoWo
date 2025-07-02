@@ -9,7 +9,6 @@
     "pages/ragQA/ragQA",
     "pages/AIchat/AIchat",
     "pages/familymanager/familymanager",
-    "pages/joinfamily/joinfamily",
     "pages/currentfamily/currentfamily",
     "pages/Roommanager/Roommanager",
     "pages/Devicemanager/Devicemanager"
@@ -37,5 +36,11 @@
         "text": "我的"
       }
     ]
+  },
+  "plugins": {
+    "WechatSI": {
+      "version": "0.3.6",
+      "provider": "wx069ba97219f66d99"
+    }
   }
 }

@@ -9,6 +9,9 @@
   background: #ffffff;
   border-radius: 24rpx;
   margin-bottom: 24rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
 }
 .current-family-name {
   padding: 0 0 0 16rpx;
@@ -244,4 +247,123 @@
 .popup-btn.confirm:active {
   background: #4a7dde;
   transform: translateY(2rpx);
+}
+
+/* 申请管理按钮 */
+.request-manage-btn {
+  position: relative;
+  width: 80rpx;
+  height: 80rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-right: 20rpx;
+}
+
+.manage-icon {
+  width: 50rpx;
+  height: 40rpx;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+}
+
+.manage-icon-bar {
+  width: 100%;
+  height: 6rpx;
+  background-color: #5A8DEE;
+  border-radius: 3rpx;
+}
+
+.notification-dot {
+  position: absolute;
+  top: 15rpx;
+  right: 15rpx;
+  width: 16rpx;
+  height: 16rpx;
+  border-radius: 50%;
+  background-color: #ff4d4f;
+}
+
+/* 申请弹窗样式 */
+.requests-popup {
+  width: 90%;
+  max-width: 680rpx;
+  max-height: 80vh;
+}
+
+.requests-list {
+  width: 100%;
+  max-height: 600rpx;
+  margin-bottom: 20rpx;
+}
+
+.request-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 24rpx 0;
+  border-bottom: 1rpx solid #eee;
+}
+
+.request-user {
+  display: flex;
+  align-items: center;
+}
+
+.request-avatar {
+  width: 70rpx;
+  height: 70rpx;
+  border-radius: 50%;
+  background-color: #E2E6F7;
+  margin-right: 16rpx;
+}
+
+.request-username {
+  font-size: 30rpx;
+  color: #333;
+}
+
+.request-actions {
+  display: flex;
+  gap: 16rpx;
+}
+
+.request-btn {
+  min-width: 100rpx;
+  height: 60rpx;
+  border-radius: 30rpx;
+  font-size: 26rpx;
+  font-weight: normal;
+  margin: 0;
+  padding: 0 20rpx;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+}
+
+.request-btn.accept {
+  background-color: #4ade80;
+  color: #fff;
+}
+
+.request-btn.reject {
+  background-color: #f5f5f5;
+  color: #666;
+}
+
+.no-requests {
+  padding: 40rpx 0;
+  text-align: center;
+  color: #999;
+  font-size: 28rpx;
+}
+
+.popup-btns.single-btn {
+  justify-content: center;
+}
+
+.popup-btns.single-btn .popup-btn {
+  width: 60%;
 }

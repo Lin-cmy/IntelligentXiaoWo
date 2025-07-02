@@ -1,3 +1,6 @@
+const plugin = requirePlugin('WechatSI');
+const manager = plugin.getRecordRecognitionManager();
+
 Page({
   data: {
     messages: [],
@@ -15,35 +18,57 @@ Page({
 
   onLoad() {
     this.setData({ homeId: wx.getStorageSync('HOMEID')});
+    this.initSI();
   },
 
   // 初始化语音识别
-  initVoiceRecognition() {
-    const manager = wx.getRecorderManager();
-    const innerAudioContext = wx.createInnerAudioContext();
+  initSI() {
+    const that = this;
+    manager.onStart = function() {
+      console.log('录音识别开始');
+      that.setData({ isRecording: true });
+    };
+    manager.onRecognize = function(res) {
+      // 实时识别内容，如果想实时显示可加如下代码
+      // that.setData({ inputText: res.result });
+    };
+    manager.onStop = function(res) {
+      console.log('识别结束', res);
+      that.setData({ isRecording: false });
+      if (!res.result) {
+        wx.showToast({ title: '没有听清，请再说一次', icon: 'none' });
+        return;
+      }
+      // 直接将识别内容作为用户消息发出
+      that.addMessage('user', res.result);
+      that.getAIResponse(res.result);
+    };
+    manager.onError = function(res) {
+      that.setData({ isRecording: false });
+      wx.showToast({ title: '识别失败，请重试', icon: 'none' });
+    };
+  },
 
-    this.recorderManager = manager;
-    this.innerAudioContext = innerAudioContext;
-
-    // 录音开始事件
-    manager.onStart(() => {
-      console.log('录音开始');
+  // 按下开始录音
+  startRecording() {
+    if (this.data.aiResponseInProgress) return;
+    this.setData({ isRecording: true });
+    manager.start({
+      duration: 30000,
+      lang: 'zh_CN',
     });
+  },
 
-    // 录音结束事件
-    manager.onStop((res) => {
-      console.log('录音结束', res);
-      this.processVoiceInput(res.tempFilePath);
-    });
+  // 松开停止录音
+  stopRecording() {
+    if (!this.data.isRecording) return;
+    manager.stop();
+  },
 
-    // 录音错误事件
-    manager.onError((err) => {
-      console.log('录音错误', err);
-      wx.showToast({
-        title: '录音失败',
-        icon: 'none'
-      });
-    });
+  // 取消录音
+  cancelRecording() {
+    if (!this.data.isRecording) return;
+    manager.stop();
   },
 
   // 切换到文本输入
@@ -65,7 +90,7 @@ Page({
   sendTextMessage() {
     const text = this.data.inputText.trim();
     if (!text || this.data.aiResponseInProgress) return;
-    
+
     this.addMessage('user', text);
     this.setData({ inputText: '' });
     this.getAIResponse(text);
@@ -78,66 +103,6 @@ Page({
     const text = e.currentTarget.dataset.text;
     this.addMessage('user', text);
     this.getAIResponse(text);
-  },
-
-  // 开始录音
-  startRecording() {
-    if (this.data.aiResponseInProgress) return;
-    
-    this.setData({ isRecording: true });
-
-    const options = {
-      duration: 60000, // 最长录音时间
-      sampleRate: 16000,
-      numberOfChannels: 1,
-      encodeBitRate: 96000,
-      format: 'mp3'
-    };
-
-    this.recorderManager.start(options);
-  },
-
-  // 停止录音
-  stopRecording() {
-    if (!this.data.isRecording) return;
-
-    this.setData({ isRecording: false });
-    this.recorderManager.stop();
-  },
-
-  // 取消录音
-  cancelRecording() {
-    this.setData({ isRecording: false });
-    this.recorderManager.stop();
-  },
-
-  // 处理语音输入
-  processVoiceInput(filePath) {
-      // 实际项目中应上传语音文件到服务器进行识别
-      // 这里暂时使用模拟数据
-      const mockRecognitionResults = [
-        '打开卧室空调',
-        '调节温度到25度',
-        '关闭客厅的灯',
-        '今天天气怎么样',
-        '帮我设置起床闹钟'
-      ];
-  
-      const randomResult = mockRecognitionResults[Math.floor(Math.random() * mockRecognitionResults.length)];
-      
-      wx.showToast({
-        title: '语音识别中...',
-        icon: 'loading',
-        duration: 1000
-      });
-  
-      setTimeout(() => {
-        this.addMessage('user', randomResult);
-        this.getAIResponse(randomResult);
-      }, 1000);
-  
-      // 实际项目中，这里应该调用语音识别API
-      // this.callVoiceRecognitionAPI(filePath);
   },
 
   // 调用 LLM 接口获取 AI 响应
@@ -166,10 +131,6 @@ Page({
     const requestData = { input: userInput };
     const token = wx.getStorageSync('token');
 
-    // 定义流式相应处理的变量
-    let responseText = '';
-    let lastResponseText = '';
-
     const requestTask = wx.request({
       url: 'http://localhost:8080/home/' + this.data.homeId + '/ai/chat',
       method: 'POST',
@@ -181,24 +142,20 @@ Page({
       responseType: 'text',
       success: (res) => {
         if (res.statusCode === 200 && res.data) {
-          // 提取所有非空的data:后面的内容
           let aiResponse = '';
           const dataRegex = /data:([^\n]*?)(?=\nid:|$)/g;
           const matches = res.data.match(dataRegex);
-          
+
           if (matches && matches.length > 0) {
-            // 过滤掉空的data:行，只保留有内容的部分
             const validMatches = matches.filter(match => {
               const content = match.replace(/^data:/, '').trim();
-              return content.length > 0; // 只保留非空内容
+              return content.length > 0;
             });
-            
-            // 提取所有data:后面的内容并拼接
             aiResponse = validMatches
               .map(match => match.replace(/^data:/, '').trim())
               .join('');
           }
-          
+
           if (aiResponse) {
             console.log("解析后的AI回复:", aiResponse);
             this.updateAIMessage(aiResponse);
@@ -235,7 +192,6 @@ Page({
       scrollIntoView: `msg${aiMessageId}`
     });
 
-    // 标记相应完成
     if (content.length > 10 && !content.endsWith('...')) {
       this.setData({ aiResponseInProgress: false });
     }
@@ -269,13 +225,7 @@ Page({
     wx.navigateBack();
   },
 
-  onUnload() {
-    // 清理资源
-    if (this.recorderManager) {
-      this.recorderManager.stop();
-    }
-    if (this.innerAudioContext) {
-      this.innerAudioContext.destory();
-    }
-  }
+  // onUnload() {
+  //   // 无需清理recorderManager和innerAudioContext
+  // }
 });

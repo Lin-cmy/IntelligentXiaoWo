@@ -2,7 +2,7 @@
   <view class="family-manager-section1">
     <block wx:for="{{myfamilies}}" wx:key="id">
       <view class="family-square">
-        <view class="family-info" bindtap="onFamilyTap" data-homeid="{{item.id}}">
+        <view class="family-info" bindtap="onFamilyTap" data-homeid="{{item.id}}" data-identity="{{item.role}}">
           <text class="family-name">{{item.name}}</text>
           <text class="family-identity">身份: {{item.role}}</text>
         </view>
@@ -24,8 +24,8 @@
     <view class="create-square" bindtap="onCreateTap">
       <text class="create-family">创建家庭</text>
     </view>
-    <view class="join-square" bindtap="onJoinTap">
-      <text class="join-family">加入家庭</text>
+    <view class="enter-square" bindtap="onEnterTap">
+      <text class="enter-family">访问家庭</text>
     </view>
     <view class="delete-square" bindtap="onDeleteTap">
       <text class="delete-family">删除家庭</text>
@@ -59,6 +59,59 @@
         <button class="popup-btn cancel" bindtap="onPopupClose">取消</button>
         <button class="popup-btn confirm" bindtap="onConfirmCreate">确定</button>
       </view>
+    </view>
+  </view>
+</view>
+
+<!-- 访问家庭搜索弹窗 -->
+<view wx:if="{{showSearchPopup}}" class="popup-mask" catchtouchmove="true">
+  <view class="search-popup">
+    <view class="popup-title">访问家庭</view>
+    
+    <!-- 搜索框 -->
+    <view class="search-box">
+      <input
+        class="search-input"
+        placeholder="请输入家庭名称"
+        value="{{searchInput}}"
+        bindinput="onSearchInput"
+        maxlength="20"
+      />
+      <view class="search-btn" bindtap="onSearch">搜索</view>
+    </view>
+    
+    <!-- 搜索结果 -->
+    <scroll-view class="search-results" scroll-y>
+      <block wx:if="{{searchfamilies.length > 0}}">
+        <view 
+          wx:for="{{searchfamilies}}" 
+          wx:key="id"
+          class="search-item {{selectedHomeId === item.id ? 'selected' : ''}}"
+          bindtap="onSelectHome"
+          data-homeid="{{item.id}}"
+        >
+          <view class="search-item-info">
+            <text class="search-item-name">{{item.name}}</text>
+            <text class="search-item-address">地址: {{item.address}}</text>
+          </view>
+          <view class="search-item-check" wx:if="{{selectedHomeId === item.id}}">✓</view>
+        </view>
+      </block>
+      <view wx:elif="{{searchInput && searchfamilies.length === 0}}" class="no-results">
+        未找到相关家庭
+      </view>
+    </scroll-view>
+    
+    <!-- 选中的家庭信息 -->
+    <view class="selected-home-info" wx:if="{{selectedHome}}">
+      <view class="selected-home-title">已选择:</view>
+      <view class="selected-home-name">{{selectedHome.name}}</view>
+    </view>
+    
+    <!-- 按钮 -->
+    <view class="popup-btns">
+      <button class="popup-btn cancel" bindtap="onSearchPopupClose">取消</button>
+      <button class="popup-btn confirm {{!selectedHomeId ? 'disabled' : ''}}" bindtap="onApplyEnter">申请加入</button>
     </view>
   </view>
 </view>

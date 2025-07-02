@@ -3,25 +3,45 @@ Page({
     homeId: null,
     homename: '',
     homeaddress: '未设置',
+    role: null,
     userId: '',
     userphone: '',
     newhomename: '',
     newhomeaddress: '',
     devicecnt: null,
+    showRequestsPopup: false,
     showChangeHomeNamePopup: false,
     showChangeHomeAddressPopup: false,
     showAddMemberPopup: false,
-    homemembers: []
-    // familymembers: [
-    //   { id: 1, name: '陈俊烨', icon: '/images/cjy.jpg'}
-    // ]
+    homemembers: [],
+    requests: []
   },
 
   // 初始化界面
   onLoad(options) {
-    this.setData({ homeId: Number(options.homeId) }, () => {
+    this.setData({ homeId: Number(options.homeId), role: options.role }, () => {
       this.homeview();
     })
+  },
+
+  // 显示访客申请弹窗
+  showRequests() {
+    this.getRequests(() => {
+      this.setData({ showRequestsPopup: true });
+    })
+  },
+
+  // 处理访客申请
+  handleRequest(e) {
+    const { requestId, userId, status } = e.currentTarget.dataset;
+    this.handlerequest(requestId, userId, status, () => {
+      this.getRequests();
+    })
+  },
+
+  // 关闭访客申请弹窗
+  closeRequests() {
+    this.setData({ showRequestsPopup: false });
   },
 
   // 修改家庭名称
@@ -36,7 +56,11 @@ Page({
       wx.showToast({ title: '请输入家庭名称', icon: 'none' });
       return;
     }
-    // 修改家庭名称
+    this.updateHomeName(() => {
+      this.homeview(() => {
+        this.setData({ showChangeHomeNamePopup: false, newhomename: '' });
+      })
+    })
   },
   onPopupCloseHomename() {
     this.setData({ showChangeHomeNamePopup: false, newhomename: '' });
@@ -54,7 +78,11 @@ Page({
       wx.showToast({ title: '请输入家庭地址', icon: 'none' });
       return;
     }
-    // 修改家庭地址
+    this.updateHomeAddress(() => {
+      this.homeview(() => {
+        this.setData({ showChangeHomeAddressPopup: false, newhomeaddress: '' });
+      })
+    })
   },
   onPopupCloseHomeaddress() {
     this.setData({ showChangeHomeAddressPopup: false, newhomeaddress: '' });
@@ -148,6 +176,52 @@ Page({
     });
   },
 
+  // /home/{homeId}/updateName
+  updateHomeName(callback) {
+    wx.request({
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/updateName',
+      method: 'POST',
+      header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
+      data: { "name": this.data.newhomename },
+      success: (res) => {
+        if (res.statusCode === 200) {
+          console.log('修改成功');
+          if (typeof callback === 'function') callback();
+        } else {
+          console.log(res.data.message || '修改失败');
+          if (typeof callback === 'function') callback();
+        }
+      },
+      fail: () => {
+        console.log('网络错误');
+        if (typeof callback === 'function') callback();
+      }
+    })
+  },
+
+  // /home/{homeId}/updateAddress
+  updateHomeAddress(callback) {
+    wx.request({
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/updateAddress',
+      method: 'POST',
+      header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
+      data: { address: this.data.newhomeaddress },  
+      success: (res) => {
+        if (res.statusCode === 200) {
+          console.log('修改成功');
+          if (typeof callback === 'function') callback();
+        } else {
+          console.log(res.data.message || '修改失败');
+          if (typeof callback === 'function') callback();
+        }
+      },
+      fail: () => {
+        console.log('网络错误');
+        if (typeof callback === 'function') callback();
+      }
+    })
+  },
+
   // /auth/search-user-by-phone
   searchuser(callback) {
     wx.request({
@@ -207,6 +281,81 @@ Page({
       fail: () => {
         wx.showToast({
           title: '网络错误2',
+          icon: 'none'
+        });
+        if (typeof callback === 'function') callback();
+      }
+    })
+  },
+
+  // /home/{homeId}/request/receive
+  getRequests(callback) {
+    wx.request({
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/request/receive',
+      method: 'GET',
+      header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
+      success: (res) => {
+        if (res.statusCode === 200) {
+          // wx.showToast({
+          //   title: '查询成功',
+          //   icon: 'none'
+          // });
+          const requests = res.data.requests
+          .filter( item => item.status === 0)
+          .map( item => ({
+            requestId: item.requestId,
+            userId: item.userId,
+            userName: item.userName
+          }));
+          this.setData({ requests: requests});
+          if (typeof callback === 'function') callback();
+        } else {
+          wx.showToast({
+            title: res.data.message || '查询失败',
+            icon: 'none'
+          });
+          if (typeof callback === 'function') callback();
+        }
+      },
+      fail: () => {
+        wx.showToast({
+          title: '网络错误',
+          icon: 'none'
+        });
+        if (typeof callback === 'function') callback();
+      }
+    })
+  },
+
+  // /home/{homeId}/request/receive/handle
+  handlerequest(requestId, userId, status, callback) {
+    wx.request({
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/request/receive/handle',
+      method: 'POST',
+      header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token') },
+      data: {
+        requestId: requestId,
+        userId: userId,
+        status: status
+      },
+      success: (res) => {
+        if (res.statusCode === 200) {
+          wx.showToast({
+            title: '处理成功',
+            icon: 'none'
+          });
+          if (typeof callback === 'function') callback();
+        } else {
+          wx.showToast({
+            title: res.data.message || '处理失败',
+            icon: 'none'
+          });
+          if (typeof callback === 'function') callback();
+        }
+      },
+      fail: () => {
+        wx.showToast({
+          title: '网络错误',
           icon: 'none'
         });
         if (typeof callback === 'function') callback();

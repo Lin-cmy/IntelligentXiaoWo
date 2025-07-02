@@ -7,8 +7,8 @@
 
   <!-- 场景列表 -->
   <view class="scene-list">
-  <!-- 离家 -->
-  <view class="scene-item" bindtap="onSceneDetail" data-scene="leave">
+    <!-- 离家 -->
+    <view class="scene-item" bindtap="onSceneDetail" data-scene="leave">
       <image class="scene-image" src="/images/leave.jpg" mode="aspectFill"></image>
       <view class="scene-info">
         <view class="scene-title">
