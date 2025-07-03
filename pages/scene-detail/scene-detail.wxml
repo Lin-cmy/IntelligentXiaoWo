@@ -7,113 +7,139 @@
       <view class="like-icon">👍</view>
     </view>
     <view class="title-section">
-      <view class="title">{{sceneData.title}}</view>
-      <view class="desc">{{sceneData.desc}}</view>
+      <!-- 可编辑的场景名称 -->
+      <view class="title" wx:if="{{!isEditingName}}" bindtap="editSceneName">{{sceneName}}</view>
+      <input class="title-input" wx:else focus="{{true}}" value="{{sceneName}}" bindblur="saveSceneName"></input>
+      
+      <!-- 可编辑的场景描述 -->
+      <view class="desc" wx:if="{{!isEditingDesc}}" bindtap="editSceneDesc">{{sceneDesc}}</view>
+      <input class="desc-input" wx:else focus="{{true}}" value="{{sceneDesc}}" bindblur="saveSceneDesc"></input>
     </view>
   </view>
 
   <!-- 设备列表 -->
-  <view class="content-section">
-    <view class="section-title">当 {{sceneData.devices[0].name}} 时</view>
-    <view class="devices-list">
-      <view class="device-item" wx:for="{{sceneData.devices}}" wx:key="name">
-        <view class="device-icon">📱</view>
-        <view class="device-info">
-          <view class="device-name">{{item.name}}</view>
-          <view class="device-state">{{item.state}}</view>
-        </view>
-      </view>
-    </view>
- <!-- 已选设备列表 -->
-<view class="selected-devices" wx:if="{{selectedDevices.length > 0}}">
-  <view class="section-title">已添加设备</view>
-  <view class="device-list">
-    <view class="device-item selected" wx:for="{{selectedDevices}}" wx:key="id">
-      <view class="device-info">
-        <view class="device-name">{{item.name}}</view>
-        <view class="device-type">{{item.type}}</view>
-      </view>
-      <view class="device-actions">
-        <picker range="{{item.actions}}" value="0" bindchange="switchDeviceAction" data-device-id="{{item.id}}">
-          <view class="action-picker">
-            <text>{{item.selectedAction}}</text>
-            <text class="arrow">▼</text>
-          </view>
-        </picker>
-      </view>
-      <view class="remove-btn" bindtap="removeDevice" data-device-id="{{item.id}}">
-        <text>×</text>
-      </view>
-    </view>
-  </view>
-</view>
-
-<!-- 添加设备按钮 -->
-<view class="add-device-btn" bindtap="showDeviceList">
-  <text class="plus-icon">+</text>
-  <text>添加设备</text>
-</view>
-
-<!-- 设备列表弹窗 -->
-<view class="device-list-modal" wx:if="{{showDeviceList}}">
-  <view class="modal-mask" bindtap="hideDeviceList"></view>
-  <view class="modal-content">
-    <view class="modal-header">
-      <text>选择设备</text>
-      <text class="close-btn" bindtap="hideDeviceList">×</text>
-    </view>
-    <view class="available-device-list">
-      <view class="device-item available" wx:for="{{availableDevices}}" wx:key="id" bindtap="selectDevice" data-device="{{item}}">
-        <view class="device-icon">📱</view>
-        <view class="device-info">
-          <view class="device-name">{{item.name}}</view>
-          <view class="device-type">{{item.type}}</view>
-        </view>
-        <view class="add-icon">+</view>
-      </view>
-    </view>
-  </view>
-</view>
-  </view>
-
-  <!-- 场景添加按钮 -->
   <!-- <view class="content-section">
-    <view class="add-btn">
-      <text class="plus-icon">+</text>
-      <text>添加场景</text>
+    <view class="section-title">执行条件</view>
+    <view class="condition-info">
+      当设置的条件满足时，场景中的设备将按设定执行操作
     </view>
   </view> -->
-<!-- 日期选择 -->
-<view class="form-section">
-    <date-picker
-      startddate="{{startdate}}"
-      endddate="{{enddate}}"
-      bind:change="handleDateChange"
-    />
-  </view>
-  <!-- 时间选择 -->
+  
+  <!-- 已选设备列表 -->
   <view class="content-section">
-    <view class="time-section">
-      <view class="section-title">生效时间段</view>
-      <view class="time-picker" bindtap="onTimeRange">
-        <text>{{timeRange}}</text>
-        <text class="arrow">></text>
+    <view class="section-title">已添加设备</view>
+    <view class="selected-devices" wx:if="{{selectedDevices.length > 0}}">
+      <view class="device-list">
+        <view class="device-item selected" wx:for="{{selectedDevices}}" wx:key="id">
+          <view class="device-info">
+            <view class="device-name">{{item.name}}</view>
+            <view class="device-type">{{item.type}}</view>
+          </view>
+          <view class="device-actions">
+            <picker range="{{item.actions}}" value="{{item.actions.indexOf(item.selectedAction)}}" bindchange="switchDeviceAction" data-device-id="{{item.id}}">
+              <view class="action-picker">
+                <text>{{item.selectedAction}}</text>
+                <text class="arrow">▼</text>
+              </view>
+            </picker>
+          </view>
+          <view class="remove-btn" bindtap="removeDevice" data-device-id="{{item.id}}">
+            <text>×</text>
+          </view>
+        </view>
       </view>
+    </view>
+    <view class="empty-devices" wx:else>
+      <text>暂无添加设备，请点击下方按钮添加</text>
+    </view>
+
+    <!-- 添加设备按钮 -->
+    <view class="add-device-btn" bindtap="showDeviceList">
+      <text class="plus-icon">+</text>
+      <text>添加设备</text>
     </view>
   </view>
 
-  <!-- 时间选择器 -->
-  <view class="time-picker-modal" wx:if="{{showTimePicker}}">
-    <picker mode="time" value="{{startTime}}" bindchange="bindStartTimeChange">
-      <view class="picker-item">开始时间: {{startTime}}</view>
-    </picker>
-    <picker mode="time" value="{{endTime}}" bindchange="bindEndTimeChange">
-      <view class="picker-item">结束时间: {{endTime}}</view>
-    </picker>
+  <!-- 日期选择 -->
+  <view class="content-section">
+    <view class="section-title">生效日期</view>
+    <view class="form-section">
+      <view class="date-picker-row">
+        <text>开始日期：</text>
+        <picker mode="date" value="{{startDate}}" bindchange="bindStartDateChange">
+          <view class="date-picker-value">{{startDate || '请选择'}}</view>
+        </picker>
+      </view>
+      <view class="date-picker-row">
+        <text>结束日期：</text>
+        <picker mode="date" value="{{endDate}}" bindchange="bindEndDateChange">
+          <view class="date-picker-value">{{endDate || '请选择'}}</view>
+        </picker>
+      </view>
+    </view>
+  </view>
+  
+  <!-- 时间选择 -->
+  <view class="content-section">
+    <view class="section-title">生效时间段</view>
+    <view class="time-picker" bindtap="onTimeRange">
+      <text>{{timeRange}}</text>
+      <text class="arrow">▼</text>
+    </view>
+  </view>
+
+  <!-- 时间选择器弹窗 -->
+  <view class="time-picker-modal" wx:if="{{showTimePicker}}" catchtouchmove="true">
+    <view class="modal-mask" bindtap="hideTimePicker"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <text>选择时间</text>
+        <text class="close-btn" bindtap="hideTimePicker">×</text>
+      </view>
+      <view class="time-picker-content">
+        <view class="time-picker-item">
+          <text>开始时间</text>
+          <picker mode="time" value="{{startTime}}" bindchange="bindStartTimeChange">
+            <view class="time-selector">{{startTime}}</view>
+          </picker>
+        </view>
+        <view class="time-picker-item">
+          <text>结束时间</text>
+          <picker mode="time" value="{{endTime}}" bindchange="bindEndTimeChange">
+            <view class="time-selector">{{endTime}}</view>
+          </picker>
+        </view>
+      </view>
+      <button class="confirm-btn" bindtap="hideTimePicker">确认</button>
+    </view>
+  </view>
+
+  <!-- 设备列表弹窗 -->
+  <view class="device-list-modal" wx:if="{{showDeviceList}}" catchtouchmove="true">
+    <view class="modal-mask" bindtap="hideDeviceList"></view>
+    <view class="modal-content">
+      <view class="modal-header">
+        <text>选择设备</text>
+        <text class="close-btn" bindtap="hideDeviceList">×</text>
+      </view>
+      <view class="available-device-list">
+        <view class="device-item available" wx:for="{{availableDevices}}" wx:key="id" bindtap="selectDevice" data-device="{{item}}">
+          <view class="device-icon">📱</view>
+          <view class="device-info">
+            <view class="device-name">{{item.name}}</view>
+            <view class="device-type">{{item.type}}</view>
+          </view>
+          <view class="device-actions-available">
+            <text wx:for="{{item.actions}}" wx:for-item="action" wx:key="*this" class="action-tag">{{action}}</text>
+          </view>
+          <view class="add-icon">+</view>
+        </view>
+      </view>
+    </view>
   </view>
 
   <!-- 底部按钮 -->
   <view class="bottom-btn">
-    <button class="create-scene-btn" bindtap="createScene">创建场景</button>
+    <button class="create-scene-btn" bindtap="createScene">保存场景</button>
   </view>
 </view>

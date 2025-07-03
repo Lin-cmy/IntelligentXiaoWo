@@ -1,7 +1,12 @@
 <!-- 窝名 -->
 <view class="home-header">
-  <text class="home-title" bindtap="onTitleTap">{{homeName}}</text>
-  <view class="triangle-down" bindtap="onTitleTap"></view>
+  <view class="title-section">
+    <text class="home-title" bindtap="onTitleTap">{{homeName}}</text>
+    <view class="triangle-down" bindtap="onTitleTap"></view>
+  </view>
+  <view class="refresh-button {{isRefreshing ? 'refreshing' : ''}}" bindtap="onRefreshTap">
+    <text class="refresh-icon">↻</text>
+  </view>
 </view>
 
 <!-- 显示当前窝的房间 -->

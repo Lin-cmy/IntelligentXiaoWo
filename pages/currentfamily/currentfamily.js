@@ -153,10 +153,11 @@ Page({
             name: item.username,
             role: roleMap[item.role]
           }));
+          const devicecnt = Array.from(new Set(res.data.devices.map(item => item.id))).length;
           this.setData({
             homename: res.data.home.name,
             homeaddress: res.data.home.address,
-            devicecnt: res.data.devices.length,
+            devicecnt: devicecnt,
             homemembers: homemembers
           });
           if (typeof callback === 'function') callback();

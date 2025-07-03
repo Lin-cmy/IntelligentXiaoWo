@@ -43,6 +43,7 @@ Page({
 
     wx.request({
       url: 'http://localhost:8080/auth/login',
+      // url: 'http://192.168.20.92:8080/auth/login',
       method: 'POST',
       data: {
         phone: this.data.phone,

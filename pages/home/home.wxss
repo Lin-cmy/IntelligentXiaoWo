@@ -1,6 +1,12 @@
 .home-header {
   display: flex;
   padding: 40rpx 24rpx 16rpx 24rpx;
+  justify-content: space-between;
+  align-items: center;
+}
+.title-section {
+  display: flex;
+  align-items: center;
 }
 .home-title {
   font-size: 50rpx;
@@ -12,6 +18,33 @@
   border-left: 15rpx solid transparent;
   border-right: 15rpx solid transparent;
   border-top: 25rpx solid #333;
+}
+/* 刷新按钮样式 */
+.refresh-button {
+  width: 70rpx;
+  height: 70rpx;
+  border-radius: 50%;
+  background: #f5f5f5;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.1);
+  transition: all 0.3s ease;
+}
+
+.refresh-icon {
+  font-size: 40rpx;
+  color: #333;
+}
+
+/* 旋转动画效果 */
+.refreshing {
+  animation: spin 1s linear infinite;
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to { transform: rotate(360deg); }
 }
 .popup {
   position: absolute;

@@ -1,6 +1,7 @@
 .detail-container {
   min-height: 100vh;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  padding-bottom: 120rpx; /* 为底部按钮留出空间 */
 }
 
 .header-section {
@@ -69,14 +70,36 @@
   margin-bottom: 16rpx;
 }
 
+.title-input {
+  font-size: 48rpx;
+  font-weight: 600;
+  margin-bottom: 16rpx;
+  color: white;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8rpx;
+  padding: 8rpx;
+}
+
 .desc {
   font-size: 28rpx;
   opacity: 0.9;
   line-height: 1.4;
 }
 
+.desc-input {
+  font-size: 28rpx;
+  opacity: 0.9;
+  line-height: 1.4;
+  color: white;
+  background: rgba(255, 255, 255, 0.2);
+  border-radius: 8rpx;
+  padding: 8rpx;
+  width: 100%;
+}
+
 .content-section {
   padding: 40rpx 30rpx;
+  margin-bottom: 20rpx;
 }
 
 .section-title {
@@ -86,19 +109,37 @@
   margin-bottom: 30rpx;
 }
 
-.devices-list {
+.condition-info {
+  font-size: 28rpx;
+  color: #7f8c8d;
+  line-height: 1.5;
+  padding: 24rpx;
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 16rpx;
+}
+
+.selected-devices {
   margin-bottom: 40rpx;
+}
+
+.device-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20rpx;
 }
 
 .device-item {
   background: rgba(255, 255, 255, 0.95);
   border-radius: 20rpx;
   padding: 30rpx;
-  margin-bottom: 20rpx;
   display: flex;
   align-items: center;
   box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
   backdrop-filter: blur(10px);
+}
+
+.device-item.selected {
+  border-left: 8rpx solid #7FB69F;
 }
 
 .device-icon {
@@ -122,15 +163,6 @@
   color: #7f8c8d;
 }
 
-.selected-devices {
-  margin-bottom: 40rpx;
-}
-
-.device-item.selected {
-  border: 3rpx solid #7FB69F;
-  position: relative;
-}
-
 .device-actions {
   margin: 0 20rpx;
 }
@@ -143,14 +175,31 @@
   display: flex;
   align-items: center;
   justify-content: space-between;
-  min-width: 120rpx;
+  min-width: 160rpx;
   font-size: 26rpx;
   color: #2c3e50;
+}
+
+.device-actions-available {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8rpx;
+  margin-left: auto;
+  margin-right: 16rpx;
+}
+
+.action-tag {
+  font-size: 22rpx;
+  background: #f0f2f5;
+  color: #6c757d;
+  padding: 4rpx 12rpx;
+  border-radius: 12rpx;
 }
 
 .arrow {
   font-size: 20rpx;
   color: #7f8c8d;
+  margin-left: 10rpx;
 }
 
 .remove-btn {
@@ -166,6 +215,13 @@
   font-weight: bold;
 }
 
+.empty-devices {
+  text-align: center;
+  padding: 40rpx 0;
+  color: #95a5a6;
+  font-size: 28rpx;
+}
+
 .add-device-btn {
   background: rgba(127, 182, 159, 0.1);
   border: 3rpx dashed #7FB69F;
@@ -175,7 +231,7 @@
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  margin-bottom: 40rpx;
+  margin-top: 30rpx;
   color: #7FB69F;
   transition: all 0.3s ease;
 }
@@ -191,7 +247,25 @@
   margin-bottom: 12rpx;
 }
 
-.device-list-modal {
+.form-section {
+  background: rgba(255, 255, 255, 0.8);
+  border-radius: 16rpx;
+  padding: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.time-picker {
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 16rpx;
+  padding: 30rpx;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+/* 弹窗样式 */
+.device-list-modal, .time-picker-modal {
   position: fixed;
   top: 0;
   left: 0;
@@ -256,6 +330,7 @@
 .device-item.available {
   border: 2rpx solid #e9ecef;
   transition: all 0.3s ease;
+  margin-bottom: 20rpx;
 }
 
 .device-item.available:active {
@@ -277,38 +352,75 @@
   font-weight: bold;
 }
 
-.time-section {
-  margin-bottom: 40rpx;
-}
-
-.time-picker {
-  background: rgba(255, 255, 255, 0.95);
-  border-radius: 16rpx;
-  padding: 30rpx;
+.date-picker-row {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+  padding: 20rpx 0;
+  border-bottom: 1rpx solid #eee;
 }
 
-.time-picker text:first-child {
-  font-size: 30rpx;
+.date-picker-value {
+  background: #f8f9fa;
+  padding: 12rpx 24rpx;
+  border-radius: 8rpx;
+  color: #2c3e50;
+  min-width: 180rpx;
+  text-align: center;
+}
+
+/* 时间选择器样式 */
+.time-picker-content {
+  display: flex;
+  flex-direction: column;
+  padding: 20rpx 0;
+  gap: 30rpx;
+}
+
+.time-picker-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 10rpx 20rpx;
+}
+
+.time-picker-item text {
+  font-size: 28rpx;
   color: #2c3e50;
 }
 
-.arrow {
-  font-size: 24rpx;
-  color: #7f8c8d;
+.time-selector {
+  background: #f8f9fa;
+  border-radius: 12rpx;
+  padding: 16rpx 24rpx;
+  font-size: 28rpx;
+  color: #2c3e50;
+  min-width: 160rpx;
+  text-align: center;
 }
 
-.form-section {
-  margin-bottom: 40rpx;
+.confirm-btn {
+  margin-top: 40rpx;
+  background: linear-gradient(135deg, #7FB69F 0%, #6aa085 100%);
+  color: white;
+  border: none;
+  border-radius: 16rpx;
+  padding: 20rpx 0;
+  font-size: 30rpx;
+  font-weight: 600;
 }
 
+/* 底部按钮 */
 .bottom-btn {
-  padding: 40rpx 30rpx;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  padding: 30rpx;
   background: rgba(255, 255, 255, 0.95);
   backdrop-filter: blur(10px);
+  box-shadow: 0 -4rpx 16rpx rgba(0, 0, 0, 0.1);
+  z-index: 10;
 }
 
 .create-scene-btn {
@@ -328,26 +440,4 @@
 .create-scene-btn:active {
   transform: translateY(2rpx);
   box-shadow: 0 4rpx 12rpx rgba(127, 182, 159, 0.6);
-}
-
-.time-picker-modal {
-  position: fixed;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: rgba(0, 0, 0, 0.5);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  z-index: 1000;
-}
-
-.picker-item {
-  background: white;
-  border-radius: 16rpx;
-  padding: 30rpx;
-  margin: 20rpx;
-  font-size: 28rpx;
-  color: #2c3e50;
 }

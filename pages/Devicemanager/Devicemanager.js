@@ -187,12 +187,24 @@ Page({
               id: item.id,
               name: item.name
             }));
-            const devices = res.data.devices
-              .filter(item => item.roomId === roomId)
-              .map(item => ({
-                id: item.id,
-                name: item.name
-            }));
+            const devicesRaw = res.data.devices.filter(item => item.roomId === roomId);
+            const deviceMap = {};
+            const devices = [];
+            devicesRaw.forEach(item => {
+              if (!deviceMap[item.id]) {
+                deviceMap[item.id] = true;
+                devices.push({
+                  id: item.id,
+                  name: item.name
+                });
+              }
+            });
+            // const devices = res.data.devices
+            //   .filter(item => item.roomId === roomId)
+            //   .map(item => ({
+            //     id: item.id,
+            //     name: item.name
+            // }));
             this.setData({ rooms: rooms, devices: devices });
             if (typeof callback === 'function') callback();
           } else {
