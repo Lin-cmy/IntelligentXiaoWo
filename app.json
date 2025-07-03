@@ -16,13 +16,18 @@
     
   ],
   "window": {
-    "navigationBarTitleText": "智慧小窝"
+    "navigationBarTitleText": "智慧小窝",
+    "navigationBarBackgroundColor": "#FFFFFF",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#F5F7FA",
+    "backgroundTextStyle": "light"
   },
   "tabBar": {
-    "color": "#666",
-    "selectedColor": "#1AAD19",
-    "backgroundColor": "#fff",
-    "borderStyle": "black",
+    "custom": false,
+    "color": "#7F8C8D",
+    "selectedColor": "#7FB69F",
+    "backgroundColor": "#FFFFFF",
+    "borderStyle": "white",
     "list": [
       {
         "pagePath": "pages/home/home",
@@ -34,7 +39,7 @@
       },
       {
         "pagePath": "pages/ragQA/ragQA",
-        "text": "我的"
+        "text": "智能助手"
       }
     ]
   },
