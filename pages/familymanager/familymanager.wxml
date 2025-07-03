@@ -1,17 +1,26 @@
 <view class="family-manager-container">
-  <view class="family-manager-section1">
+  <!-- 顶部标题 -->
+  <view class="header-section">
+    <text class="page-title">家庭管理</text>
+  </view>
+
+  <!-- 家庭列表 -->
+  <view class="family-list-section">
     <block wx:for="{{myfamilies}}" wx:key="id">
-      <view class="family-square">
-        <view class="family-info" bindtap="onFamilyTap" data-homeid="{{item.id}}" data-identity="{{item.role}}">
-          <text class="family-name">{{item.name}}</text>
-          <text class="family-identity">身份: {{item.role}}</text>
+      <view class="family-card" bindtap="onFamilyTap" data-homeid="{{item.id}}" data-identity="{{item.role}}">
+        <view class="family-info">
+          <view class="family-icon">🏠</view>
+          <view class="family-details">
+            <text class="family-name">{{item.name}}</text>
+            <text class="family-identity">身份: {{item.role}}</text>
+          </view>
         </view>
 
         <!-- 删除模式下显示删除按钮 -->
         <view
           wx:if="{{deleteMode}}"
           class="family-delete-btn"
-          bindtap="onDeleteFamily"
+          catchtap="onDeleteFamily"
           data-homeid="{{item.id}}"
         >
           <text class="family-delete-minus">-</text>
@@ -20,98 +29,128 @@
     </block>
   </view>
 
-  <view class="family-manager-section2">
-    <view class="create-square" bindtap="onCreateTap">
-      <text class="create-family">创建家庭</text>
+  <!-- 功能按钮区 -->
+  <view class="action-section">
+    <view class="action-card" bindtap="onCreateTap">
+      <view class="action-icon add-icon">+</view>
+      <view class="action-text">
+        <text class="action-title">创建家庭</text>
+        <text class="action-desc">创建一个新的家庭空间</text>
+      </view>
     </view>
-    <view class="enter-square" bindtap="onEnterTap">
-      <text class="enter-family">访问家庭</text>
+    
+    <view class="action-card" bindtap="onEnterTap">
+      <view class="action-icon search-icon">🔍</view>
+      <view class="action-text">
+        <text class="action-title">访问家庭</text>
+        <text class="action-desc">查找并加入已有家庭</text>
+      </view>
     </view>
-    <view class="delete-square" bindtap="onDeleteTap">
-      <text class="delete-family">删除家庭</text>
+    
+    <view class="action-card" bindtap="onDeleteTap">
+      <view class="action-icon delete-icon">🗑️</view>
+      <view class="action-text">
+        <text class="action-title">删除家庭</text>
+        <text class="action-desc">从家庭列表中移除家庭</text>
+      </view>
     </view>
 
     <!-- 删除模式下显示完成按钮 -->
     <view wx:if="{{deleteMode}}" class="finish-btn" bindtap="onFinishDelete">
       完成
     </view>
-
   </view>
 
-  <view wx:if="{{showCreatePopup}}" class="popup-mask" catchtouchmove="true">
-    <view class="popup">
-      <view class="popup-title">创建家庭</view>
-      <input
-        class="popup-input"
-        placeholder="请输入家庭名称"
-        value="{{newFamilyName}}"
-        bindinput="onFamilyNameInput"
-        maxlength="20"
-      />
-      <input
-        class="popup-input"
-        placeholder="请输入家庭地址"
-        value="{{newFamilyAddress}}"
-        bindinput="onFamilyAddressInput"
-        maxlength="20"
-        />
-      <view class="popup-btns">
-        <button class="popup-btn cancel" bindtap="onPopupClose">取消</button>
-        <button class="popup-btn confirm" bindtap="onConfirmCreate">确定</button>
+  <!-- 创建家庭弹窗 -->
+  <view wx:if="{{showCreatePopup}}" class="modal-overlay" catchtouchmove="true">
+    <view class="modal-content">
+      <view class="modal-header">
+        <text class="modal-title">创建家庭</text>
       </view>
-    </view>
-  </view>
-</view>
-
-<!-- 访问家庭搜索弹窗 -->
-<view wx:if="{{showSearchPopup}}" class="popup-mask" catchtouchmove="true">
-  <view class="search-popup">
-    <view class="popup-title">访问家庭</view>
-    
-    <!-- 搜索框 -->
-    <view class="search-box">
-      <input
-        class="search-input"
-        placeholder="请输入家庭名称"
-        value="{{searchInput}}"
-        bindinput="onSearchInput"
-        maxlength="20"
-      />
-      <view class="search-btn" bindtap="onSearch">搜索</view>
-    </view>
-    
-    <!-- 搜索结果 -->
-    <scroll-view class="search-results" scroll-y>
-      <block wx:if="{{searchfamilies.length > 0}}">
-        <view 
-          wx:for="{{searchfamilies}}" 
-          wx:key="id"
-          class="search-item {{selectedHomeId === item.id ? 'selected' : ''}}"
-          bindtap="onSelectHome"
-          data-homeid="{{item.id}}"
-        >
-          <view class="search-item-info">
-            <text class="search-item-name">{{item.name}}</text>
-            <text class="search-item-address">地址: {{item.address}}</text>
-          </view>
-          <view class="search-item-check" wx:if="{{selectedHomeId === item.id}}">✓</view>
+      <view class="modal-body">
+        <view class="input-group">
+          <text class="input-label">家庭名称</text>
+          <input
+            class="modal-input"
+            placeholder="请输入家庭名称"
+            value="{{newFamilyName}}"
+            bindinput="onFamilyNameInput"
+            maxlength="20"
+          />
         </view>
-      </block>
-      <view wx:elif="{{searchInput && searchfamilies.length === 0}}" class="no-results">
-        未找到相关家庭
+        <view class="input-group">
+          <text class="input-label">家庭地址</text>
+          <input
+            class="modal-input"
+            placeholder="请输入家庭地址"
+            value="{{newFamilyAddress}}"
+            bindinput="onFamilyAddressInput"
+            maxlength="20"
+          />
+        </view>
       </view>
-    </scroll-view>
-    
-    <!-- 选中的家庭信息 -->
-    <view class="selected-home-info" wx:if="{{selectedHome}}">
-      <view class="selected-home-title">已选择:</view>
-      <view class="selected-home-name">{{selectedHome.name}}</view>
+      <view class="modal-footer">
+        <button class="modal-btn cancel" bindtap="onPopupClose">取消</button>
+        <button class="modal-btn confirm" bindtap="onConfirmCreate">确定</button>
+      </view>
     </view>
-    
-    <!-- 按钮 -->
-    <view class="popup-btns">
-      <button class="popup-btn cancel" bindtap="onSearchPopupClose">取消</button>
-      <button class="popup-btn confirm {{!selectedHomeId ? 'disabled' : ''}}" bindtap="onApplyEnter">申请加入</button>
+  </view>
+
+  <!-- 访问家庭搜索弹窗 -->
+  <view wx:if="{{showSearchPopup}}" class="modal-overlay" catchtouchmove="true">
+    <view class="modal-content search-modal">
+      <view class="modal-header">
+        <text class="modal-title">访问家庭</text>
+      </view>
+      
+      <!-- 搜索框 -->
+      <view class="search-box">
+        <input
+          class="search-input"
+          placeholder="请输入家庭名称"
+          value="{{searchInput}}"
+          bindinput="onSearchInput"
+          maxlength="20"
+          confirm-type="search"
+          bindconfirm="onSearch"
+        />
+        <view class="search-btn" bindtap="onSearch">搜索</view>
+      </view>
+      
+      <!-- 搜索结果 -->
+      <scroll-view class="search-results" scroll-y>
+        <block wx:if="{{searchfamilies.length > 0}}">
+          <view 
+            wx:for="{{searchfamilies}}" 
+            wx:key="id"
+            class="search-item {{selectedHomeId === item.id ? 'selected' : ''}}"
+            bindtap="onSelectHome"
+            data-homeid="{{item.id}}"
+          >
+            <view class="search-item-info">
+              <text class="search-item-name">{{item.name}}</text>
+              <text class="search-item-address">地址: {{item.address}}</text>
+            </view>
+            <view class="search-item-check" wx:if="{{selectedHomeId === item.id}}">✓</view>
+          </view>
+        </block>
+        <view wx:elif="{{searchInput && searchfamilies.length === 0}}" class="no-results">
+          <view class="no-results-icon">🔍</view>
+          <text>未找到相关家庭</text>
+        </view>
+      </scroll-view>
+      
+      <!-- 选中的家庭信息 -->
+      <view class="selected-home-info" wx:if="{{selectedHome}}">
+        <view class="selected-home-title">已选择:</view>
+        <view class="selected-home-name">{{selectedHome.name}}</view>
+      </view>
+      
+      <!-- 按钮 -->
+      <view class="modal-footer">
+        <button class="modal-btn cancel" bindtap="onSearchPopupClose">取消</button>
+        <button class="modal-btn confirm {{!selectedHomeId ? 'disabled' : ''}}" bindtap="onApplyEnter">申请加入</button>
+      </view>
     </view>
   </view>
 </view>

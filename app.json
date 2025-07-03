@@ -11,7 +11,8 @@
     "pages/familymanager/familymanager",
     "pages/currentfamily/currentfamily",
     "pages/Roommanager/Roommanager",
-    "pages/Devicemanager/Devicemanager"
+    "pages/Devicemanager/Devicemanager",
+    "pages/device-detail/device-detail"
     
   ],
   "window": {

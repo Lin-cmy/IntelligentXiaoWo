@@ -127,7 +127,16 @@ Page({
           icon: 'success'
         });
       }, 1000);
-    }, 5000);
+    }, 4000);
+  },
+
+  // 跳转到设备详情页
+  onDeviceTap(e) {
+    const deviceId = e.currentTarget.dataset.id;
+    const deviceName = e.currentTarget.dataset.name;
+    wx.navigateTo({
+      url: '/pages/device-detail/device-detail?deviceId=' + deviceId + '&deviceName=' + deviceName,
+    })
   },
 
   // /home/get

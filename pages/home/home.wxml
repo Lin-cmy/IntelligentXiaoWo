@@ -1,64 +1,92 @@
-<!-- 窝名 -->
-<view class="home-header">
-  <view class="title-section">
-    <text class="home-title" bindtap="onTitleTap">{{homeName}}</text>
-    <view class="triangle-down" bindtap="onTitleTap"></view>
-  </view>
-  <view class="refresh-button {{isRefreshing ? 'refreshing' : ''}}" bindtap="onRefreshTap">
-    <text class="refresh-icon">↻</text>
-  </view>
-</view>
-
-<!-- 显示当前窝的房间 -->
-<scroll-view class="filter-bar" scroll-x>
-  <view class="filter-item {{selectedRoomId == '0' ? 'active' : '' }}" bindtap="onFilterTap" data-roomid='0'>全部</view>
-  <block wx:for="{{rooms}}" wx:key="id">
-    <view class="filter-item {{selectedRoomId == item.id ? 'active' : '' }}" bindtap="onFilterTap" data-roomId="{{item.id}}">{{item.name}}</view>
-  </block>
-</scroll-view>
-
-<!-- 显示当前房间的设备 -->
-<view class="device-grid">
-  <block wx:for="{{filteredDevices}}" wx:key="id">
-    <view class="device-square" bindtap="onDeviceTap" data-id="{{item.id}}">
-      <image class="device-bg" src="{{item.icon}}" mode="aspectFill" />
-      <text class="device-name">{{item.name}}</text>
+<!-- 主页容器 -->
+<!-- <view class="container"> -->
+  <!-- 顶部标题区域 -->
+  <view class="header-section">
+    <view class="title-section" bindtap="onTitleTap">
+      <text class="home-title">{{homeName}}</text>
+      <view class="triangle-down"></view>
     </view>
-  </block>
-</view>
-
-<!-- 悬浮窗 -->
-<view wx:if="{{showPopup}}" class="popup">
-  <block wx:for="{{homes}}" wx:key="id">
-    <view class="popup-item" hover-class="popup-item-hover" bindtap="onFamilyChangeTap" data-id="{{item.id}}" data-name="{{item.name}}">
-      {{item.name}}
+    <view class="refresh-button {{isRefreshing ? 'refreshing' : ''}}" bindtap="onRefreshTap">
+      <text class="refresh-icon">↻</text>
     </view>
-  </block>
-  <view class="popup-item" hover-class="popup-item-hover" bindtap="onFamilyManagerTap">家庭管理</view>
-  <view class="popup-item" hover-class="popup-item-hover" bindtap="onFamilyCreateTap">创建家庭</view>
-</view>
+  </view>
 
-<!-- 创建家庭弹窗 -->
-<view wx:if="{{showCreatePopup}}" class="popup-mask" catchtouchmove="true">
-    <view class="popup-section">
-      <view class="popup-title">创建家庭</view>
-      <input
-        class="popup-input"
-        placeholder="请输入家庭名称"
-        value="{{newFamilyName}}"
-        bindinput="onFamilyNameInput"
-        maxlength="20"
-      />
-      <input
-        class="popup-input"
-        placeholder="请输入家庭地址"
-        value="{{newFamilyAddress}}"
-        bindinput="onFamilyAddressInput"
-        maxlength="20"
-        />
-      <view class="popup-btns">
-        <button class="popup-btn cancel" bindtap="onPopupClose">取消</button>
-        <button class="popup-btn confirm" bindtap="onConfirmCreate">确定</button>
+  <!-- 房间筛选栏 -->
+  <scroll-view class="filter-bar" scroll-x enhanced show-scrollbar="{{false}}">
+    <view class="filter-item {{selectedRoomId == '0' ? 'active' : ''}}" bindtap="onFilterTap" data-roomid='0'>
+      <text>全部</text>
+    </view>
+    <block wx:for="{{rooms}}" wx:key="id">
+      <view class="filter-item {{selectedRoomId == item.id ? 'active' : ''}}" bindtap="onFilterTap" data-roomId="{{item.id}}">
+        <text>{{item.name}}</text>
+      </view>
+    </block>
+  </scroll-view>
+
+  <!-- 设备网格 -->
+  <view class="content-section">
+    <view class="device-grid" wx:if="{{filteredDevices.length > 0}}">
+      <block wx:for="{{filteredDevices}}" wx:key="id">
+        <view class="device-card" bindtap="onDeviceTap" data-id="{{item.id}}" data-name="{{item.name}}">
+          <view class="device-icon-container">
+            <image class="device-icon" src="{{item.icon || '/images/device-default.png'}}" mode="aspectFill" />
+          </view>
+          <text class="device-name">{{item.name}}</text>
+          <view class="device-status">
+            <text class="status-dot active"></text>
+            <text>在线</text>
+          </view>
+        </view>
+      </block>
+    </view>
+    
+    <!-- 无设备时显示 -->
+    <view class="empty-devices" wx:else>
+      <image class="empty-icon" src="/images/empty-device.png" mode="aspectFit"></image>
+      <text>暂无设备</text>
+      <text class="empty-hint">请先添加设备到此房间</text>
+    </view>
+  </view>
+
+  <!-- 家庭选择弹窗 -->
+  <view class="popup-overlay" wx:if="{{showPopup}}" bindtap="onTitleTap" catchtouchmove="true"></view>
+  <view class="popup" wx:if="{{showPopup}}">
+    <block wx:for="{{homes}}" wx:key="id">
+      <view class="popup-item" hover-class="popup-item-hover" bindtap="onFamilyChangeTap" data-id="{{item.id}}" data-name="{{item.name}}">
+        <view class="home-icon">🏠</view>
+        <text>{{item.name}}</text>
+      </view>
+    </block>
+    <view class="popup-divider"></view>
+    <view class="popup-item" hover-class="popup-item-hover" bindtap="onFamilyManagerTap">
+      <view class="home-icon">⚙️</view>
+      <text>家庭管理</text>
+    </view>
+    <view class="popup-item" hover-class="popup-item-hover" bindtap="onFamilyCreateTap">
+      <view class="home-icon">➕</view>
+      <text>创建家庭</text>
+    </view>
+  </view>
+
+  <!-- 创建家庭弹窗 -->
+  <view class="modal-overlay" wx:if="{{showCreatePopup}}" bindtap="onPopupClose" catchtouchmove="true"></view>
+  <view class="modal-content" wx:if="{{showCreatePopup}}">
+    <view class="modal-header">
+      <text class="modal-title">创建家庭</text>
+    </view>
+    <view class="modal-body">
+      <view class="input-group">
+        <text class="input-label">家庭名称</text>
+        <input class="modal-input" placeholder="请输入家庭名称" value="{{newFamilyName}}" bindinput="onFamilyNameInput" maxlength="20" />
+      </view>
+      <view class="input-group">
+        <text class="input-label">家庭地址</text>
+        <input class="modal-input" placeholder="请输入家庭地址" value="{{newFamilyAddress}}" bindinput="onFamilyAddressInput" maxlength="20" />
       </view>
     </view>
+    <view class="modal-footer">
+      <button class="modal-btn cancel" bindtap="onPopupClose">取消</button>
+      <button class="modal-btn confirm" bindtap="onConfirmCreate">确定</button>
+    </view>
   </view>
+<!-- </view> -->

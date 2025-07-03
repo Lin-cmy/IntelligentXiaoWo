@@ -1,160 +1,146 @@
+/* 全局页面样式 */
+page {
+  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  min-height: 100vh;
+  box-sizing: border-box;
+}
+
 /* 顶部导航栏 */
 .nav-bar {
   position: relative;
-  height: 100rpx;
-  background: #fff;
+  height: 110rpx;
+  background: rgba(255, 255, 255, 0.95);
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 0 32rpx;
-  box-shadow: 0 2rpx 12rpx rgba(0,0,0,0.06);
+  padding: 0 30rpx;
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.08);
   z-index: 10;
+  backdrop-filter: blur(10px);
 }
+
 .nav-title {
-  font-size: 36rpx;
+  font-size: 42rpx;
   font-weight: bold;
-  color: #222;
+  color: #2c3e50;
 }
+
 .nav-menu-icon {
-  width: 48rpx;
-  height: 48rpx;
+  width: 70rpx;
+  height: 70rpx;
+  background: rgba(127, 182, 159, 0.1);
+  border-radius: 35rpx;
   display: flex;
   flex-direction: column;
   justify-content: center;
   align-items: center;
-  cursor: pointer;
+  transition: all 0.3s ease;
 }
+
+.nav-menu-icon:active {
+  transform: scale(0.95);
+  background: rgba(127, 182, 159, 0.2);
+}
+
 .icon-dot {
   width: 8rpx;
   height: 8rpx;
   border-radius: 50%;
-  background: #888;
-  margin: 2rpx 0;
+  background: #7FB69F;
+  margin: 3rpx 0;
   display: block;
 }
 
 /* 悬浮菜单 */
 .float-menu {
   position: absolute;
-  top: 92rpx; /* 紧贴导航栏底部 */
-  right: 32rpx;
-  background: #fff;
-  border-radius: 16rpx;
-  box-shadow: 0 8rpx 32rpx rgba(0,0,0,0.15);
+  top: 100rpx;
+  right: 30rpx;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 20rpx;
+  box-shadow: 0 12rpx 36rpx rgba(0, 0, 0, 0.15);
   z-index: 20;
-  min-width: 180rpx;
-  padding: 16rpx 0;
-  animation: float-fade-in 0.2s;
-}
-.menu-item {
-  padding: 22rpx 48rpx 22rpx 36rpx;
-  font-size: 30rpx;
-  color: #222;
-  transition: background 0.18s;
-}
-.menu-item:active {
-  background: #f0fdf4;
+  min-width: 200rpx;
+  padding: 12rpx 0;
+  animation: float-fade-in 0.3s ease;
+  backdrop-filter: blur(10px);
 }
 
-/* 弹窗样式 */
-.popup-change {
-  position: fixed;
-  left: 0; right: 0; top: 0; bottom: 0;
-  background: rgba(0,0,0,0.4);
-  z-index: 100;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  animation: popup-fade-in 0.25s;
-}
-.popup-content {
-  background: #fff;
-  border-radius: 22rpx;
-  padding: 54rpx 36rpx 36rpx 36rpx;
-  min-width: 520rpx;
-  box-shadow: 0 8rpx 32rpx rgba(0,0,0,0.12);
-  display: flex;
-  flex-direction: column;
-  align-items: center;
-}
-.popup-change-title {
-  font-size: 36rpx;
-  font-weight: bold;
-  margin-bottom: 32rpx;
-  color: #222;
-}
-.popup-change-input {
-  border: 1rpx solid #e5e7eb;
-  border-radius: 14rpx;
-  width: 100%;
-  padding: 18rpx 14rpx;
-  font-size: 28rpx;
-  margin-bottom: 36rpx;
-  background: #f7fafc;
-  outline: none;
-}
-.popup-btns {
-  width: 100%;
-  display: flex;
-  justify-content: space-between;
-  gap: 24rpx;
-}
-.popup-btn {
-  width: 44%;
-  padding: 16rpx 0;
-  border-radius: 14rpx;
+.menu-item {
+  padding: 24rpx 40rpx;
   font-size: 30rpx;
-  font-weight: 600;
-  border: none;
+  color: #2c3e50;
+  transition: all 0.3s ease;
+  position: relative;
 }
-.popup-btn.cancel {
-  background: #f1f5f9;
-  color: #6b7280;
+
+.menu-item:active {
+  background: rgba(127, 182, 159, 0.1);
 }
-.popup-btn.confirm {
-  background: linear-gradient(90deg, #4ade80 0%, #22d3ee 100%);
-  color: #fff;
+
+.menu-item:first-child {
+  border-bottom: 1rpx solid rgba(0, 0, 0, 0.05);
 }
 
 /* 房间列表 */
 .room-list {
-  padding: 32rpx;
-  margin-bottom: 140rpx; /* 为底部的完成按钮留出空间 */
+  padding: 30rpx 20rpx;
+  margin-bottom: 140rpx;
 }
+
 .room-item {
   display: flex;
   align-items: center;
   justify-content: space-between;
-  padding: 32rpx 0;
-  border-bottom: 1rpx solid #f4f4f4;
-  font-size: 32rpx;
-  cursor: pointer;
+  padding: 36rpx 30rpx;
+  background: rgba(255, 255, 255, 0.95);
+  border-radius: 20rpx;
+  margin-bottom: 20rpx;
+  box-shadow: 0 6rpx 20rpx rgba(0, 0, 0, 0.06);
+  transition: all 0.3s ease;
+  backdrop-filter: blur(10px);
 }
+
+.room-item:active {
+  transform: scale(0.98);
+  box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
 .room-name {
-  color: #222;
+  font-size: 34rpx;
+  font-weight: 600;
+  color: #2c3e50;
 }
+
 .room-arrow {
-  color: #bdbdbd;
+  color: #95a5a6;
   font-size: 36rpx;
   margin-left: 14rpx;
 }
 
 /* 删除按钮样式 */
 .room-delete-btn {
-  width: 56rpx;
-  height: 56rpx;
-  background: #ff4d4f;
-  border-radius: 50%;
+  width: 64rpx;
+  height: 64rpx;
+  background: linear-gradient(135deg, #e74c3c 0%, #c0392b 100%);
+  border-radius: 32rpx;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2rpx 8rpx rgba(255,77,79,0.18);
+  box-shadow: 0 6rpx 18rpx rgba(231, 76, 60, 0.3);
+  transition: all 0.3s ease;
 }
+
+.room-delete-btn:active {
+  transform: scale(0.9);
+}
+
 .room-delete-minus {
-  color: #fff;
+  color: white;
   font-size: 44rpx;
   font-weight: bold;
   line-height: 1;
+  margin-top: -6rpx;
 }
 
 /* 完成按钮样式 */
@@ -165,24 +151,130 @@
   transform: translateX(-50%);
   width: 686rpx;
   height: 96rpx;
-  background: #4ade80;
-  border-radius: 16rpx;
-  color: #fff;
+  background: linear-gradient(135deg, #7FB69F 0%, #6aa085 100%);
+  border-radius: 48rpx;
+  color: white;
   font-size: 34rpx;
   font-weight: 600;
   display: flex;
   align-items: center;
   justify-content: center;
-  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.08);
+  box-shadow: 0 8rpx 24rpx rgba(127, 182, 159, 0.4);
   letter-spacing: 2rpx;
+  transition: all 0.3s ease;
+}
+
+.finish-btn:active {
+  transform: translateX(-50%) scale(0.98);
+  box-shadow: 0 4rpx 12rpx rgba(127, 182, 159, 0.6);
+}
+
+/* 弹窗样式 */
+.popup-change {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  backdrop-filter: blur(4px);
+  animation: fadeIn 0.3s ease;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.popup-content {
+  width: 80%;
+  max-width: 600rpx;
+  background: rgba(255, 255, 255, 0.98);
+  border-radius: 24rpx;
+  overflow: hidden;
+  box-shadow: 0 24rpx 64rpx rgba(0, 0, 0, 0.2);
+  animation: scaleIn 0.3s ease;
+  padding: 40rpx;
+}
+
+@keyframes scaleIn {
+  from { transform: scale(0.9); opacity: 0; }
+  to { transform: scale(1); opacity: 1; }
+}
+
+.popup-change-title {
+  font-size: 36rpx;
+  font-weight: bold;
+  color: #2c3e50;
+  margin-bottom: 30rpx;
+  text-align: center;
+}
+
+.popup-change-input {
+  width: 100%;
+  height: 88rpx;
+  background: rgba(240, 242, 245, 0.6);
+  border-radius: 16rpx;
+  padding: 0 24rpx;
+  box-sizing: border-box;
+  font-size: 28rpx;
+  color: #2c3e50;
+  border: 2rpx solid rgba(233, 236, 239, 0.8);
+  transition: all 0.3s ease;
+  margin-bottom: 40rpx;
+}
+
+.popup-change-input:focus {
+  border-color: rgba(127, 182, 159, 0.5);
+  background: rgba(240, 242, 245, 0.9);
+}
+
+.popup-btns {
+  display: flex;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.popup-btn {
+  width: 45%;
+  height: 88rpx;
+  border-radius: 16rpx;
+  font-size: 30rpx;
+  font-weight: 600;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.1);
+}
+
+.popup-btn.cancel {
+  background: #f1f2f6;
+  color: #7f8c8d;
+}
+
+.popup-btn.cancel:active {
+  transform: scale(0.97);
+  background: #e5e7eb;
+}
+
+.popup-btn.confirm {
+  background: linear-gradient(135deg, #7FB69F 0%, #6aa085 100%);
+  color: white;
+  box-shadow: 0 8rpx 24rpx rgba(127, 182, 159, 0.4);
+}
+
+.popup-btn.confirm:active {
+  transform: scale(0.97);
+  box-shadow: 0 4rpx 12rpx rgba(127, 182, 159, 0.6);
 }
 
 /* 动画 */
-@keyframes popup-fade-in {
-  from { opacity: 0; transform: scale(0.98);}
-  to   { opacity: 1; transform: scale(1);}
-}
 @keyframes float-fade-in {
-  from { opacity: 0; transform: translateY(-12rpx);}
-  to   { opacity: 1; transform: translateY(0);}
+  from { opacity: 0; transform: translateY(-20rpx); }
+  to { opacity: 1; transform: translateY(0); }
 }

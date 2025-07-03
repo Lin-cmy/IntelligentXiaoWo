@@ -295,7 +295,7 @@ Page({
     })
   },
 
-  // /home/room/device/delete?id={deviceId}
+  // /home/{homeId}/room/device/delete?id={deviceId}
   deletedevice(callback) {
     wx.request({
       url: 'http://localhost:8080/home/' + this.data.homeId + '/room/device/delete?id='  + this.data.deviceId,
@@ -329,7 +329,7 @@ Page({
   movedevice(callback) {
     this.setData({ deviceId: this.data.selectedDeviceId, roomId: this.data.targetRoomId });
     wx.request({
-      url: 'http://localhost:8080/home/device/move',
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/device/move',
       method: 'POST',
       data: {
         deviceId: this.data.deviceId,
