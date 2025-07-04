@@ -90,6 +90,13 @@ Page({
 
   // 房间及设备管理
   onRandDTap(e) {
+    if (this.data.role === '访客') {
+      wx.showToast({
+        title: '您无权访问该页面',
+        icon: 'none'
+      });
+      return;
+    }
     const homeId = e.currentTarget.dataset.homeid;
     wx.navigateTo({
       url: '/pages/Roommanager/Roommanager?homeId=' + homeId

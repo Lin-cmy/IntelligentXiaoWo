@@ -27,7 +27,7 @@
   <view class="content-section">
     <view class="device-grid" wx:if="{{filteredDevices.length > 0}}">
       <block wx:for="{{filteredDevices}}" wx:key="id">
-        <view class="device-card" bindtap="onDeviceTap" data-id="{{item.id}}" data-name="{{item.name}}">
+        <view class="device-card" bindtap="onDeviceTap" data-id="{{item.id}}" data-name="{{item.name}}" data-typeid="{{item.typeId}}">
           <view class="device-icon-container">
             <image class="device-icon" src="{{item.icon || '/images/device-default.png'}}" mode="aspectFill" />
           </view>

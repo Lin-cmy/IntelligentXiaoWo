@@ -1,5 +1,6 @@
 Page({
   data: {
+    role: null,
     homeId: null,
     homeName: '创建家庭',
     newFamilyName: '',
@@ -97,45 +98,53 @@ Page({
   },
 
   // 点击刷新按钮
-  onRefreshTap() {
-    // 防止重复点击
-    if (this.data.isRefreshing) {
-      return;
-    }
+  // onRefreshTap() {
+  //   // 防止重复点击
+  //   if (this.data.isRefreshing) {
+  //     return;
+  //   }
     
-    // 设置刷新状态
-    this.setData({ isRefreshing: true });
+  //   // 设置刷新状态
+  //   this.setData({ isRefreshing: true });
     
-    // 显示连接中提示
-    wx.showLoading({ title: '连接中...' });
+  //   // 显示连接中提示
+  //   wx.showLoading({ title: '连接中...' });
     
-    // 先调用connectdevice
-    this.connectdevice();
+  //   // 先调用connectdevice
+  //   this.connectdevice();
     
-    // 5秒后调用disconnectdevice
-    setTimeout(() => {
-      wx.showLoading({ title: '断开连接中...' });
-      this.disconnectdevice();
+  //   // 5秒后调用disconnectdevice
+  //   setTimeout(() => {
+  //     wx.showLoading({ title: '断开连接中...' });
+  //     this.disconnectdevice();
       
-      // 操作完成后重置状态并刷新页面
-      setTimeout(() => {
-        wx.hideLoading();
-        this.setData({ isRefreshing: false });
-        this.homeview(); // 刷新设备列表
-        wx.showToast({
-          title: '设备已刷新',
-          icon: 'success'
-        });
-      }, 1000);
-    }, 4000);
-  },
+  //     // 操作完成后重置状态并刷新页面
+  //     setTimeout(() => {
+  //       wx.hideLoading();
+  //       this.setData({ isRefreshing: false });
+  //       this.homeview(); // 刷新设备列表
+  //       wx.showToast({
+  //         title: '设备已刷新',
+  //         icon: 'success'
+  //       });
+  //     }, 1000);
+  //   }, 4000);
+  // },
 
   // 跳转到设备详情页
   onDeviceTap(e) {
     const deviceId = e.currentTarget.dataset.id;
     const deviceName = e.currentTarget.dataset.name;
+    const deviceTypeId = e.currentTarget.dataset.typeid;
+    if (this.data.role === 2 && (deviceTypeId === "55" || deviceTypeId === "88" || deviceTypeId === "99")) {
+      wx.showToast({
+        title: '您无权限访问该设备',
+        icon: 'none'
+      });
+      return;
+    }
     wx.navigateTo({
-      url: '/pages/device-detail/device-detail?deviceId=' + deviceId + '&deviceName=' + deviceName,
+      url: '/pages/device-detail/device-detail?deviceId=' + deviceId + '&deviceName=' + deviceName + '&deviceTypeId=' + deviceTypeId,
     })
   },
 
@@ -213,12 +222,20 @@ Page({
               deviceMap[item.id] = {
                 id: item.id,
                 name: item.name,
-                roomId: String(item.roomId)
+                roomId: String(item.roomId),
+                typeId: String(item.typeId)
               };
             }
           });
           const devices = Object.values(deviceMap);
+          let role = null;
+          res.data.users.forEach(item => {
+            if (item.id === res.data.currentUserId) {
+              role = item.role;
+            }
+          });
           this.setData({
+            role: role,
             rooms: rooms,
             devices: devices,
             selectedRoomId: '0'
@@ -269,65 +286,5 @@ Page({
         });
       }
     })
-  },
-
-  // /home/{homeId}/device/connect
-  connectdevice() {
-    wx.request({
-      url: 'http://localhost:8080/home/' + this.data.homeId + '/device/connect',
-      method: 'POST',
-      header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
-      success: (res) => {
-        if (res.statusCode === 200) {
-          console.log('连接成功');
-          // wx.showToast({
-          //   title: '连接成功',
-          //   icon: 'none'
-          // });
-        } else {
-          console.log('连接失败');
-          // wx.showToast({
-          //   title: '连接失败',
-          //   icon: 'none'
-          // });
-        }
-      },
-      fail: () => {
-        wx.showToast({
-          title: '网络错误',
-          icon: 'none'
-        });
-      }
-    })
-  },
-
-  // /home/{homeId}/device/disconnect
-  disconnectdevice() {
-    wx.request({
-      url: 'http://localhost:8080/home/' + this.data.homeId + '/device/disconnect',
-      method: 'POST',
-      header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
-      success: (res) => {
-        if (res.statusCode === 200) {
-          console.log('成功断开连接');
-          // wx.showToast({
-          //   title: '成功断开连接',
-          //   icon: 'none'
-          // });
-        } else {
-          console.log('断开连接失败');
-          // wx.showToast({
-          //   title: '断开连接失败',
-          //   icon: 'none'
-          // });
-        }
-      },
-      fail: () => {
-        wx.showToast({
-          title: '网络错误',
-          icon: 'none'
-        });
-      }
-    })
-  },
+  }
 });

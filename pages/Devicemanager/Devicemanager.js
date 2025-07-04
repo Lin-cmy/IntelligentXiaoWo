@@ -12,11 +12,30 @@ Page({
     rooms: [],
     devices: [],
     deviceTypes: [],
+    connecteddevice: [],
     showMenu: false,
     showAddDevicePopup: false,
     showMoveDevicePopup: false,
+    showAddDevicePopupByHand: false,
+    isSearching: false,
     deleteMode: false,
+    newDeviceId: null,
     newDeviceName: '',
+    deviceMap: {
+      "1":  "温度传感器",
+      "2":  "湿度传感器",
+      "3":  "可燃气体传感器",
+      "4":  "可燃气体报警器",
+      "5":  "风扇",
+      "6":  "环境光照传感器",
+      "7":  "人体红外传感器",
+      "8":  "可调亮度灯光", 
+      "9":  "水泵", 
+      "10": "土壤湿度传感器",
+      "55": "风扇控制器", // 0 1 2 3 >=4
+      "88": "灯光控制器", // 0-100 >=100 
+      "99": "水泵控制器"  // 0 1 2 3 >=4
+    }
   },
 
   onLoad(options) {
@@ -33,12 +52,49 @@ Page({
 
   // 添加设备弹窗
   onAddDeviceTap() {
-    this.setData({ showAddDevicePopup: true })
+    this.setData({ 
+      showAddDevicePopup: true,
+      newDeviceName: '',
+      selectedDeviceId: null,
+      selectedDeviceTypeId: null,
+      newDeviceId: null
+    });
+
+    // 开始搜索设备
+    this.startDeviceSearch();
   },
 
   // 输入设备名称
   onDeviceNameInput(e) {
     this.setData({ newDeviceName: e.detail.value })
+  },
+
+  // 开始设备搜索
+  startDeviceSearch() {
+    this.setData({ isSearching: true, connecteddevice: [] });
+    
+    // 连接设备
+    this.connect();
+    
+    // 3秒后断开连接并获取设备列表
+    setTimeout(() => {
+      this.disconnect();
+      
+      setTimeout(() => {
+        this.getconnecteddevice();
+        this.setData({ isSearching: false });
+      }, 500);
+    }, 4000);
+  },
+
+  // 选择设备
+  onSelectDevice(e) {
+    const { id, typeId } = e.currentTarget.dataset;
+    this.setData({
+      selectedDeviceId: id,
+      selectedDeviceTypeId: typeId,
+      newDeviceId: id
+    });
   },
 
   // 设备类型选择器改变事件
@@ -171,6 +227,34 @@ Page({
     this.setData({ deleteMode: false })
   },
 
+  // 手动添加设备
+  onAddDeviceTapByHand() {
+    this.setData({ showAddDevicePopupByHand: true });
+  },
+
+  // 获取设备id
+  onDeviceIdInput(e) {
+    this.setData({ newDeviceId: e.detail.value });
+  },
+
+  // 确认手动添加
+  onAddDeviceByHandConfirm() {
+    this.adddevicebyhand(() => {
+      this.homeview(() => {
+        this.setData({
+          newDeviceId: '',
+          newDeviceName: '',
+          showAddDevicePopupByHand: ''
+        })
+      })
+    });
+  },
+
+  // 取消手动添加
+  onAddDeviceByHandCancel() {
+    this.setData({ showAddDevicePopupByHand: false });
+  },
+
   // /home/view
   homeview(callback) {
       wx.request({
@@ -260,12 +344,83 @@ Page({
     });
   },
 
-  // /home/room/device/add
+  // /home/{homeId}/device/search/connect
+  connect() {
+    wx.request({
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/device/search/connect',
+      method: 'POST',
+      header: { "Authorization": "Bearer " + wx.getStorageSync('token')},
+      success: (res) => {
+        if (res.statusCode === 200) {
+          console.log("连接成功");
+        } else {
+          console.log("连接失败")
+        }
+      },
+      fail: () => {
+        console.log("网络错误")
+      }
+    })
+  },
+
+  // /home/{homeId}/device/search/disconnect
+  disconnect() {
+    wx.request({
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/device/search/disconnect',
+      method: 'POST',
+      header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
+      success: (res) => {
+        if (res.statusCode === 200) {
+          console.log('成功断开连接')
+        } else {
+          console.log('断开连接失败')
+        }
+      },
+      fail: () => {
+        console.log('网络错误')
+      }
+    })
+  },
+
+  // /home/{homeId}/device/search/get
+  getconnecteddevice() {
+    wx.request({
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/device/search/get',
+      method: 'GET',
+      header: { "Authorization": "Bearer " + wx.getStorageSync('token')},
+      success: (res) => {
+        if (res.statusCode === 200) {
+          wx.showToast({
+            title: '成功获取连接设备',
+            icon: 'none'
+          });
+          const connecteddevice = res.data.devices.map(item => ({
+            id: item.id,
+            typeId: item.typeId,
+            typeName: this.data.deviceMap[item.typeId]
+          }));
+          this.setData({ connecteddevice: connecteddevice });
+        } else {
+          wx.showToast({
+            title: '获取设备失败',
+            icon: 'none'
+          });
+        }
+      },
+      fail: () => {
+        console.log('网络错误')
+      }
+    })
+  },
+
+  // /home/{homeId}/device/search/postdevice
   createdevice(callback) {
     wx.request({
-      url: 'http://localhost:8080/home/' + this.data.homeId + '/room/device/add',
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/device/search/postdevice',
       method: 'POST',
+      header: { "Authorization": "Bearer " + wx.getStorageSync('token')},
       data: {
+        "id": this.data.newDeviceId,
         "name": this.data.newDeviceName,
         "typeId": this.data.selectedDeviceTypeId,
         "roomId": this.data.roomId,
@@ -280,7 +435,7 @@ Page({
           if (typeof callback === 'function') callback();
         } else {
           wx.showToast({
-            title: res.data.message || '创建失败',
+            title: res.data.message || '创建失败，可能设备已创建',
             icon: 'none'
           });
           if (typeof callback === 'function') callback();
@@ -345,6 +500,43 @@ Page({
         } else {
           wx.showToast({
             title: res.data.message || '移动失败',
+            icon: 'none'
+          });
+          if (typeof callback === 'function') callback();
+        }
+      },
+      fail: () => {
+        wx.showToast({
+          title: '网络错误',
+          icon: 'none'
+        });
+        if (typeof callback === 'function') callback();
+      }
+    })
+  },
+
+  // /home/{homeId}/room/device/add
+  adddevicebyhand(callback) {
+    wx.request({
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/room/device/add',
+      method: 'POST',
+      data: {
+        "name": this.data.newDeviceName,
+        "id": this.data.newDeviceId,
+        "typeId": this.data.selectedDeviceTypeId,
+        "roomId": this.data.roomId,
+        "homeId": this.data.homeId
+      },
+      success: (res) => {
+        if (res.statusCode === 201) {
+          wx.showToast({
+            title: '添加成功',
+            icon: 'none'
+          });
+          if (typeof callback === 'function') callback();
+        } else {
+          wx.showToast({
+            title: '添加失败',
             icon: 'none'
           });
           if (typeof callback === 'function') callback();

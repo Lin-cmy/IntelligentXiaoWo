@@ -13,10 +13,11 @@
   <view class="menu-item" bindtap="onAddDeviceTap">添加设备</view>
   <view class="menu-item" bindtap="onMoveDeviceTap">移动设备</view>
   <view class="menu-item" bindtap="onDeleteDeviceTap">删除设备</view>
+  <view class="menu-item" bindtap="onAddDeviceTapByHand">手动添加</view>
 </view>
 
-<!-- 添加设备弹窗 -->
-<view wx:if="{{showAddDevicePopup}}" class="popup-change" catchtouchmove="true">
+<!-- 手动添加设备弹窗 -->
+<view wx:if="{{showAddDevicePopupByHand}}" class="popup-change" catchtouchmove="true">
   <view class="popup-content">
     <text class="popup-change-title">添加设备</text>
     <input 
@@ -24,6 +25,13 @@
       placeholder="请输入设备名称"
       value="{{newDeviceName}}"
       bindinput="onDeviceNameInput"
+      maxlength="20"
+    />
+    <input
+      class="popup-change-input"
+      placeholder="请输入设备id"
+      value="{{newDeviceId}}"
+      bindinput="onDeviceIdInput"
       maxlength="20"
     />
     <view class="device-type-selector">
@@ -40,6 +48,72 @@
         </view>
       </picker>
     </view>
+    <view class="popup-btns">
+      <button class="popup-btn cancel" bindtap="onAddDeviceByHandCancel">取消</button>
+      <button class="popup-btn confirm" bindtap="onAddDeviceByHandConfirm">创建</button>
+    </view>
+  </view>
+</view>
+
+<!-- 添加设备弹窗 -->
+<view wx:if="{{showAddDevicePopup}}" class="popup-change" catchtouchmove="true">
+  <view class="popup-content">
+    <text class="popup-change-title">添加设备</text>
+    
+    <!-- 设备名称输入框 -->
+    <input 
+      class="popup-change-input"
+      placeholder="请输入设备名称"
+      value="{{newDeviceName}}"
+      bindinput="onDeviceNameInput"
+      maxlength="20"
+    />
+    
+    <!-- 可用设备列表区域 -->
+    <view class="connected-devices-section">
+      <text class="selector-label">当前可用设备</text>
+      
+      <!-- 连接状态提示 -->
+      <view class="connect-status" wx:if="{{isSearching}}">
+        <view class="loading-icon"></view>
+        <text>正在搜索设备...</text>
+      </view>
+      
+      <!-- 连接设备列表 -->
+      <scroll-view 
+        class="connected-devices-list" 
+        scroll-y 
+        wx:if="{{!isSearching && connecteddevice.length > 0}}"
+      >
+        <view 
+          wx:for="{{connecteddevice}}" 
+          wx:key="id"
+          class="connected-device-item {{selectedDeviceId === item.id ? 'selected' : ''}}"
+          bindtap="onSelectDevice"
+          data-id="{{item.id}}"
+          data-type-id="{{item.typeId}}"
+        >
+          <view class="device-info">
+            <view class="device-type-icon">
+              <text class="device-type-code">{{item.typeId}}</text>
+            </view>
+            <view class="device-details">
+              <text class="device-type-name">{{item.typeName}}</text>
+              <text class="device-id">ID: {{item.id}}</text>
+            </view>
+          </view>
+          <view class="select-indicator" wx:if="{{selectedDeviceId === item.id}}">✓</view>
+        </view>
+      </scroll-view>
+      
+      <!-- 无设备提示 -->
+      <view class="no-devices" wx:if="{{!isSearching && connecteddevice.length === 0}}">
+        <text class="no-devices-text">未发现可用设备</text>
+        <view class="retry-btn" bindtap="startDeviceSearch">重新搜索</view>
+      </view>
+    </view>
+    
+    <!-- 按钮区域 -->
     <view class="popup-btns">
       <button class="popup-btn cancel" bindtap="onAddDeviceCancel">取消</button>
       <button class="popup-btn confirm" bindtap="onAddDeviceConfirm">创建</button>

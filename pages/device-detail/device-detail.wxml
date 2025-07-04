@@ -61,18 +61,85 @@
     </view>
   </view>
   
-  <!-- 设备控制区域 (如有需要) -->
-  <view class="control-section">
+  <!-- 设备控制区域 (根据设备类型显示) -->
+  <view class="control-section" wx:if="{{deviceTypeId == '55' || deviceTypeId == '88' || deviceTypeId ==  '99'}}">
     <view class="section-title">设备控制</view>
-    <view class="control-panel">
-      <view class="control-item" bindtap="toggleDevice">
-        <view class="control-icon">⚡</view>
-        <text>开关设备</text>
+  
+    <!-- 风扇控制器 (deviceTypeId: 55 或 99) -->
+    <view class="fan-control" wx:if="{{deviceTypeId == '55' || deviceTypeId == '99'}}">
+      <view class="control-description">{{deviceTypeId == '55' ? '风扇' : '水泵'}}挡位控制</view>
+    
+      <view class="fan-levels">
+        <view class="fan-level {{selectedLevel == 0 ? 'selected' : ''}}" 
+          bindtap="selectLevel" data-level="0">
+          <view class="level-icon level-off">●</view>
+          <text>关闭</text>
+        </view>
+      
+        <view class="fan-level {{selectedLevel == 1 ? 'selected' : ''}}" 
+          bindtap="selectLevel" data-level="1">
+          <view class="level-icon level-low">●</view>
+          <text>低速</text>
+        </view>
+      
+        <view class="fan-level {{selectedLevel == 2 ? 'selected' : ''}}" 
+          bindtap="selectLevel" data-level="2">
+          <view class="level-icon level-medium">●</view>
+          <text>中速</text>
+        </view>
+      
+        <view class="fan-level {{selectedLevel == 3 ? 'selected' : ''}}" 
+          bindtap="selectLevel" data-level="3">
+          <view class="level-icon level-high">●</view>
+          <text>高速</text>
+        </view>
+      
+        <view class="fan-level {{selectedLevel == 4 ? 'selected' : ''}}" 
+          bindtap="selectLevel" data-level="4">
+          <view class="level-icon level-auto">●</view>
+          <text>自动</text>
+        </view>
       </view>
-      <view class="control-item" bindtap="resetDevice">
-        <view class="control-icon">🔄</view>
-        <text>重置设备</text>
+    </view>
+  
+    <!-- 灯光控制器 (deviceTypeId: 88) -->
+    <view class="light-control" wx:if="{{deviceTypeId == '88'}}">
+      <view class="control-description">灯光亮度控制</view>
+    
+      <view class="light-buttons">
+        <view class="light-button {{selectedLevel == 0 ? 'selected' : ''}}" 
+          bindtap="selectLevel" data-level="0">
+          <view class="light-icon light-off">○</view>
+          <text>关闭</text>
+        </view>
+      
+        <view class="light-button {{selectedLevel == 101 ? 'selected' : ''}}" 
+          bindtap="selectLevel" data-level="101">
+          <view class="light-icon light-auto">⟳</view>
+          <text>自动</text>
+        </view>
       </view>
+    
+      <view class="brightness-control">
+        <text class="brightness-label">亮度: {{selectedLevel == 0 ? '关闭' : selectedLevel == 101 ? '自动' : selectedLevel + '%'}}</text>
+        <slider 
+          min="1" 
+          max="100" 
+          step="1" 
+          activeColor="#7FB69F" 
+          backgroundColor="#e0e0e0"
+          blockSize="28"
+          value="{{selectedLevel >= 0 && selectedLevel <= 100 ? selectedLevel : 0}}"
+          bindchange="onSliderChange"
+        />
+      </view>
+    </view>
+  
+    <!-- 确认按钮 -->
+    <view class="confirm-container">
+      <button class="confirm-btn" bindtap="confirmOperation">
+        确认设置
+      </button>
     </view>
   </view>
 </view>

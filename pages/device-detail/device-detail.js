@@ -3,23 +3,63 @@ Page({
   data: {
     deviceId: null,
     deviceName: '设备详情',
-    deviceData: []
+    deviceTypeId: null,
+    deviceData: [],
+    selectedLevel: 0,
   },
 
   onLoad: function(options) {
     // 从页面参数获取设备ID
     const deviceId = options.deviceId;
     const deviceName = options.deviceName;
-    if (deviceId && deviceName) {
+    const deviceTypeId = options.deviceTypeId;
+    if (deviceId && deviceName && deviceTypeId) {
       this.setData({ deviceId });
       this.setData({ deviceName });
-      this.fetchDeviceData();
+      this.setData({ deviceTypeId });
+      this.refreshData();
     } else {
       wx.showToast({
-        title: '设备 ID 或 NAME 不存在',
+        title: '设备 ID、NAME 或 DEVICETYPEID 不存在',
         icon: 'none'
       });
     }
+    this.initDeviceControl();
+    this.connect();
+  },
+
+  // 点击刷新按钮
+  refreshData() {
+    // 防止重复点击
+    if (this.data.isRefreshing) {
+      return;
+    }
+      
+    // 设置刷新状态
+    this.setData({ isRefreshing: true });
+    
+    // 显示连接中提示
+    wx.showLoading({ title: '连接中...' });
+    
+    // 先调用connectdevice
+    this.connectdevice();
+      
+    // 5秒后调用disconnectdevice
+    setTimeout(() => {
+      wx.showLoading({ title: '断开连接中...' });
+      this.disconnectdevice();
+      
+      // 操作完成后重置状态并刷新页面
+      setTimeout(() => {
+        wx.hideLoading();
+        this.setData({ isRefreshing: false });
+        this.fetchDeviceData();
+        wx.showToast({
+          title: '数据已更新',
+          icon: 'success'
+        });
+      }, 1000);
+    }, 4000);
   },
 
   // 获取设备数据
@@ -72,9 +112,133 @@ Page({
   refreshData() {
     this.fetchDeviceData();
   },
+
+  // 初始化控制模式
+  initDeviceControl: function() {
+    this.setData({ selectedLevel: 0 });
+  },
+
+  // 选择控制级别
+  selectLevel: function(e) {
+    const level = parseInt(e.currentTarget.dataset.level);
+    this.setData({ selectedLevel: level });
+  },
+
+  // 滑块变化事件
+  onSliderChange: function(e) {
+    const value = e.detail.value;
+    this.setData({ selectedLevel: value == 0 ? 0 : value });
+  },
+
+  confirmOperation: function() {
+    wx.showLoading({ title: '设置中...' });
+    this.sendmessage(() => {
+      wx.hideLoading();
+    })
+  },
   
   // 返回上一页
   onBack() {
     wx.navigateBack();
-  }
+  },
+
+  // /home/{homeId}/device/{deviceId}/connect
+  connect() {
+    wx.request({
+      url: 'http://localhost:8080/home/' + wx.getStorageSync('HOMEID') + '/device/' + this.data.deviceId + '/connect',
+      method: 'POST',
+      header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
+      success: (res) => {
+        if (res.statusCode === 200) {
+          console.log('连接成功');
+        } else {
+          console.log('连接失败');
+        }
+      },
+      fail: () => {
+        console.log('网络错误');
+      }
+    })
+  },
+
+  // /sendMessage?topic={deviceId}&value={selectedLevel}
+  sendmessage(callback) {
+    wx.request({
+      url: 'http://localhost:8080/sendMessage?topic=' + this.data.deviceId + '&value=' + this.data.selectedLevel,
+      method: 'POST',
+      success: (res) => {
+        if (res.statusCode === 200) {
+          console.log('发送成功', res.data);
+          if (typeof callback === 'function') callback();
+        } else {
+          console.log('发送失败');
+          if (typeof callback === 'function') callback();
+        }
+      },
+      fail: () => {
+        console.log('网络错误');
+        if (typeof callback === 'function') callback();
+      }
+    })
+  },
+
+  // /home/{homeId}/device/connect
+  connectdevice() {
+    wx.request({
+      url: 'http://localhost:8080/home/' + wx.getStorageSync('HOMEID') + '/device/connect',
+      method: 'POST',
+      header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
+      success: (res) => {
+        if (res.statusCode === 200) {
+          console.log('连接成功');
+          // wx.showToast({
+          //   title: '连接成功',
+          //   icon: 'none'
+          // });
+        } else {
+          console.log('连接失败');
+          // wx.showToast({
+          //   title: '连接失败',
+          //   icon: 'none'
+          // });
+        }
+      },
+      fail: () => {
+        wx.showToast({
+          title: '网络错误',
+          icon: 'none'
+        });
+      }
+    })
+  },
+  
+  // /home/{homeId}/device/disconnect
+  disconnectdevice() {
+    wx.request({
+      url: 'http://localhost:8080/home/' + wx.getStorageSync('HOMEID') + '/device/search/disconnect',
+      method: 'POST',
+      header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
+      success: (res) => {
+        if (res.statusCode === 200) {
+          console.log('成功断开连接');
+          // wx.showToast({
+          //   title: '成功断开连接',
+          //   icon: 'none'
+          // });
+        } else {
+          console.log('断开连接失败');
+          // wx.showToast({
+          //   title: '断开连接失败',
+          //   icon: 'none'
+          // });
+        }
+      },
+      fail: () => {
+        wx.showToast({
+          title: '网络错误',
+          icon: 'none'
+        });
+      }
+    })
+  },
 });

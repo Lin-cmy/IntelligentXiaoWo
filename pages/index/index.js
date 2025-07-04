@@ -26,6 +26,7 @@ Page({
     handleStart() {
       // 检查用户是否已登录
       const token = wx.getStorageSync('token');
+      //console.log(token);
       if (token) {
         wx.switchTab({
           url: '/pages/home/home'
