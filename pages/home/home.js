@@ -194,7 +194,6 @@ Page({
   homeview() {
     const homeId = this.data.homeId;
     wx.request({
-      // url: 'http://192.168.20.92:8080/home/view/' + homeId,
       url: 'http://localhost:8080/home/view/' + homeId,
       method: 'GET',
       header: { 
