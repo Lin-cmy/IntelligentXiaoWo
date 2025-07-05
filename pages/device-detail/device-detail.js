@@ -9,6 +9,10 @@ Page({
   },
 
   onLoad: function(options) {
+    this.setData({
+      deviceData: [],
+      isRefreshing: false
+    });
     // 从页面参数获取设备ID
     const deviceId = options.deviceId;
     const deviceName = options.deviceName;
@@ -17,7 +21,9 @@ Page({
       this.setData({ deviceId });
       this.setData({ deviceName });
       this.setData({ deviceTypeId });
-      this.refreshData();
+      if (!(deviceTypeId === '55' || deviceTypeId === '88' || deviceTypeId === '99')){
+        this.refreshData();
+      }
     } else {
       wx.showToast({
         title: '设备 ID、NAME 或 DEVICETYPEID 不存在',
@@ -25,7 +31,7 @@ Page({
       });
     }
     this.initDeviceControl();
-    this.connect();
+    // this.connect();
   },
 
   // 点击刷新按钮
@@ -76,6 +82,7 @@ Page({
         wx.hideLoading();
         
         if (res.statusCode === 200 && res.data.data) {
+          this.setData({ deviceData: [] });
           // 处理时间格式
           const formattedData = res.data.data.map(item => {
             // 格式化时间 2025-07-03T15:24:10 -> 2025-07-03 15:24:10
@@ -107,11 +114,6 @@ Page({
       }
     });
   },
-  
-  // 刷新数据
-  refreshData() {
-    this.fetchDeviceData();
-  },
 
   // 初始化控制模式
   initDeviceControl: function() {
@@ -132,6 +134,7 @@ Page({
 
   confirmOperation: function() {
     wx.showLoading({ title: '设置中...' });
+    this.connectdevice();
     this.sendmessage(() => {
       wx.hideLoading();
     })
@@ -143,24 +146,24 @@ Page({
   },
 
   // /home/{homeId}/device/{deviceId}/connect
-  connect() {
-    wx.request({
-      url: 'http://localhost:8080/home/' + wx.getStorageSync('HOMEID') + '/device/' + this.data.deviceId + '/connect',
-      method: 'POST',
-      header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
-      success: (res) => {
-        if (res.statusCode === 200) {
-          console.log('连接成功');
-        } else {
-          console.log('连接失败');
-        }
-      },
-      fail: () => {
-        console.log('网络错误');
-      }
-    })
-  },
-
+  // connect() {
+  //   wx.request({
+  //     url: 'http://localhost:8080/home/' + wx.getStorageSync('HOMEID') + '/device/' + this.data.deviceId + '/connect',
+  //     method: 'POST',
+  //     header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
+  //     success: (res) => {
+  //       if (res.statusCode === 200) {
+  //         console.log('连接成功');
+  //       } else {
+  //         console.log('连接失败');
+  //       }
+  //     },
+  //     fail: () => {
+  //       console.log('网络错误');
+  //     }
+  //   })
+  // },
+  
   // /sendMessage?topic={deviceId}&value={selectedLevel}
   sendmessage(callback) {
     wx.request({
@@ -185,7 +188,7 @@ Page({
   // /home/{homeId}/device/connect
   connectdevice() {
     wx.request({
-      url: 'http://localhost:8080/home/' + wx.getStorageSync('HOMEID') + '/device/connect',
+      url: 'http://localhost:8080/home/' + wx.getStorageSync('HOMEID') + '/device/' + this.data.deviceId + '/connect',
       method: 'POST',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       success: (res) => {

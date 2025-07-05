@@ -17,8 +17,26 @@ Page({
     showDeviceList: false,
     availableDevices: [],
     selectedDevices: [],
-    typeMap: {},
-    operationMap: {}
+    controlDevices: [], // 控制类设备 (55, 88, 99)
+    sensorDevices: [], // 传感类设备 (其他类型)
+    typeMap: {
+      "1":  "温度传感器",
+      "2":  "湿度传感器",
+      "3":  "可燃气体传感器",
+      "4":  "可燃气体报警器",
+      "5":  "风扇",
+      "6":  "环境光照传感器",
+      "7":  "人体红外传感器",
+      "8":  "可调亮度灯光", 
+      "9":  "水泵", 
+      "10": "土壤湿度传感器",
+      "55": "风扇控制器", // 0 1 2 3 >=4
+      "88": "灯光控制器", // 0-100 >=100 
+      "99": "水泵控制器"  // 0 1 2 3 >=4
+    },
+    operationMap: {},
+    deviceData: [], // 存储传感器设备数据
+    isRefreshing: false
   },
 
   /**
@@ -39,14 +57,12 @@ Page({
           // 初始化日期时间
           this.initDateTime();
           
-          // 加载类型和设备信息
-          this.gettypemap(() => {
-            this.getavailableDevices(() => {
-              // 加载场景已有设备
-              if (data.id) {
-                this.getSceneDevices(data.id);
-              }
-            });
+          // 加载设备信息
+          this.getavailableDevices(() => {
+            // 加载场景已有设备
+            if (data.id) {
+              this.getSceneDevices(data.id);
+            }
           });
         });
       } else {
@@ -56,11 +72,9 @@ Page({
           this.setData({ sceneId: sceneId });
           this.initDateTime();
           
-          // 加载类型和设备信息
-          this.gettypemap(() => {
-            this.getavailableDevices(() => {
-              this.getSceneDevices(sceneId);
-            });
+          // 加载设备信息
+          this.getavailableDevices(() => {
+            this.getSceneDevices(sceneId);
           });
         } else {
           this.initDateTime();
@@ -170,10 +184,8 @@ Page({
   
   // 显示设备列表
   showDeviceList() {
-    this.gettypemap(() => {
-      this.getavailableDevices(() => {
-        this.setData({ showDeviceList: true });
-      });
+    this.getavailableDevices(() => {
+      this.setData({ showDeviceList: true });
     });
   },
 
@@ -194,14 +206,26 @@ Page({
       const firstActionName = device.actions[0];
       const operationId = this.getOperationIdByName(firstActionName);
       
-      selectedDevices.push({
+      // 根据设备类型设置默认值
+      let defaultValue = 0;
+      if (device.typeId === '88') { // 灯光控制器默认50%亮度
+        defaultValue = 50;
+      }
+      
+      const newDevice = {
         ...device,
         selectedAction: firstActionName,
-        operationId: operationId
-      });
+        operationId: operationId,
+        selectedLevel: defaultValue,
+        latestTime: '暂无数据',
+        latestValue: '暂无数据'
+      };
       
-      this.setData({ selectedDevices: selectedDevices });
-
+      selectedDevices.push(newDevice);
+      
+      // 重新分类设备
+      this.categorizeDevices(selectedDevices);
+      
       wx.showToast({
         title: '设备添加成功',
         icon: 'success'
@@ -218,7 +242,6 @@ Page({
 
   // 切换设备动作
   switchDeviceAction(e) {
-    // const { deviceId, actionIndex } = e.currentTarget.dataset;
     const deviceId = e.currentTarget.dataset.deviceId;
     const actionIndex = e.detail.value;
     const selectedDevices = [...this.data.selectedDevices];
@@ -231,11 +254,146 @@ Page({
       selectedDevices[deviceIndex].selectedAction = actionName;
       selectedDevices[deviceIndex].operationId = operationId;
       
-      this.setData({ selectedDevices: selectedDevices });
+      // 重新分类设备
+      this.categorizeDevices(selectedDevices);
     }
   },
 
-   // 删除设备
+  // 设备分类
+  categorizeDevices(devices) {
+    const controlDevices = devices.filter(device => 
+      device.typeId === '55' || device.typeId === '88' || device.typeId === '99'
+    );
+    
+    const sensorDevices = devices.filter(device => 
+      device.typeId !== '55' && device.typeId !== '88' && device.typeId !== '99'
+    );
+    
+    // 为每个传感器设备添加其最新数据
+    const sensorDevicesWithData = sensorDevices.map(device => {
+      let latestData = null;
+      
+      // 查找设备的最新数据
+      for (let i = 0; i < this.data.deviceData.length; i++) {
+        if (this.data.deviceData[i].deviceId === device.id) {
+          latestData = this.data.deviceData[i];
+          break;
+        }
+      }
+      
+      return {
+        ...device,
+        latestData: latestData,
+        latestTime: latestData ? latestData.formattedTime : '暂无数据',
+        latestValue: latestData ? latestData.dataValue : '暂无数据'
+      };
+    });
+    
+    this.setData({
+      selectedDevices: devices,
+      controlDevices: controlDevices,
+      sensorDevices: sensorDevicesWithData
+    });
+    
+    // 获取传感器设备数据
+    if (sensorDevices.length > 0) {
+      this.fetchDeviceData(sensorDevices);
+    }
+  },
+
+  // 获取传感器设备数据
+  fetchDeviceData(devices) {
+    const homeId = wx.getStorageSync('HOMEID');
+  
+    // 为每个设备分别发起请求
+    devices.forEach(device => {
+      wx.request({
+        url: `http://localhost:8080/home/${homeId}/device/getData?deviceId=${device.id}`,
+        method: 'GET',
+        header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token') },
+        success: (res) => {
+          if (res.statusCode === 200 && res.data.data && res.data.data.length > 0) {
+            // 获取该设备的最新数据（第一条数据通常是最新的）
+            const latestData = res.data.data[0];
+            // 格式化时间
+            const formattedTime = latestData.dataTime.replace('T', ' ');
+          
+            // 更新该设备的数据
+            const sensorDevices = [...this.data.sensorDevices];
+            const deviceIndex = sensorDevices.findIndex(d => d.id === device.id);
+          
+            if (deviceIndex !== -1) {
+              sensorDevices[deviceIndex].latestTime = formattedTime;
+              sensorDevices[deviceIndex].latestValue = latestData.dataValue;
+            
+              // 只更新该设备的数据
+              this.setData({
+                sensorDevices: sensorDevices
+              });
+              console.log(sensorDevices);
+            }
+          }
+        },
+        fail: (err) => {
+          console.error(`获取设备${device.id}数据失败:`, err);
+        }
+      });
+    });
+  
+    // 请求完成后取消加载状态
+    this.setData({ isRefreshing: false });
+  },
+  
+  // 刷新数据
+  refreshData() {
+    // 防止重复点击
+    if (this.data.isRefreshing) {
+      return;
+    }
+      
+    // 设置刷新状态
+    this.setData({ isRefreshing: true });
+    
+    // 显示连接中提示
+    wx.showLoading({ title: '连接设备中...' });
+
+    // 获取所有传感器设备
+    const sensorDevices = this.data.sensorDevices;
+    
+    // 刷新传感器数据
+    if (sensorDevices.length > 0) {
+      let connectedCount = 0;
+
+      sensorDevices.forEach(device => {
+        this.connect(device.id);
+        connectedCount++;
+
+        // 当所有设备都已连接，执行数据获取
+        if (connectedCount === sensorDevices.length) {
+          setTimeout(() => {
+            wx.showToast({
+              title: '获取数据中...',
+              icon: 'none'
+            });
+            this.fetchDeviceData(sensorDevices);
+            setTimeout(() => {
+              wx.hideLoading();
+              this.setData({ isRefreshing: false });
+              wx.showToast({
+                title: '数据已更新',
+                icon: 'none'
+              });
+            }, 1000);
+          }, 3000);
+        }
+      });
+    } else {
+      wx.hideLoading();
+      this.setData({ isRefreshing: false });
+    }
+  },
+
+  // 删除设备
   removeDevice(e) {
     const deviceId = e.currentTarget.dataset.deviceId;
     
@@ -245,29 +403,49 @@ Page({
       success: (res) => {
         if (res.confirm) {
           const selectedDevices = this.data.selectedDevices.filter(d => d.id !== deviceId);
-          this.setData({ 
-            selectedDevices: selectedDevices
-          });
+          
+          // 重新分类设备
+          this.categorizeDevices(selectedDevices);
   
           wx.showToast({
             title: '设备已移除',
             icon: 'success'
           });
-          
-          // 可选：添加一个提示
-          if (!this.unsavedChangesTimer) {
-            this.unsavedChangesTimer = setTimeout(() => {
-              wx.showToast({
-                title: '记得点击"保存场景"',
-                icon: 'none',
-                duration: 2000
-              });
-              this.unsavedChangesTimer = null;
-            }, 1500);
-          }
         }
       }
     });
+  },
+
+  // 选择控制级别 (风扇/水泵)
+  selectLevel(e) {
+    const deviceId = e.currentTarget.dataset.deviceId;
+    const level = parseInt(e.currentTarget.dataset.level);
+    
+    const selectedDevices = [...this.data.selectedDevices];
+    const deviceIndex = selectedDevices.findIndex(d => d.id === deviceId);
+    
+    if (deviceIndex !== -1) {
+      selectedDevices[deviceIndex].selectedLevel = level;
+      
+      // 重新分类设备
+      this.categorizeDevices(selectedDevices);
+    }
+  },
+
+  // 灯光亮度滑块变化事件
+  onSliderChange(e) {
+    const deviceId = e.currentTarget.dataset.deviceId;
+    const value = e.detail.value;
+    
+    const selectedDevices = [...this.data.selectedDevices];
+    const deviceIndex = selectedDevices.findIndex(d => d.id === deviceId);
+    
+    if (deviceIndex !== -1) {
+      selectedDevices[deviceIndex].selectedLevel = value === 0 ? 0 : value;
+      
+      // 重新分类设备
+      this.categorizeDevices(selectedDevices);
+    }
   },
 
   // 创建场景
@@ -293,12 +471,13 @@ Page({
 
   // 提交场景到后端
   submitScene() {
-    // 构建deviceOperation数组
-    const deviceOperation = this.data.selectedDevices.map(device => ({
-      deviceId: device.id,
-      operationId: device.operationId
-    }));
-    
+    let deviceOperation = [];
+    this.data.selectedDevices.forEach(device => {
+      deviceOperation.push({
+        deviceId: device.id
+      });
+    });
+
     // 构建请求体
     const requestData = {
       name: this.data.sceneName,
@@ -308,6 +487,8 @@ Page({
       endTime: this.data.fullEndTime,
       deviceOperation: deviceOperation
     };
+
+    console.log(requestData);
 
     const homeId = wx.getStorageSync('HOMEID');
     const sceneId = this.data.sceneId;
@@ -368,38 +549,6 @@ Page({
     }
   },
 
-  // 获取设备类型映射
-  gettypemap(callback) {
-    wx.request({
-      url: 'http://localhost:8080/home/' + wx.getStorageSync('HOMEID') + '/room/device/type/list',
-      method: 'GET',
-      header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
-      success: (res) => {
-        if (res.statusCode === 200) {
-          const typeMap = {};
-          res.data.forEach(item => {
-            typeMap[item.id] = item.name;
-          });
-          this.setData({ typeMap: typeMap });
-          if (typeof callback === 'function') callback();
-        } else {
-          wx.showToast({
-            title: '建立类型映射失败',
-            icon: 'none'
-          });
-          if (typeof callback === 'function') callback();
-        }
-      },
-      fail: () => {
-        wx.showToast({
-          title: '网络错误',
-          icon: 'none'
-        });
-        if (typeof callback === 'function') callback();
-      }
-    })
-  },
-
   // 获取可用设备
   getavailableDevices(callback) {
     wx.request({
@@ -409,7 +558,6 @@ Page({
       success: (res) => {
         if (res.statusCode === 200) {
           const devicesRaw = res.data.devices;
-          const typeMap = this.data.typeMap;
           const deviceMap = {};
           const operationMap = {};
           
@@ -418,7 +566,8 @@ Page({
               deviceMap[item.id] = {
                 id: item.id,
                 name: item.name,
-                type: typeMap[item.typeId],
+                typeId: item.typeId.toString(),
+                type: this.data.typeMap[item.typeId] || `未知类型(${item.typeId})`,
                 actions: []
               };
             }
@@ -429,6 +578,8 @@ Page({
           });
           
           const availableDevices = Object.values(deviceMap);
+          console.log('调试：', availableDevices);
+
           this.setData({
             availableDevices: availableDevices,
             operationMap: operationMap
@@ -456,58 +607,62 @@ Page({
   // 获取场景已添加的设备
   getSceneDevices(sceneId) {
     const homeId = wx.getStorageSync('HOMEID');
-  
+
     wx.request({
-     url: `http://localhost:8080/home/${homeId}/scene/view/${sceneId}/device`,
+      url: `http://localhost:8080/home/${homeId}/scene/view/${sceneId}/device`,
       method: 'GET',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token') },
       success: (res) => {
         if (res.statusCode === 200 && res.data.devices) {
-          // 数据预处理：去重（相同设备ID和操作ID只保留一个）
-          const uniqueDevices = {};
-        
-          res.data.devices.forEach(item => {
-            const key = `${item.deviceId}_${item.operationId}`;
-            uniqueDevices[key] = item;
-          });
-        
-          // 按设备ID分组
-          const deviceGroups = {};
-        
-          Object.values(uniqueDevices).forEach(device => {
-            if (!deviceGroups[device.deviceId]) {
-              deviceGroups[device.deviceId] = {
-                id: device.deviceId,
-                name: device.deviceName,
-                operations: [],
-                type: this.getDeviceTypeById(device.deviceId)
-              };
-            }
-          
-            deviceGroups[device.deviceId].operations.push({
-              id: device.operationId,
-              name: device.operationName
-            });
-          });
+          // 直接使用返回的设备数组
+          const devices = res.data.devices;
         
           // 转换为selectedDevices格式
-          const selectedDevices = Object.values(deviceGroups).map(device => {
-            // 提取操作名称列表
-            const actions = device.operations.map(op => op.name);
-            // 默认选中第一个操作
-            const selectedOperation = device.operations[0];
+          const selectedDevices = devices.map(device => {
+            // 根据设备类型设置默认操作和级别
+            let defaultLevel = 0;
+            if (device.typeId === 88) { // 灯光控制器默认50%亮度
+              defaultLevel = 50;
+            }
+          
+            // 为每种设备类型设置默认动作
+            let actions = [];
+            let defaultAction = "";
+          
+            switch(device.typeId) {
+              case 55: // 风扇控制器
+                actions = ["开启", "调速", "关闭"];
+                defaultAction = "开启";
+                break;
+              case 88: // 灯光控制器
+                actions = ["开灯", "调光", "关灯"];
+                defaultAction = "开灯";
+                break;
+              case 99: // 水泵控制器
+                actions = ["开启", "调速", "关闭"];
+                defaultAction = "开启";
+                break;
+              default: // 传感器等其他设备
+                actions = ["读取数据", "校准", "重置"];
+                defaultAction = "读取数据";
+            }
           
             return {
-              id: device.id,
-              name: device.name,
-              type: device.type,
+              id: device.id || device.deviceId,
+              name: device.name || device.deviceName,
+              typeId: (device.deviceTypeId || "0").toString(),
+              type: this.data.typeMap[device.deviceTypeId] || `未知类型(${device.typeId})`,
               actions: actions,
-              selectedAction: selectedOperation.name,
-              operationId: selectedOperation.id
+              selectedAction: defaultAction,
+              operationId: 1, // 默认操作ID，因为不再使用
+              selectedLevel: defaultLevel,
+              latestTime: '暂无数据',
+              latestValue: '暂无数据'
             };
           });
         
-          this.setData({ selectedDevices });
+          // 重新分类设备
+          this.categorizeDevices(selectedDevices);
         } else {
           console.error('获取场景设备失败:', res);
         }
@@ -518,11 +673,112 @@ Page({
     });
   },
 
-  // 根据设备ID获取设备类型
-  getDeviceTypeById(deviceId) {
-    // 查找设备类型，可能需要再次调用getavailableDevices来获取所有设备信息
-    const devices = this.data.availableDevices;
-    const device = devices.find(d => d.id === deviceId);
-    return device ? device.type : '未知类型';
+  // 根据设备类型名称获取类型ID
+  getDeviceTypeIdByName(typeName) {
+    // 首先检查typeName是否存在
+    if (!typeName) return '0';
+  
+    for (const [id, name] of Object.entries(this.data.typeMap)) {
+      if (name === typeName) return id;
+    }
+    // 特殊处理控制器类型
+    if (typeName.includes('风扇控制器')) return '55';
+    if (typeName.includes('灯光控制器')) return '88';
+    if (typeName.includes('水泵控制器')) return '99';
+    return '0';
+  },
+  
+  // 连接设备
+  connectDevice(deviceId) {
+    const homeId = wx.getStorageSync('HOMEID');
+    
+    wx.request({
+      url: `http://localhost:8080/home/${homeId}/device/${deviceId}/connect`,
+      method: 'POST',
+      header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
+      success: (res) => {
+        if (res.statusCode === 200) {
+          console.log('连接成功');
+        } else {
+          console.log('连接失败');
+        }
+      },
+      fail: () => {
+        console.log('网络错误');
+      }
+    });
+  },
+  
+  // 发送控制消息
+  sendControlMessage(deviceId, value) {
+    wx.request({
+      url: `http://localhost:8080/sendMessage?topic=${deviceId}&value=${value}`,
+      method: 'POST',
+      success: (res) => {
+        if (res.statusCode === 200) {
+          console.log('发送成功', res.data);
+          wx.showToast({
+            title: '设置成功',
+            icon: 'success'
+          });
+        } else {
+          console.log('发送失败');
+          wx.showToast({
+            title: '设置失败',
+            icon: 'none'
+          });
+        }
+      },
+      fail: () => {
+        console.log('网络错误');
+        wx.showToast({
+          title: '网络错误',
+          icon: 'none'
+        });
+      }
+    });
+  },
+  
+  // 确认设备操作
+  confirmOperation(e) {
+    const deviceId = e.currentTarget.dataset.deviceId;
+    const device = this.data.selectedDevices.find(d => d.id === deviceId);
+    
+    if (!device) return;
+    
+    wx.showLoading({ title: '设置中...' });
+    
+    // 连接设备
+    this.connectDevice(deviceId);
+    
+    // 发送控制消息
+    setTimeout(() => {
+      this.sendControlMessage(deviceId, device.selectedLevel);
+      wx.hideLoading();
+    }, 1000);
+  },
+
+  // /home/{homeId}/device/{deviceId}/connect
+  connect(deviceId) {
+    if (!deviceId) {
+      console.log('设备ID未提供');
+      return;
+    }
+
+    wx.request({
+      url: 'http://localhost:8080/home/' + wx.getStorageSync('HOMEID') + '/device/' + deviceId + '/connect',
+      method: 'POST',
+      header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
+      success: (res) => {
+        if (res.statusCode === 200) {
+          console.log('连接成功');
+        } else {
+          console.log('连接失败');
+        }
+      },
+      fail: () => {
+        console.log('网络错误');
+      }
+    })
   }
 })

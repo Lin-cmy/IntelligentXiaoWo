@@ -7,7 +7,7 @@
 } */
 
 page {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  /* background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); */
   min-height: 100vh;
   box-sizing: border-box;
   padding-bottom: 40rpx;
@@ -19,8 +19,7 @@ page {
   padding: 40rpx 30rpx 20rpx;
   justify-content: space-between; /* 确保左右两端对齐 */
   align-items: center;
-  /* background: rgba(255, 255, 255, 0.8); */
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
+  background: rgba(240, 248, 240, 0.8);
   backdrop-filter: blur(10px);
   box-shadow: 0 4rpx 12rpx rgba(0, 0, 0, 0.05);
   margin-bottom: 20rpx;
@@ -44,7 +43,7 @@ page {
   height: 0;
   border-left: 15rpx solid transparent;
   border-right: 15rpx solid transparent;
-  border-top: 20rpx solid #7FB69F;
+  border-top: 20rpx solidrgb(70, 165, 180); /* SteelBlue */
   align-self: center;
   margin-top: 6rpx;
 }
@@ -54,7 +53,7 @@ page {
   width: 80rpx;
   height: 80rpx;
   border-radius: 50%;
-  background: rgba(127, 182, 159, 0.1);
+  background: rgba(104, 239, 227, 0.1);
   display: flex;
   align-items: center;
   justify-content: center;
@@ -69,7 +68,7 @@ page {
 
 .refresh-icon {
   font-size: 40rpx;
-  color: #7FB69F;
+  color:rgb(133, 227, 202);
 }
 
 .refreshing {
@@ -84,7 +83,7 @@ page {
 /* 房间筛选栏 */
 .filter-bar {
   white-space: nowrap;
-  background: rgba(255, 255, 255, 0.8);
+  background: rgba(126, 226, 235, 0.8);
   padding: 20rpx 10rpx;
   overflow-x: auto;
   margin: 0 20rpx 30rpx;
@@ -109,9 +108,9 @@ page {
 }
 
 .filter-item.active {
-  background: linear-gradient(135deg, #7FB69F 0%, #6aa085 100%);
+  background: #4682B4; /* SteelBlue */
   color: #fff;
-  box-shadow: 0 4rpx 12rpx rgba(127, 182, 159, 0.4);
+  box-shadow: 0 4rpx 12rpx rgba(70, 130, 180, 0.4);
 }
 
 /* 内容区域 */
@@ -148,6 +147,11 @@ page {
 .device-card:active {
   transform: scale(0.97);
   box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
+}
+
+.device-card-hover {
+  transform: translateY(-10rpx);
+  box-shadow: 0 12rpx 30rpx rgba(0, 0, 0, 0.12);
 }
 
 .device-icon-container {

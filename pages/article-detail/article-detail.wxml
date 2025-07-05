@@ -1,0 +1,26 @@
+<!--pages/article-detail/article-detail.wxml-->
+<view class="container" wx:if="{{article}}">
+  <view class="header">
+    <image class="header-image" src="{{article.url}}" mode="aspectFill"></image>
+    <view class="title-container">
+      <text class="title">{{article.nad}}</text>
+      <view class="meta">
+        <text class="category">{{article.category}}</text>
+        <text class="tag">#{{article.tag}}</text>
+      </view>
+    </view>
+  </view>
+
+  <view class="content-card">
+    <view class="summary">
+      <text>{{article.summary}}</text>
+    </view>
+    <view class="divider"></view>
+    <view class="content">
+      <text selectable="true">{{article.content || '暂无详细内容'}}</text>
+    </view>
+  </view>
+</view>
+<view class="loading" wx:else>
+  <text>加载中...</text>
+</view>

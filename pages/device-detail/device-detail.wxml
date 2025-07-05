@@ -27,7 +27,7 @@
   </view>
 
   <!-- 数据表格 -->
-  <view class="data-section">
+  <view class="data-section" wx:if="{{!(deviceTypeId === '55' || deviceTypeId === '88' || deviceTypeId === '99')}}">
     <view class="section-title">设备数据</view>
     
     <view class="data-table-container">

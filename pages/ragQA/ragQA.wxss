@@ -1,14 +1,10 @@
 /* ragQA.wxss */
-page {
-  background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
-  min-height: 100vh;
-}
 
 /* 顶部标题 */
 .text {
   text-align: center;
   padding: 40rpx 20rpx;
-  background: rgba(255, 255, 255, 0.95);
+  background: rgba(213, 251, 245, 0.95);
   margin: 20rpx;
   border-radius: 24rpx;
   box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
@@ -18,7 +14,7 @@ page {
 .line_y {
   width: 80rpx;
   height: 6rpx;
-  background: linear-gradient(135deg, #7FB69F 0%, #6aa085 100%);
+  background:rgb(151, 228, 234); /* SteelBlue */
   margin: 0 auto 20rpx;
   border-radius: 3rpx;
 }
@@ -73,7 +69,8 @@ page {
 /* 左侧导航 */
 .nav_left {
   width: 200rpx;
-  background: rgba(127, 182, 159, 0.1);
+  background: rgba(255, 255, 255, 0.8);
+  backdrop-filter: blur(10px);
   padding: 30rpx 0;
 }
 
@@ -88,7 +85,7 @@ page {
 }
 
 .nav_left_items.active-tag {
-  background: linear-gradient(135deg, #7FB69F 0%, #6aa085 100%);
+  background: #4682B4; /* SteelBlue */
   color: white;
   font-weight: 600;
   transform: scale(1.02);
@@ -105,6 +102,9 @@ page {
   border-radius: 16rpx;
   overflow: hidden;
   transition: all 0.3s ease;
+  opacity: 0;
+  transform: translateY(20px);
+  animation: fadeIn 0.5s ease-out forwards;
 }
 
 .nav_right_cat:active {
@@ -144,7 +144,7 @@ page {
 
 .nav_right_sex {
   padding: 6rpx 16rpx;
-  background: linear-gradient(135deg, #3498db 0%, #2980b9 100%);
+  background: #5F9EA0; /* CadetBlue */
   color: white;
   border-radius: 20rpx;
   font-size: 22rpx;
@@ -215,6 +215,26 @@ page {
     transform: scale(1.2);
     opacity: 0;
   }
+}
+
+.nav_right_cat:hover {
+  transform: scale(1.02);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.right-item-hover {
+  background-color: #e0eee0;
 }
 
 /* 对话弹窗相关样式 */

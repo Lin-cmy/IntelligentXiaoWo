@@ -17,39 +17,144 @@
     </view>
   </view>
 
-  <!-- 设备列表 -->
-  <!-- <view class="content-section">
-    <view class="section-title">执行条件</view>
-    <view class="condition-info">
-      当设置的条件满足时，场景中的设备将按设定执行操作
-    </view>
-  </view> -->
-  
-  <!-- 已选设备列表 -->
+  <!-- 已选设备列表（通用信息区） -->
   <view class="content-section">
-    <view class="section-title">已添加设备</view>
-    <view class="selected-devices" wx:if="{{selectedDevices.length > 0}}">
-      <view class="device-list">
-        <view class="device-item selected" wx:for="{{selectedDevices}}" wx:key="id">
-          <view class="device-info">
-            <view class="device-name">{{item.name}}</view>
-            <view class="device-type">{{item.type}}</view>
-          </view>
-          <view class="device-actions">
-            <picker range="{{item.actions}}" value="{{item.actions.indexOf(item.selectedAction)}}" bindchange="switchDeviceAction" data-device-id="{{item.id}}">
-              <view class="action-picker">
-                <text>{{item.selectedAction}}</text>
-                <text class="arrow">▼</text>
+    <view class="section-title">已选择设备</view>
+    
+    <!-- 传感器设备表格 (非控制类设备) -->
+    <view class="data-section" wx:if="{{sensorDevices.length > 0}}">
+      <view class="data-table-container">
+        <view class="table-header">
+          <view class="table-cell name-cell">设备名称</view>
+          <view class="table-cell type-cell">设备类型</view>
+          <view class="table-cell time-cell">更新时间</view>
+          <view class="table-cell value-cell">属性值</view>
+        </view>
+        
+        <scroll-view class="table-body" scroll-y>
+          <block wx:if="{{sensorDevices.length > 0}}">
+            <view class="table-row" wx:for="{{sensorDevices}}" wx:key="id">
+              <view class="table-cell name-cell">
+                {{item.name}}
+                <view class="remove-icon" bindtap="removeDevice" data-device-id="{{item.id}}">×</view>
               </view>
-            </picker>
+              <view class="table-cell type-cell">{{item.type}}</view>
+              <view class="table-cell time-cell">{{item.latestTime}}</view>
+              <view class="table-cell value-cell">{{item.latestValue}}</view>
+            </view>
+          </block>
+          <view wx:else class="empty-data">
+            <text>暂无传感器数据</text>
           </view>
-          <view class="remove-btn" bindtap="removeDevice" data-device-id="{{item.id}}">
-            <text>×</text>
+        </scroll-view>
+      </view>
+      
+      <!-- 刷新按钮 -->
+      <view class="refresh-container">
+        <button class="refresh-btn" bindtap="refreshData">
+          <text class="refresh-icon">↻</text>
+          <text>刷新数据</text>
+        </button>
+      </view>
+    </view>
+    
+    <!-- 控制设备列表 (55, 88, 99) -->
+    <view wx:if="{{controlDevices.length > 0}}">
+      <!-- 遍历控制设备 -->
+      <view class="control-devices">
+        <view class="device-control-card" wx:for="{{controlDevices}}" wx:key="id">
+          <view class="device-header">
+            <view class="device-info">
+              <view class="device-name">{{item.name}}</view>
+              <view class="device-type">{{item.type}}</view>
+            </view>
+            <view class="remove-btn" bindtap="removeDevice" data-device-id="{{item.id}}">
+              <text>×</text>
+            </view>
+          </view>
+          
+          <!-- 风扇控制器 (deviceTypeId: 55 或 99) -->
+          <view class="fan-control" wx:if="{{item.typeId == '55' || item.typeId == '99'}}">
+            <view class="control-description">{{item.typeId == '55' ? '风扇' : '水泵'}}挡位控制</view>
+          
+            <view class="fan-levels">
+              <view class="fan-level {{item.selectedLevel == 0 ? 'selected' : ''}}" 
+                bindtap="selectLevel" data-device-id="{{item.id}}" data-level="0">
+                <view class="level-icon level-off">●</view>
+                <text>关闭</text>
+              </view>
+            
+              <view class="fan-level {{item.selectedLevel == 1 ? 'selected' : ''}}" 
+                bindtap="selectLevel" data-device-id="{{item.id}}" data-level="1">
+                <view class="level-icon level-low">●</view>
+                <text>低速</text>
+              </view>
+            
+              <view class="fan-level {{item.selectedLevel == 2 ? 'selected' : ''}}" 
+                bindtap="selectLevel" data-device-id="{{item.id}}" data-level="2">
+                <view class="level-icon level-medium">●</view>
+                <text>中速</text>
+              </view>
+            
+              <view class="fan-level {{item.selectedLevel == 3 ? 'selected' : ''}}" 
+                bindtap="selectLevel" data-device-id="{{item.id}}" data-level="3">
+                <view class="level-icon level-high">●</view>
+                <text>高速</text>
+              </view>
+            
+              <view class="fan-level {{item.selectedLevel == 4 ? 'selected' : ''}}" 
+                bindtap="selectLevel" data-device-id="{{item.id}}" data-level="4">
+                <view class="level-icon level-auto">●</view>
+                <text>自动</text>
+              </view>
+            </view>
+          </view>
+        
+          <!-- 灯光控制器 (deviceTypeId: 88) -->
+          <view class="light-control" wx:if="{{item.typeId == '88'}}">
+            <view class="control-description">灯光亮度控制</view>
+          
+            <view class="light-buttons">
+              <view class="light-button {{item.selectedLevel == 0 ? 'selected' : ''}}" 
+                bindtap="selectLevel" data-device-id="{{item.id}}" data-level="0">
+                <view class="light-icon light-off">○</view>
+                <text>关闭</text>
+              </view>
+            
+              <view class="light-button {{item.selectedLevel == 101 ? 'selected' : ''}}" 
+                bindtap="selectLevel" data-device-id="{{item.id}}" data-level="101">
+                <view class="light-icon light-auto">⟳</view>
+                <text>自动</text>
+              </view>
+            </view>
+          
+            <view class="brightness-control">
+              <text class="brightness-label">亮度: {{item.selectedLevel == 0 ? '关闭' : item.selectedLevel == 101 ? '自动' : item.selectedLevel + '%'}}</text>
+              <slider 
+                min="1" 
+                max="100" 
+                step="1" 
+                activeColor="#7FB69F" 
+                backgroundColor="#e0e0e0"
+                blockSize="28"
+                value="{{item.selectedLevel >= 0 && item.selectedLevel <= 100 ? item.selectedLevel : 0}}"
+                bindchange="onSliderChange"
+                data-device-id="{{item.id}}"
+              />
+            </view>
+          </view>
+          
+          <!-- 确认按钮 -->
+          <view class="confirm-container">
+            <button class="confirm-btn" bindtap="confirmOperation" data-device-id="{{item.id}}">
+              确认设置
+            </button>
           </view>
         </view>
       </view>
     </view>
-    <view class="empty-devices" wx:else>
+    
+    <view class="empty-devices" wx:if="{{selectedDevices.length === 0}}">
       <text>暂无添加设备，请点击下方按钮添加</text>
     </view>
 
@@ -123,16 +228,39 @@
         <text class="close-btn" bindtap="hideDeviceList">×</text>
       </view>
       <view class="available-device-list">
-        <view class="device-item available" wx:for="{{availableDevices}}" wx:key="id" bindtap="selectDevice" data-device="{{item}}">
-          <view class="device-icon">📱</view>
-          <view class="device-info">
-            <view class="device-name">{{item.name}}</view>
-            <view class="device-type">{{item.type}}</view>
+        <!-- 分类显示设备 -->
+        <view class="device-list-section">
+          <view class="device-list-title">传感器设备</view>
+          <view class="device-item available" 
+            wx:for="{{availableDevices}}" 
+            wx:key="id" 
+            wx:if="{{item.typeId != '55' && item.typeId != '88' && item.typeId != '99'}}"
+            bindtap="selectDevice" 
+            data-device="{{item}}">
+            <view class="device-icon">📊</view>
+            <view class="device-info">
+              <view class="device-name">{{item.name}}</view>
+              <view class="device-type">{{item.type}}</view>
+            </view>
+            <view class="add-icon">+</view>
           </view>
-          <view class="device-actions-available">
-            <text wx:for="{{item.actions}}" wx:for-item="action" wx:key="*this" class="action-tag">{{action}}</text>
+        </view>
+        
+        <view class="device-list-section">
+          <view class="device-list-title">控制器设备</view>
+          <view class="device-item available" 
+            wx:for="{{availableDevices}}" 
+            wx:key="id" 
+            wx:if="{{item.typeId == '55' || item.typeId == '88' || item.typeId == '99'}}"
+            bindtap="selectDevice" 
+            data-device="{{item}}">
+            <view class="device-icon">🎮</view>
+            <view class="device-info">
+              <view class="device-name">{{item.name}}</view>
+              <view class="device-type">{{item.type}}</view>
+            </view>
+            <view class="add-icon">+</view>
           </view>
-          <view class="add-icon">+</view>
         </view>
       </view>
     </view>

@@ -23,12 +23,12 @@
   <view class="nav_right"><!--右边主体部分-->
     <!--通过侧边栏的选择传到js中的index的值与js中data数据中的tag进行比较，完成设备的分类显示-->
     <view class="nav_right_cat" wx:for="{{rightitem}}" wx:key="id" wx:if="{{count==item.tag}}" ><!--设备详情-->
-      <view bindtap="click_nav_cat" data-index_two="{{index}}" class="nav">
+      <view bindtap="click_nav_cat" data-id="{{item.id}}" class="nav" hover-class="right-item-hover">
         <image src="{{item.url}}" mode="widthFix" style="width: 180rpx;height: 180rpx;border-radius: 20rpx;"></image>
         <view class="nav_right_nadandsex"><!--文字盒子-->
           <text class="nav_right_nad" style="color: black;">{{item.nad}}</text><!--文字-->
           <view class="nav_right_sex"><!--文章tag-->
-            {{item.tag}}
+            {{item.tagText}}
           </view>
         </view>
       </view>

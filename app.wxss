@@ -1,4 +1,8 @@
 /**app.wxss**/
+page {
+  background-color: #f0f8f0; /* 现代风浅绿色 */
+}
+
 .container {
   height: 100%;
   display: flex;
@@ -7,4 +11,4 @@
   justify-content: space-between;
   padding: 200rpx 0;
   box-sizing: border-box;
-} 
+}

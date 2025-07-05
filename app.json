@@ -12,8 +12,8 @@
     "pages/currentfamily/currentfamily",
     "pages/Roommanager/Roommanager",
     "pages/Devicemanager/Devicemanager",
-    "pages/device-detail/device-detail"
-    
+    "pages/device-detail/device-detail",
+    "pages/article-detail/article-detail"
   ],
   "window": {
     "navigationBarTitleText": "智慧小窝",
