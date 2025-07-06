@@ -11,7 +11,9 @@
   <!-- 设备概览卡片 -->
   <view class="device-overview">
     <view class="device-icon-container">
-      <view class="device-icon">📱</view>
+      <view class="device-icon">
+        <image src="/images/deviceType/{{deviceTypeId}}.png" mode="aspectFit"></image>
+      </view>
     </view>
     <view class="device-basic-info">
       <view class="device-id">设备ID: {{deviceId}}</view>
@@ -33,7 +35,7 @@
     <view class="data-table-container">
       <view class="table-header">
         <view class="table-cell time-cell">更新时间</view>
-        <view class="table-cell topic-cell">属性名称</view>
+        <!-- <view class="table-cell topic-cell">属性名称</view> -->
         <view class="table-cell value-cell">属性值</view>
       </view>
       
@@ -41,7 +43,7 @@
         <block wx:if="{{deviceData.length > 0}}">
           <view class="table-row" wx:for="{{deviceData}}" wx:key="id">
             <view class="table-cell time-cell">{{item.formattedTime}}</view>
-            <view class="table-cell topic-cell">{{item.dataTopic}}</view>
+            <!-- <view class="table-cell topic-cell">{{item.dataTopic}}</view> -->
             <view class="table-cell value-cell">{{item.dataValue}}</view>
           </view>
         </block>

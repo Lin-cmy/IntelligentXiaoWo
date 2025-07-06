@@ -75,7 +75,7 @@ Page({
     wx.showLoading({ title: '加载中...' });
     
     wx.request({
-      url: `http://localhost:8080/home/${homeId}/device/getData?deviceId=${this.data.deviceId}`,
+      url: `http://192.168.43.218:8080/home/${homeId}/device/getData?deviceId=${this.data.deviceId}`,
       method: 'GET',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token') },
       success: (res) => {
@@ -148,7 +148,7 @@ Page({
   // /home/{homeId}/device/{deviceId}/connect
   // connect() {
   //   wx.request({
-  //     url: 'http://localhost:8080/home/' + wx.getStorageSync('HOMEID') + '/device/' + this.data.deviceId + '/connect',
+  //     url: 'http://192.168.43.218:8080/home/' + wx.getStorageSync('HOMEID') + '/device/' + this.data.deviceId + '/connect',
   //     method: 'POST',
   //     header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
   //     success: (res) => {
@@ -167,7 +167,7 @@ Page({
   // /sendMessage?topic={deviceId}&value={selectedLevel}
   sendmessage(callback) {
     wx.request({
-      url: 'http://localhost:8080/sendMessage?topic=' + this.data.deviceId + '&value=' + this.data.selectedLevel,
+      url: 'http://192.168.43.218:8080/sendMessage?topic=' + this.data.deviceId + '&value=' + this.data.selectedLevel,
       method: 'POST',
       success: (res) => {
         if (res.statusCode === 200) {
@@ -188,7 +188,7 @@ Page({
   // /home/{homeId}/device/connect
   connectdevice() {
     wx.request({
-      url: 'http://localhost:8080/home/' + wx.getStorageSync('HOMEID') + '/device/' + this.data.deviceId + '/connect',
+      url: 'http://192.168.43.218:8080/home/' + wx.getStorageSync('HOMEID') + '/device/' + this.data.deviceId + '/connect',
       method: 'POST',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       success: (res) => {
@@ -218,7 +218,7 @@ Page({
   // /home/{homeId}/device/disconnect
   disconnectdevice() {
     wx.request({
-      url: 'http://localhost:8080/home/' + wx.getStorageSync('HOMEID') + '/device/search/disconnect',
+      url: 'http://192.168.43.218:8080/home/' + wx.getStorageSync('HOMEID') + '/device/search/disconnect',
       method: 'POST',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       success: (res) => {

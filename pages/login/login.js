@@ -42,8 +42,8 @@ Page({
     this.setData({ isLoading: true });
 
     wx.request({
-      // url: 'http://localhost:8080/auth/login',
-      url: 'http://localhost:8080/auth/login',
+      // url: 'http://192.168.43.218:8080/auth/login',
+      url: 'http://192.168.43.218:8080/auth/login',
       method: 'POST',
       data: {
         phone: this.data.phone,

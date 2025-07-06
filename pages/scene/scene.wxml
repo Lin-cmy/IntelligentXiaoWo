@@ -150,23 +150,39 @@
   <!-- 场景列表 -->
   <view class="scene-list">
     <block wx:for="{{scenes}}" wx:for-index="sceneKey" wx:for-item="scene" wx:key="id">
-      <view class="scene-item" bindtap="onSceneDetail" data-scene="{{sceneKey}}">
+      <!-- <view class="scene-item" bindtap="onSceneDetail" data-scene="{{sceneKey}}">
         <image class="scene-image" 
-               src="{{scene.imagePath || '/images/default.jpg'}}" 
+               src="{{scene.imagePath || '/images/scene/定制家居.png'}}" 
                mode="aspectFill"></image>
         <view class="scene-info">
           <view class="scene-name">
             <text class="{{scene.iconClass || 'medal-icon'}}">
               {{scene.iconSymbol || '🏆'}}
             </text>
-            <text>{{scene.name}}</text>
-            <view class="scene-status {{scene.activated ? 'activated' : 'pending'}}">
+            <text>{{scene.name}}</text> -->
+            <!-- <view class="scene-status {{scene.activated ? 'activated' : 'pending'}}">
               {{scene.activated ? '已激活' : '待激活'}}
-            </view>
-          </view>
+            </view> -->
+          <!-- </view>
           <view class="scene-desc">{{scene.desc}}</view>
           <view class="scene-users">附近{{randomUsers[sceneKey] || 3}}k人已启用</view>
-        </view>
+        </view> -->
+
+        <view class="scene-item" bindtap="onSceneDetail" data-scene="{{sceneKey}}">
+          <image class="scene-image" 
+            src="{{scene.imagePath || '/images/scene/定制家居.png'}}" 
+            mode="aspectFill"></image>
+          <view class="scene-info">
+            <view class="scene-name">
+              <text class="{{scene.iconClass || 'medal-icon'}}">
+                {{scene.iconSymbol || '🏆'}}
+              </text>
+              <text>{{scene.name}}</text>
+            </view>
+            <view class="scene-desc">{{scene.desc}}</view>
+            <view class="scene-users">附近{{randomUsers[sceneKey] || 3}}k人已启用</view>
+          </view>
+
 
         <!-- 删除按钮，仅在删除模式下显示 -->
         <view class="delete-btn" wx:if="{{isDeleteMode}}" catchtap="onDeleteScene" data-id="{{scene.id}}">

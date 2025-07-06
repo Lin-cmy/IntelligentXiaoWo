@@ -151,7 +151,7 @@ Page({
   // /home/get
   homeget(callback) {
     wx.request ({
-      url: 'http://localhost:8080/home/get',
+      url: 'http://192.168.43.218:8080/home/get',
       method: 'GET',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token') },
       success: (res) => {
@@ -203,7 +203,7 @@ Page({
   homeview() {
     const homeId = this.data.homeId;
     wx.request({
-      url: 'http://localhost:8080/home/view/' + homeId,
+      url: 'http://192.168.43.218:8080/home/view/' + homeId,
       method: 'GET',
       header: { 
         'content-type': 'application/json',
@@ -222,6 +222,7 @@ Page({
               deviceMap[item.id] = {
                 id: item.id,
                 name: item.name,
+                icon: "/images/deviceType/" + String(item.typeId) + ".png",
                 roomId: String(item.roomId),
                 typeId: String(item.typeId)
               };
@@ -259,7 +260,7 @@ Page({
   // /home/create
   homecreate(callback) {
     wx.request({
-      url: 'http://localhost:8080/home/create',
+      url: 'http://192.168.43.218:8080/home/create',
       method: 'POST',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       data: {

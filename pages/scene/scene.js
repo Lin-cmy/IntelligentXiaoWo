@@ -267,7 +267,7 @@ Page({
   getscenes(callback) {
     const homeId = wx.getStorageSync('HOMEID');
     wx.request({
-      url: 'http://localhost:8080/home/' + homeId + '/scene/view',
+      url: 'http://192.168.43.218:8080/home/' + homeId + '/scene/view',
       method: 'GET',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       success: (res) => {
@@ -304,7 +304,7 @@ Page({
   // /home/{homeId}/scene/add
   addscene(homeId, userId, newSceneName, newSceneDesc, callback) {
     wx.request({
-      url: 'http://localhost:8080/home/' + this.data.homeId + '/scene/add',
+      url: 'http://192.168.43.218:8080/home/' + this.data.homeId + '/scene/add',
       method: 'POST',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       data: {
@@ -342,7 +342,7 @@ Page({
   // /home/{homeId}/scene/delete/{sceneId}
   deletescene(homeId, sceneId, callback) {
     wx.request({
-      url: 'http://localhost:8080/home/' + homeId + '/scene/delete/' + sceneId,
+      url: 'http://192.168.43.218:8080/home/' + homeId + '/scene/delete/' + sceneId,
       method: 'DELETE',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       success: (res) => {

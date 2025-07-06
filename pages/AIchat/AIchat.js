@@ -132,7 +132,7 @@ Page({
     const token = wx.getStorageSync('token');
 
     const requestTask = wx.request({
-      url: 'http://localhost:8080/home/' + this.data.homeId + '/ai/chat',
+      url: 'http://192.168.43.218:8080/home/' + this.data.homeId + '/ai/chat',
       method: 'POST',
       header: {
         'Content-Type': 'application/json',

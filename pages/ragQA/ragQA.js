@@ -6,7 +6,7 @@ Page({
       imgUrls: [
         '/images/pagesetting/others/lunbotu1.jpg',
         '/images/pagesetting/others/lunbotu2.jpg',
-        '/images/pagesetting/others/lunbotu3.png'
+        '/images/pagesetting/others/lunbotu3.jpg'
       ],
       swiperIdx :0,
       count: 0,

@@ -13,7 +13,7 @@
   >
     <swiper-item>
       <view class="slide-item">
-        <image src="/static/images/welcome1.png" mode="aspectFill"/>
+        <image src="/images/index/welcome1.png" mode="aspectFill"/>
         <view class="slide-content">
           <text class="title">智能设备       
           随心管理</text>
@@ -23,7 +23,7 @@
     </swiper-item>
     <swiper-item>
       <view class="slide-item">
-        <image src="/static/images/welcome2.png" mode="aspectFill"/>
+        <image src="/images/index/welcome2.png" mode="aspectFill"/>
         <view class="slide-content">
           <text class="title">您的专属推荐场景</text>
           <text class="subtitle">一屋互联 智慧联动 舒心生活</text>
@@ -32,7 +32,7 @@
     </swiper-item>
     <swiper-item>
       <view class="slide-item">
-        <image src="/static/images/welcome3.png" mode="aspectFill"/>
+        <image src="/images/index/welcome3.png" mode="aspectFill"/>
         <view class="slide-content">
           <text class="title">新视觉 新体验</text>
           <text class="subtitle">全新界面 精致呈现</text>

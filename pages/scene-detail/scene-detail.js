@@ -308,7 +308,7 @@ Page({
     // 为每个设备分别发起请求
     devices.forEach(device => {
       wx.request({
-        url: `http://localhost:8080/home/${homeId}/device/getData?deviceId=${device.id}`,
+        url: `http://192.168.43.218:8080/home/${homeId}/device/getData?deviceId=${device.id}`,
         method: 'GET',
         header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token') },
         success: (res) => {
@@ -496,7 +496,7 @@ Page({
     wx.showLoading({ title: '保存中...' });
     
     wx.request({
-      url: `http://localhost:8080/home/${homeId}/scene/update/${sceneId}`,
+      url: `http://192.168.43.218:8080/home/${homeId}/scene/update/${sceneId}`,
       method: 'POST',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token') },
       data: requestData,
@@ -552,7 +552,7 @@ Page({
   // 获取可用设备
   getavailableDevices(callback) {
     wx.request({
-      url: 'http://localhost:8080/home/view/' + wx.getStorageSync('HOMEID'),
+      url: 'http://192.168.43.218:8080/home/view/' + wx.getStorageSync('HOMEID'),
       method: 'GET',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       success: (res) => {
@@ -609,7 +609,7 @@ Page({
     const homeId = wx.getStorageSync('HOMEID');
 
     wx.request({
-      url: `http://localhost:8080/home/${homeId}/scene/view/${sceneId}/device`,
+      url: `http://192.168.43.218:8080/home/${homeId}/scene/view/${sceneId}/device`,
       method: 'GET',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token') },
       success: (res) => {
@@ -693,7 +693,7 @@ Page({
     const homeId = wx.getStorageSync('HOMEID');
     
     wx.request({
-      url: `http://localhost:8080/home/${homeId}/device/${deviceId}/connect`,
+      url: `http://192.168.43.218:8080/home/${homeId}/device/${deviceId}/connect`,
       method: 'POST',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       success: (res) => {
@@ -712,7 +712,7 @@ Page({
   // 发送控制消息
   sendControlMessage(deviceId, value) {
     wx.request({
-      url: `http://localhost:8080/sendMessage?topic=${deviceId}&value=${value}`,
+      url: `http://192.168.43.218:8080/sendMessage?topic=${deviceId}&value=${value}`,
       method: 'POST',
       success: (res) => {
         if (res.statusCode === 200) {
@@ -766,7 +766,7 @@ Page({
     }
 
     wx.request({
-      url: 'http://localhost:8080/home/' + wx.getStorageSync('HOMEID') + '/device/' + deviceId + '/connect',
+      url: 'http://192.168.43.218:8080/home/' + wx.getStorageSync('HOMEID') + '/device/' + deviceId + '/connect',
       method: 'POST',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       success: (res) => {

@@ -54,7 +54,7 @@ Page({
     this.setData({ isLoading: true });
 
     wx.request({
-      url: 'http://localhost:8080/auth/register',
+      url: 'http://192.168.43.218:8080/auth/register',
       method: 'POST',
       data: {
         username: this.data.username,
@@ -109,7 +109,7 @@ Page({
   // requestRegister() {
   //   return new Promise((resolve, reject) => {
   //     wx.request({
-  //       url: 'http://localhost:8080/auth/register', // 替换为实际API地址
+  //       url: 'http://192.168.43.218:8080/auth/register', // 替换为实际API地址
   //       method: 'POST',
   //       header: {
   //         'Content-Type': 'application/json'

@@ -133,7 +133,7 @@ Page({
   // /home/get
   homeget(callback) {
     wx.request({
-      url: 'http://localhost:8080/home/myHome',
+      url: 'http://192.168.43.218:8080/home/myHome',
       method: 'GET',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       success: (res) => {
@@ -174,7 +174,7 @@ Page({
   // /home/create
   homecreate(callback) {
     wx.request({
-      url: 'http://localhost:8080/home/create',
+      url: 'http://192.168.43.218:8080/home/create',
       method: 'POST',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       data: {
@@ -208,7 +208,7 @@ Page({
   // /home/search?keyword=this.data.searchfamilyname
   searchhome(callback) {
     wx.request({
-      url: 'http://localhost:8080/home/search?keyword=' + this.data.searchfamilyname,
+      url: 'http://192.168.43.218:8080/home/search?keyword=' + this.data.searchfamilyname,
       method: 'GET',
       headers: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       success: (res) => {
@@ -236,7 +236,7 @@ Page({
   // /home/{homeId}/request/put
   enterhome(callback) {
     wx.request({
-      url: 'http://localhost:8080/home/' + this.data.selectedHomeId + '/request/put',
+      url: 'http://192.168.43.218:8080/home/' + this.data.selectedHomeId + '/request/put',
       method: 'POST',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       success: (res) => {
@@ -267,7 +267,7 @@ Page({
   // /home/delete/{homeId}
   homedelete(callback) {
     wx.request({
-      url: 'http://localhost:8080/home/delete/' + this.data.homeId,
+      url: 'http://192.168.43.218:8080/home/delete/' + this.data.homeId,
       method: 'DELETE',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token') },
       success: (res) => {

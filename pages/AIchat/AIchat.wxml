@@ -23,7 +23,7 @@
       <!-- AI助手欢迎消息 -->
       <view class="message-item ai-message">
         <view class="avatar-wrapper">
-          <image class="message-avatar" src="/images/cjy.jpg" mode="aspectFill"></image>
+          <image class="message-avatar" src="/images/RAG/AI头像.jpg" mode="aspectFill"></image>
         </view>
         <view class="message-content">
           <view class="message-bubble ai-bubble">

@@ -142,7 +142,7 @@ Page({
   // /home/view
   homeview(callback) {
     wx.request({
-      url: 'http://localhost:8080/home/view/' + this.data.homeId,
+      url: 'http://192.168.43.218:8080/home/view/' + this.data.homeId,
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       success: (res) => {
         if (res.statusCode === 200) {
@@ -187,7 +187,7 @@ Page({
   // /home/{homeId}/updateName
   updateHomeName(callback) {
     wx.request({
-      url: 'http://localhost:8080/home/' + this.data.homeId + '/updateName',
+      url: 'http://192.168.43.218:8080/home/' + this.data.homeId + '/updateName',
       method: 'POST',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       data: { "name": this.data.newhomename },
@@ -210,7 +210,7 @@ Page({
   // /home/{homeId}/updateAddress
   updateHomeAddress(callback) {
     wx.request({
-      url: 'http://localhost:8080/home/' + this.data.homeId + '/updateAddress',
+      url: 'http://192.168.43.218:8080/home/' + this.data.homeId + '/updateAddress',
       method: 'POST',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       data: { address: this.data.newhomeaddress },  
@@ -233,7 +233,7 @@ Page({
   // /auth/search-user-by-phone
   searchuser(callback) {
     wx.request({
-      url: 'http://localhost:8080/auth/search-user-by-phone?phone=' + this.data.userphone,
+      url: 'http://192.168.43.218:8080/auth/search-user-by-phone?phone=' + this.data.userphone,
       method: 'GET',
       success: (res) => {
         if (res.statusCode === 200) {
@@ -264,7 +264,7 @@ Page({
   // /home/member/add
   addmember(callback) {
     wx.request({
-      url: 'http://localhost:8080/home/member/add',
+      url: 'http://192.168.43.218:8080/home/member/add',
       method: 'POST',
       data: {
         homeId: this.data.homeId,
@@ -299,7 +299,7 @@ Page({
   // /home/{homeId}/request/receive
   getRequests(callback) {
     wx.request({
-      url: 'http://localhost:8080/home/' + this.data.homeId + '/request/receive',
+      url: 'http://192.168.43.218:8080/home/' + this.data.homeId + '/request/receive',
       method: 'GET',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       success: (res) => {
@@ -338,7 +338,7 @@ Page({
   // /home/{homeId}/request/receive/handle
   handlerequest(requestId, userId, status, callback) {
     wx.request({
-      url: 'http://localhost:8080/home/' + this.data.homeId + '/request/receive/handle',
+      url: 'http://192.168.43.218:8080/home/' + this.data.homeId + '/request/receive/handle',
       method: 'POST',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token') },
       data: {

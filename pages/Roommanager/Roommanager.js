@@ -114,7 +114,7 @@ Page({
   // /home/view
   homeview(callback) {
       wx.request({
-        url: 'http://localhost:8080/home/view/' + this.data.homeId,
+        url: 'http://192.168.43.218:8080/home/view/' + this.data.homeId,
         header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
         success: (res) => {
           if (res.statusCode === 200) {
@@ -147,7 +147,7 @@ Page({
   // /home/{homeId}/room/create
   roomcreate(callback) {
     wx.request({
-      url: 'http://localhost:8080/home/' + this.data.homeId + '/room/create',
+      url: 'http://192.168.43.218:8080/home/' + this.data.homeId + '/room/create',
       method: 'POST',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       data: {
@@ -182,7 +182,7 @@ Page({
   // /home/{homeId}/room/delete
   roomdelete(callback) {
     wx.request({
-      url: 'http://localhost:8080/home/' + this.data.homeId + '/room/delete',
+      url: 'http://192.168.43.218:8080/home/' + this.data.homeId + '/room/delete',
       method: 'DELETE',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       data: {

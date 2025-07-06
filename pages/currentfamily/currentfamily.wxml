@@ -50,7 +50,7 @@
     <text class="member-introduction">所有成员均可使用家庭内的设备</text>
     <block wx:for="{{homemembers}}" wx:key="id">
       <view class="member-item" bindtap="onMemberTap" data-id="{{item.id}}">
-        <image class="member-icon" src="{{item.icon}}"></image>
+        <image class="member-icon" src="/images/user/用户头像.png"></image>
         <text class="member-name">{{item.name}}</text>
       </view>
     </block>
