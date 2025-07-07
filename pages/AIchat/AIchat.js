@@ -5,7 +5,7 @@ Page({
   data: {
     messages: [],
     inputText: '',
-    inputMode: 'voice', // 'text' 或 'voice'
+    inputMode: 'voice', // 'text' 或 'voice'，用于指定输入模式
     isRecording: false,
     scrollTop: 0,
     scrollIntoView: '',
@@ -29,8 +29,6 @@ Page({
       that.setData({ isRecording: true });
     };
     manager.onRecognize = function(res) {
-      // 实时识别内容，如果想实时显示可加如下代码
-      // that.setData({ inputText: res.result });
     };
     manager.onStop = function(res) {
       console.log('识别结束', res);
@@ -132,7 +130,7 @@ Page({
     const token = wx.getStorageSync('token');
 
     const requestTask = wx.request({
-      url: 'http://192.168.43.218:8080/home/' + this.data.homeId + '/ai/chat',
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/ai/chat',
       method: 'POST',
       header: {
         'Content-Type': 'application/json',
@@ -171,9 +169,9 @@ Page({
         this.updateAIMessage('网络错误，请稍后再试');
         this.setData({ aiResponseInProgress: false });
       },
-      complete: () => {
+      // complete: () => {
         // 请求完成后的处理
-      }
+      // }
     });
   },
 
@@ -217,15 +215,11 @@ Page({
   formatTime(date) {
     const hours = date.getHours().toString().padStart(2, '0');
     const minutes = date.getMinutes().toString().padStart(2, '0');
-    return `${hours}${minutes}`;
+    return `${hours}:${minutes}`;
   },
 
   // 返回上一页
   goBack() {
     wx.navigateBack();
-  },
-
-  // onUnload() {
-  //   // 无需清理recorderManager和innerAudioContext
-  // }
+  }
 });

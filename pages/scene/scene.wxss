@@ -3,7 +3,7 @@
   min-height: 100vh;
   background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   padding: 30rpx 20rpx;
-  padding-bottom: 120rpx; /* 为底部按钮留出空间 */
+  padding-bottom: 120rpx;
   box-sizing: border-box;
 }
 
@@ -25,11 +25,11 @@
   box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
   backdrop-filter: blur(10px);
-  position: relative; /* 为删除按钮定位做准备 */
+  position: relative;
 }
 
 .scene-item.delete-mode {
-  padding-right: 80rpx; /* 为删除按钮预留空间 */
+  padding-right: 80rpx;
 }
 
 .scene-item:active:not(.delete-mode) {
@@ -140,21 +140,21 @@
     border-radius: 24rpx;
     padding: 30rpx;
     display: flex;
-    align-items: flex-start;  /* 改为顶部对齐 */
+    align-items: flex-start;
     box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.1);
     transition: all 0.3s ease;
     backdrop-filter: blur(10px);
     position: relative;
-    margin-bottom: 24rpx;  /* 增加卡片间距 */
+    margin-bottom: 24rpx;
   }
 
   .scene-image {
-    width: 140rpx;  /* 略微增大图片尺寸 */
+    width: 140rpx;
     height: 140rpx;
-    border-radius: 20rpx;  /* 增加圆角 */
+    border-radius: 20rpx;
     margin-right: 30rpx;
-    box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.15);  /* 增强阴影效果 */
-    object-fit: cover;  /* 确保图片填充整个区域 */
+    box-shadow: 0 6rpx 16rpx rgba(0, 0, 0, 0.15);
+    object-fit: cover;
   }
 
   .scene-info {
@@ -162,41 +162,31 @@
     display: flex;
     flex-direction: column;
     justify-content: space-between;
-    min-height: 140rpx;  /* 与图片高度保持一致 */
+    min-height: 140rpx;
   }
 
   .scene-name {
     display: flex;
     align-items: center;
     margin-bottom: 16rpx;
-    border-bottom: 2rpx solid rgba(0, 0, 0, 0.05);  /* 添加下划线分隔 */
+    border-bottom: 2rpx solid rgba(0, 0, 0, 0.05);
     padding-bottom: 12rpx;
   }
   
-  .scene-name text:nth-child(2) {  /* 场景名称文本 */
+  .scene-name text:nth-child(2) {
     font-size: 34rpx;
     font-weight: 600;
     color: #2c3e50;
     margin-left: 8rpx;
   }
-  
-  /* .trophy-icon, .medal-icon {
-    font-size: 28rpx;
-    background: rgba(127, 182, 159, 0.1);  给图标添加背景色 */
-    /* padding: 8rpx;
-    border-radius: 50%;
-    display: inline-flex;
-    align-items: center;
-    justify-content: center;
-  } */
 
   .scene-desc {
     font-size: 28rpx;
-    color: #5d6d7e;  /* 调深颜色增加可读性 */
+    color: #5d6d7e;
     line-height: 1.5;
     margin-bottom: 16rpx;
-    padding-left: 10rpx;  /* 添加左侧内边距 */
-    border-left: 6rpx solid rgba(127, 182, 159, 0.5);  /* 添加左侧边框 */
+    padding-left: 10rpx;
+    border-left: 6rpx solid rgba(127, 182, 159, 0.5);
     padding-bottom: 4rpx;
   }
 
@@ -205,12 +195,12 @@
     color: #95a5a6;
     display: flex;
     align-items: center;
-    margin-top: auto;  /* 将用户数推到底部 */
-    background: rgba(248, 249, 250, 0.7);  /* 添加背景色 */
+    margin-top: auto;
+    background: rgba(248, 249, 250, 0.7);
     padding: 8rpx 16rpx;
     border-radius: 30rpx;
-    align-self: flex-start;  /* 左对齐 */
-    width: fit-content;  /* 宽度适应内容 */
+    align-self: flex-start;
+    width: fit-content;
   }
   
   .scene-users::before {
@@ -230,8 +220,8 @@
   justify-content: center;
   width: 40rpx;
   height: 40rpx;
-  line-height: 1;  /* 确保行高合适 */
-  text-align: center;  /* 文本居中 */
+  line-height: 1;
+  text-align: center;
 }
 
 /* 底部按钮区域 */
@@ -334,7 +324,7 @@
   color: white;
   font-size: 40rpx;
   font-weight: 700;
-  margin-top: -8rpx; /* 微调居中位置 */
+  margin-top: -8rpx;
 }
 
 /* 弹窗样式 */

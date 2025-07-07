@@ -54,7 +54,7 @@
       <!-- 聊天消息列表 -->
       <view wx:for="{{messages}}" wx:key="id" id="msg{{item.id}}" class="message-item {{item.type === 'user' ? 'user-message' : 'ai-message'}}">
         <view class="avatar-wrapper" wx:if="{{item.type === 'ai'}}">
-          <image class="message-avatar" src="/images/cjy.jpg" mode="aspectFill"></image>
+          <image class="message-avatar" src="/images/RAG/AI头像.jpg" mode="aspectFill"></image>
         </view>
         <view class="message-content">
           <view class="message-bubble {{item.type === 'user' ? 'user-bubble' : 'ai-bubble'}}">

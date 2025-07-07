@@ -258,7 +258,7 @@ Page({
   // /home/view
   homeview(callback) {
       wx.request({
-        url: 'http://192.168.43.218:8080/home/view/' + this.data.homeId,
+        url: 'http://localhost:8080/home/view/' + this.data.homeId,
         header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
         success: (res) => {
           if (res.statusCode === 200) {
@@ -310,7 +310,7 @@ Page({
   // /home/room/device/type/list
   getDeviceTypes() {
     wx.request({
-      url: 'http://192.168.43.218:8080/home/' + this.data.homeId + '/room/device/type/list',
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/room/device/type/list',
       method: 'GET',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token') },
       success: (res) => {
@@ -347,7 +347,7 @@ Page({
   // /home/{homeId}/device/search/connect
   connect() {
     wx.request({
-      url: 'http://192.168.43.218:8080/home/' + this.data.homeId + '/device/search/connect',
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/device/search/connect',
       method: 'POST',
       header: { "Authorization": "Bearer " + wx.getStorageSync('token')},
       success: (res) => {
@@ -366,7 +366,7 @@ Page({
   // /home/{homeId}/device/search/disconnect
   disconnect() {
     wx.request({
-      url: 'http://192.168.43.218:8080/home/' + this.data.homeId + '/device/search/disconnect',
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/device/search/disconnect',
       method: 'POST',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       success: (res) => {
@@ -385,7 +385,7 @@ Page({
   // /home/{homeId}/device/search/get
   getconnecteddevice() {
     wx.request({
-      url: 'http://192.168.43.218:8080/home/' + this.data.homeId + '/device/search/get',
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/device/search/get',
       method: 'GET',
       header: { "Authorization": "Bearer " + wx.getStorageSync('token')},
       success: (res) => {
@@ -416,7 +416,7 @@ Page({
   // /home/{homeId}/device/search/postdevice
   createdevice(callback) {
     wx.request({
-      url: 'http://192.168.43.218:8080/home/' + this.data.homeId + '/device/search/postdevice',
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/device/search/postdevice',
       method: 'POST',
       header: { "Authorization": "Bearer " + wx.getStorageSync('token')},
       data: {
@@ -453,7 +453,7 @@ Page({
   // /home/{homeId}/room/device/delete?id={deviceId}
   deletedevice(callback) {
     wx.request({
-      url: 'http://192.168.43.218:8080/home/' + this.data.homeId + '/room/device/delete?id='  + this.data.deviceId,
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/room/device/delete?id='  + this.data.deviceId,
       method: 'DELETE',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       success: (res) => {
@@ -484,7 +484,7 @@ Page({
   movedevice(callback) {
     this.setData({ deviceId: this.data.selectedDeviceId, roomId: this.data.targetRoomId });
     wx.request({
-      url: 'http://192.168.43.218:8080/home/' + this.data.homeId + '/device/move',
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/device/move',
       method: 'POST',
       data: {
         deviceId: this.data.deviceId,
@@ -518,7 +518,7 @@ Page({
   // /home/{homeId}/room/device/add
   adddevicebyhand(callback) {
     wx.request({
-      url: 'http://192.168.43.218:8080/home/' + this.data.homeId + '/room/device/add',
+      url: 'http://localhost:8080/home/' + this.data.homeId + '/room/device/add',
       method: 'POST',
       data: {
         "name": this.data.newDeviceName,

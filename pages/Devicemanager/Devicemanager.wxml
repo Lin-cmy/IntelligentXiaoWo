@@ -60,6 +60,7 @@
   <view class="popup-content">
     <text class="popup-change-title">添加设备</text>
     
+
     <!-- 设备名称输入框 -->
     <input 
       class="popup-change-input"

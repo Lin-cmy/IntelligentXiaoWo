@@ -42,8 +42,7 @@ Page({
     this.setData({ isLoading: true });
 
     wx.request({
-      // url: 'http://192.168.43.218:8080/auth/login',
-      url: 'http://192.168.43.218:8080/auth/login',
+      url: 'http://localhost:8080/auth/login',
       method: 'POST',
       data: {
         phone: this.data.phone,
@@ -54,8 +53,6 @@ Page({
         if (res.statusCode === 200 ) {
           wx.showToast({ title: '登录成功', icon: 'success' });
           wx.setStorageSync('token', res.data.token);
-          // wx.setStorageSync('userId', res.data.data.userId);
-          // wx.setStorageSync('userInfo', res.data.data.userInfo);
           wx.switchTab({ url: '/pages/home/home' });
           // wx.navigateTo({
           //   url: '/pages/home/home',

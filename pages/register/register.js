@@ -54,7 +54,7 @@ Page({
     this.setData({ isLoading: true });
 
     wx.request({
-      url: 'http://192.168.43.218:8080/auth/register',
+      url: 'http://localhost:8080/auth/register',
       method: 'POST',
       data: {
         username: this.data.username,
@@ -75,55 +75,7 @@ Page({
         this.setData({ registerMsg: '网络错误', isLoading: false });
       }
     });
-
-    // try {
-    //   const res = await this.requestRegister();
-      
-    //   if (res.statusCode === 201) {
-    //     wx.showToast({
-    //       title: '注册成功',
-    //       icon: 'success'
-    //     });
-
-    //     setTimeout(() => {
-    //       wx.navigateTo({
-    //         url: '/pages/login/login'
-    //       });
-    //     }, 1500);
-    //   } else {
-    //     wx.showToast({
-    //       title: res.data.message || '注册失败',
-    //       icon: 'none'
-    //     });
-    //   }
-    // } catch (error) {
-    //   wx.showToast({
-    //     title: '网络错误，请重试',
-    //     icon: 'none'
-    //   });
-    // } finally {
-    //   this.setData({ isLoading: false });
-    // }
   },
-
-  // requestRegister() {
-  //   return new Promise((resolve, reject) => {
-  //     wx.request({
-  //       url: 'http://192.168.43.218:8080/auth/register', // 替换为实际API地址
-  //       method: 'POST',
-  //       header: {
-  //         'Content-Type': 'application/json'
-  //       },
-  //       data: {
-  //         username: this.data.username,
-  //         phone: this.data.phone,
-  //         password: this.data.password
-  //       },
-  //       success: resolve,
-  //       fail: reject
-  //     });
-  //   });
-  // },
 
   goToLogin() {
     wx.navigateBack();

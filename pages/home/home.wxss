@@ -7,17 +7,16 @@
 } */
 
 page {
-  /* background: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%); */
   min-height: 100vh;
   box-sizing: border-box;
   padding-bottom: 40rpx;
 }
 
-/* 顶部标题区域 - 修改为明确的左右对齐 */
+/* 顶部标题区域 */
 .header-section {
   display: flex;
   padding: 40rpx 30rpx 20rpx;
-  justify-content: space-between; /* 确保左右两端对齐 */
+  justify-content: space-between;
   align-items: center;
   background: rgba(240, 248, 240, 0.8);
   backdrop-filter: blur(10px);
@@ -48,7 +47,7 @@ page {
   margin-top: 6rpx;
 }
 
-/* 刷新按钮 - 确保靠右对齐 */
+/* 刷新按钮 */
 .refresh-button {
   width: 80rpx;
   height: 80rpx;
@@ -59,7 +58,7 @@ page {
   justify-content: center;
   box-shadow: 0 4rpx 16rpx rgba(0, 0, 0, 0.1);
   transition: all 0.3s ease;
-  margin-left: auto; /* 确保靠右 */
+  margin-left: auto;
 }
 
 .refresh-button:active {
@@ -118,7 +117,7 @@ page {
   padding: 0 20rpx;
 }
 
-/* 设备网格 - 修改为每行两个设备 */
+/* 设备网格 */
 .device-grid {
   display: flex;
   flex-wrap: wrap;
@@ -126,10 +125,10 @@ page {
   padding: 10rpx;
 }
 
-/* 设备卡片 - 修改为正方形且每行两个 */
+/* 设备卡片 */
 .device-card {
-  width: 48%; /* 略小于50%，考虑间距 */
-  aspect-ratio: 1/1; /* 确保是正方形 */
+  width: 48%;
+  aspect-ratio: 1/1;
   background: rgba(255, 255, 255, 0.95);
   border-radius: 24rpx;
   box-shadow: 0 8rpx 24rpx rgba(0, 0, 0, 0.08);

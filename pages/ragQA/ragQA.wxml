@@ -11,8 +11,8 @@
   </block>
  </swiper>
 </view>
-<view class="meowing"><!--大框架-->
-  <view class="nav_left"><!--侧边栏盒子-->
+<view class="meowing">
+  <view class="nav_left">
     <block wx:for="{{leftitem}}" wx:key="id">
       <!--这里定义了一个变量index，并把这个变量赋值为index，这个是wx：for循环产生的下标，传到js，通过这个下标完成文章的显示-->
       <view class="nav_left_items {{count==index?'active-tag':''}}" bindtap="switchRightTab" data-index="{{index}}"><!--文字盒子-->
@@ -25,9 +25,9 @@
     <view class="nav_right_cat" wx:for="{{rightitem}}" wx:key="id" wx:if="{{count==item.tag}}" ><!--设备详情-->
       <view bindtap="click_nav_cat" data-id="{{item.id}}" class="nav" hover-class="right-item-hover">
         <image src="{{item.url}}" mode="widthFix" style="width: 180rpx;height: 180rpx;border-radius: 20rpx;"></image>
-        <view class="nav_right_nadandsex"><!--文字盒子-->
-          <text class="nav_right_nad" style="color: black;">{{item.nad}}</text><!--文字-->
-          <view class="nav_right_sex"><!--文章tag-->
+        <view class="nav_right_nadandsex">
+          <text class="nav_right_nad" style="color: black;">{{item.nad}}</text>
+          <view class="nav_right_sex">
             {{item.tagText}}
           </view>
         </view>

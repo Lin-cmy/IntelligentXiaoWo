@@ -151,7 +151,7 @@ Page({
   // /home/get
   homeget(callback) {
     wx.request ({
-      url: 'http://192.168.43.218:8080/home/get',
+      url: 'http://localhost:8080/home/get',
       method: 'GET',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token') },
       success: (res) => {
@@ -203,7 +203,7 @@ Page({
   homeview() {
     const homeId = this.data.homeId;
     wx.request({
-      url: 'http://192.168.43.218:8080/home/view/' + homeId,
+      url: 'http://localhost:8080/home/view/' + homeId,
       method: 'GET',
       header: { 
         'content-type': 'application/json',
@@ -260,7 +260,7 @@ Page({
   // /home/create
   homecreate(callback) {
     wx.request({
-      url: 'http://192.168.43.218:8080/home/create',
+      url: 'http://localhost:8080/home/create',
       method: 'POST',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       data: {

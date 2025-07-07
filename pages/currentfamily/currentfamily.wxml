@@ -61,9 +61,7 @@
   </view>
 </view>
 
-<!-- 访客 -->
-
-<!-- 修改家庭名称弹窗(美化版) -->
+<!-- 修改家庭名称弹窗 -->
 <view wx:if="{{showChangeHomeNamePopup}}" class="popup-change" catchtouchmove="true">
   <view class="popup-content">
     <text class="popup-title">修改家庭名称</text>
@@ -82,7 +80,7 @@
   </view>
 </view>
 
-<!-- 修改家庭位置弹窗(美化版) -->
+<!-- 修改家庭位置弹窗 -->
 <view wx:if="{{showChangeHomeAddressPopup}}" class="popup-change" catchtouchmove="true">
   <view class="popup-content">
     <text class="popup-title">修改家庭地址</text>

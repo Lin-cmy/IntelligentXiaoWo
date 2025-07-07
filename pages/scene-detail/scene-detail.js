@@ -11,14 +11,14 @@ Page({
     timeRange: '00:00 - 23:59',
     startTime: '00:00',
     endTime: '23:59',
-    fullStartTime: '', // 完整的开始时间 (ISO格式)
-    fullEndTime: '',   // 完整的结束时间 (ISO格式)
+    fullStartTime: '',
+    fullEndTime: '',
     showTimePicker: false,
     showDeviceList: false,
     availableDevices: [],
     selectedDevices: [],
-    controlDevices: [], // 控制类设备 (55, 88, 99)
-    sensorDevices: [], // 传感类设备 (其他类型)
+    controlDevices: [],
+    sensorDevices: [],
     typeMap: {
       "1":  "温度传感器",
       "2":  "湿度传感器",
@@ -35,13 +35,10 @@ Page({
       "99": "水泵控制器"  // 0 1 2 3 >=4
     },
     operationMap: {},
-    deviceData: [], // 存储传感器设备数据
+    deviceData: [],
     isRefreshing: false
   },
 
-  /**
-   * 生命周期函数--监听页面加载
-   */
   onLoad: function(options) {
     try {
       const eventChannel = this.getOpenerEventChannel();
@@ -105,7 +102,7 @@ Page({
     for (const [id, name] of Object.entries(this.data.operationMap)) {
       if (name === operationName) return Number(id);
     }
-    return 1; // 默认返回1，实际应该根据API调整
+    return 1;
   },
 
   onBack() {
@@ -308,12 +305,12 @@ Page({
     // 为每个设备分别发起请求
     devices.forEach(device => {
       wx.request({
-        url: `http://192.168.43.218:8080/home/${homeId}/device/getData?deviceId=${device.id}`,
+        url: `http://localhost:8080/home/${homeId}/device/getData?deviceId=${device.id}`,
         method: 'GET',
         header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token') },
         success: (res) => {
           if (res.statusCode === 200 && res.data.data && res.data.data.length > 0) {
-            // 获取该设备的最新数据（第一条数据通常是最新的）
+            // 获取该设备的最新数据
             const latestData = res.data.data[0];
             // 格式化时间
             const formattedTime = latestData.dataTime.replace('T', ' ');
@@ -496,7 +493,7 @@ Page({
     wx.showLoading({ title: '保存中...' });
     
     wx.request({
-      url: `http://192.168.43.218:8080/home/${homeId}/scene/update/${sceneId}`,
+      url: `http://localhost:8080/home/${homeId}/scene/update/${sceneId}`,
       method: 'POST',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token') },
       data: requestData,
@@ -552,7 +549,7 @@ Page({
   // 获取可用设备
   getavailableDevices(callback) {
     wx.request({
-      url: 'http://192.168.43.218:8080/home/view/' + wx.getStorageSync('HOMEID'),
+      url: 'http://localhost:8080/home/view/' + wx.getStorageSync('HOMEID'),
       method: 'GET',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       success: (res) => {
@@ -609,7 +606,7 @@ Page({
     const homeId = wx.getStorageSync('HOMEID');
 
     wx.request({
-      url: `http://192.168.43.218:8080/home/${homeId}/scene/view/${sceneId}/device`,
+      url: `http://localhost:8080/home/${homeId}/scene/view/${sceneId}/device`,
       method: 'GET',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token') },
       success: (res) => {
@@ -693,7 +690,7 @@ Page({
     const homeId = wx.getStorageSync('HOMEID');
     
     wx.request({
-      url: `http://192.168.43.218:8080/home/${homeId}/device/${deviceId}/connect`,
+      url: `http://localhost:8080/home/${homeId}/device/${deviceId}/connect`,
       method: 'POST',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       success: (res) => {
@@ -712,7 +709,7 @@ Page({
   // 发送控制消息
   sendControlMessage(deviceId, value) {
     wx.request({
-      url: `http://192.168.43.218:8080/sendMessage?topic=${deviceId}&value=${value}`,
+      url: `http://localhost:8080/sendMessage?topic=${deviceId}&value=${value}`,
       method: 'POST',
       success: (res) => {
         if (res.statusCode === 200) {
@@ -766,7 +763,7 @@ Page({
     }
 
     wx.request({
-      url: 'http://192.168.43.218:8080/home/' + wx.getStorageSync('HOMEID') + '/device/' + deviceId + '/connect',
+      url: 'http://localhost:8080/home/' + wx.getStorageSync('HOMEID') + '/device/' + deviceId + '/connect',
       method: 'POST',
       header: { 'Authorization': 'Bearer ' + wx.getStorageSync('token')},
       success: (res) => {
