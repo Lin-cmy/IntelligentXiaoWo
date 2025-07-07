@@ -148,6 +148,15 @@ page {
   margin-bottom: 10rpx;
 }
 
+.family-visitor {
+  padding: 20rpx 10rpx;
+  font-size: 40rpx;
+  font-weight: bold;
+  color: #2c3e50;
+  display: block;
+  margin: 10rpx;
+}
+
 .current-family-section2 {
   background: rgba(255, 255, 255, 0.95);
   border-radius: 24rpx;

@@ -55,9 +55,25 @@
       </view>
     </block>
     <view class="member-item">
-      <view class="member-icon add-member-icon" bindtap="onAddTap"></view>
+      <view class="member-icon add-member-icon" bindtap="onAddMemberTap"></view>
       <text class="member-name">添加成员</text>
     </view>
+  </view>
+
+  <!-- 家庭访客 -->
+  <text class="family-visitor">家庭访客</text>
+  <view class="current-family-section2">
+    <text class="member-introduction">访客仅可在有限权限下访问家庭</text>
+    <block wx:for="{{visitors}}" wx:key="id">
+      <view class="member-item" bindtap="onVisitorTap" data-id="{{item.id}}">
+        <image class="member-icon" src="/images/user/用户头像.png"></image>
+        <text class="member-name">{{item.name}}</text>
+      </view>
+    </block>
+    <view class="member-item">
+        <view class="member-icon add-member-icon" bindtap="onAddVisitorTap"></view>
+        <text class="member-name">添加访客</text>
+      </view>
   </view>
 </view>
 
@@ -115,6 +131,26 @@
     <view class="popup-btns">
       <button class="popup-btn cancel" bindtap="onAddMemberCancel">取消</button>
       <button class="popup-btn confirm" bindtap="onAddMemberConfirm">确定</button>
+    </view>
+  </view>
+</view>
+
+<!-- 添加访客弹窗 -->
+<view wx:if="{{showAddVisitorPopup}}" class="popup-change" catchtouchmove="true">
+  <view class="popup-content">
+    <text class="popup-title">添加访客</text>
+    <view class="popup-desc">通过手机号添加访客</view>
+    <input 
+      class="popup-input"
+      placeholder="请输入访客手机号"
+      value="{{userphone}}"
+      bindinput="onMemberPhoneInput"
+      maxlength="11"
+      type="number"
+    />
+    <view class="popup-btns">
+      <button class="popup-btn cancel" bindtap="onAddVisitorCancel">取消</button>
+      <button class="popup-btn confirm" bindtap="onAddVisitorConfirm">确定</button>
     </view>
   </view>
 </view>

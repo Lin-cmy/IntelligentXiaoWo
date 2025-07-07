@@ -13,7 +13,9 @@ Page({
     showChangeHomeNamePopup: false,
     showChangeHomeAddressPopup: false,
     showAddMemberPopup: false,
+    showAddVisitorPopup: false,
     homemembers: [],
+    visitors: [],
     requests: []
   },
 
@@ -46,6 +48,13 @@ Page({
 
   // 修改家庭名称
   onNameTap() {
+    if (this.data.role !== '房主') {
+      wx.showToast({
+        title: '您无权修改家庭名称',
+        icon: 'none'
+      });
+      return;
+    }
     this.setData({ showChangeHomeNamePopup: true });
   },
   onHomeNameInput(e) {
@@ -68,6 +77,13 @@ Page({
 
   // 修改家庭地址
   onAddressTap() {
+    if (this.data.role !== '房主') {
+      wx.showToast({
+        title: '您无权修改家庭位置',
+        icon: 'none'
+      });
+      return;
+    }
     this.setData({ showChangeHomeAddressPopup: true });
   },
   onHomeAddressInput(e) {
@@ -104,7 +120,14 @@ Page({
   },
 
   // 添加成员按钮
-  onAddTap() {
+  onAddMemberTap() {
+    if (this.data.role !== '房主') {
+      wx.showToast({
+        title: '只有房主才能添加成员',
+        icon: 'none'
+      });
+      return;
+    }
     this.setData({
       showAddMemberPopup: true,
       userphone: ''
@@ -139,6 +162,44 @@ Page({
     });
   },
 
+  // 添加访客按钮
+  onAddVisitorTap() {
+    if (this.data.role !== '房主') {
+      wx.showToast({
+        title: '只有房主才能添加访客',
+        icon: 'none'
+      });
+      return;
+    }
+    this.setData({
+      showAddVisitorPopup: true,
+      userphone: ''
+    });
+  },
+  
+  // 取消添加访客
+  onAddVisitorCancel() {
+    this.setData({
+      showAddVisitorPopup: false,
+      userphone: ''
+    });
+  },
+
+  // 确认添加访客
+  onAddVisitorConfirm() {
+    this.searchuser(() => {
+      this.addvisitor(() => {
+        this.homeview(() => {
+          this.setData({
+            showAddMemberPopup: false,
+            userId: '',
+            userphone: ''
+          })
+        })
+      })
+    });
+  },
+
   // /home/view
   homeview(callback) {
     wx.request({
@@ -155,7 +216,16 @@ Page({
             1: "成员",
             2: "访客"
           };
-          const homemembers = res.data.users.map(item => ({
+          const homemembers = res.data.users
+            .filter(item => item.role !== 2)
+            .map(item => ({
+              id: item.id,
+              name: item.username,
+              role: roleMap[item.role]
+            }));
+          const visitors = res.data.users
+          .filter(item => item.role === 2)
+          .map(item => ({
             id: item.id,
             name: item.username,
             role: roleMap[item.role]
@@ -165,7 +235,8 @@ Page({
             homename: res.data.home.name,
             homeaddress: res.data.home.address,
             devicecnt: devicecnt,
-            homemembers: homemembers
+            homemembers: homemembers,
+            visitors: visitors
           });
           if (typeof callback === 'function') callback();
         } else {
@@ -270,6 +341,41 @@ Page({
         homeId: this.data.homeId,
         userId: this.data.userId,
         role: 1
+      },
+      success: (res) => {
+        if (res.statusCode === 200) {
+          wx.showToast({
+            title: '添加成功',
+            icon: 'none'
+          });
+          if (typeof callback === 'function') callback();
+        } else {
+          wx.showToast({
+            title: res.data.message || '添加失败',
+            icon: 'none'
+          });
+          if (typeof callback === 'function') callback();
+        }
+      },
+      fail: () => {
+        wx.showToast({
+          title: '网络错误2',
+          icon: 'none'
+        });
+        if (typeof callback === 'function') callback();
+      }
+    })
+  },
+
+  // /home/member/add
+  addvisitor(callback) {
+    wx.request({
+      url: 'http://localhost:8080/home/member/add',
+      method: 'POST',
+      data: {
+        homeId: this.data.homeId,
+        userId: this.data.userId,
+        role: 2
       },
       success: (res) => {
         if (res.statusCode === 200) {
